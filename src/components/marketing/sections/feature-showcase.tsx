@@ -1,65 +1,98 @@
-import {
-  Users,
-  ListChecks,
-  CalendarDays,
-  ShieldCheck,
-  Star,
-  Target,
-  Trophy,
-  BarChart3,
-  Sparkles,
-  Heart,
-  Smartphone,
-  Baby,
-} from 'lucide-react'
+import { BookOpen, ShieldCheck, Star, Target, Gift, Users } from 'lucide-react'
+import { CentralChildIllustration } from '@/components/marketing/illustrations'
 
 const FEATURES = [
-  { icon: Users, title: 'একাধিক সন্তান প্রোফাইল', description: 'প্রতিটি সন্তানের নিজস্ব প্রাইভেট প্রোফাইল, কাজ আর পুরস্কারের অগ্রগতি — একটি পারিবারিক ওয়ার্কস্পেসে।' },
-  { icon: ListChecks, title: 'কাস্টমাইজযোগ্য কাজ', description: 'একবারি, দৈনিক, সাপ্তাহিক বা কাস্টম কাজ তৈরি করুন। পয়েন্ট, সময় আর অনুমোদন নীতি নির্ধারণ করুন।' },
-  { icon: CalendarDays, title: 'দৈনিক ও সাপ্তাহিক ট্র্যাকিং', description: 'আপনার পরিবারের টাইমজোন অনুযায়ী কাজ তৈরি হয় — কোনো ডুপ্লিকেট নেই, কোনো মিসড দিন নেই।' },
-  { icon: ShieldCheck, title: 'বাবা-মায়ের অনুমোদন', description: 'প্রতিটি সাবমিশন রিভিউ করুন। অনুমোদন দিন, সংশোধন চান, বা গঠনমূলক মন্তব্যসহ ফেরত পাঠান।' },
-  { icon: Star, title: 'পয়েন্ট ও পুরস্কার', description: 'একটি আসল লেজার প্রতিটি পয়েন্ট ট্র্যাক করে — অর্জিত, খরচ হওয়া, ফেরত পাওয়া। কখনোই শুধু একটি এডিটযোগ্য সংখ্যা নয়।' },
-  { icon: Target, title: 'সাপ্তাহিক চ্যালেঞ্জ', description: 'সপ্তাহের জন্য একটি লক্ষ্য নির্ধারণ করুন আর সন্তানকে একটি অর্থপূর্ণ পুরস্কারের দিকে এগিয়ে যেতে দিন।' },
-  { icon: Trophy, title: 'মাসিক মাইলস্টোন', description: 'সাপ্তাহিক ফলাফল মাসিক মাইলস্টোনে পরিণত হয় — কনফিগারযোগ্য কোয়ালিফিকেশন নিয়মসহ।' },
-  { icon: BarChart3, title: 'পারিবারিক অগ্রগতি রিপোর্ট', description: 'দৈনিক, সাপ্তাহিক আর মাসিক রিপোর্ট দেখুন — চার্ট সহ, যা গঠনমূলক কথোপকথনে সাহায্য করে।' },
-  { icon: Sparkles, title: 'ইসলামি অভ্যাস টেমপ্লেট', description: 'নামাজ, কুরআন, দোয়া, সততা, দয়া আর কৃতজ্ঞতার জন্য অপশনাল টেমপ্লেট — সম্পূর্ণ কনফিগারযোগ্য।' },
-  { icon: Heart, title: 'শিশু-বান্ধব ড্যাশবোর্ড', description: 'রঙিন, বয়স-উপযোগী ড্যাশবোর্ড যা ব্যক্তিগত অগ্রগতি উদযাপন করে — কখনো ভাই-বোনের তুলনা করে না।' },
-  { icon: Smartphone, title: 'মোবাইল-ফার্স্ট অভিজ্ঞতা', description: 'ফোন, ট্যাবলেট, ল্যাপটপ আর ডেস্কটপ — সব স্ক্রিনে রেসপন্সিভ। সর্বত্র টাচ-ফ্রেন্ডলি।' },
-  { icon: Baby, title: 'শিশুদের ইমেইল লাগে না', description: 'সন্তানের আলাদা অ্যাকাউন্ট লাগে না — তারা আপনার পরিবারের ওয়ার্কস্পেস থেকেই নিরাপদে তাদের ড্যাশবোর্ড দেখে।' },
+  { icon: BookOpen, title: 'দৈনিক অভ্যাস', desc: 'নামাজ, কুরআন ও ভালো কাজ।', color: 'emerald', pos: 'top-left' },
+  { icon: ShieldCheck, title: 'অভিভাবকের গাইড', desc: 'কাজ দেখুন, অনুমোদন দিন।', color: 'sky', pos: 'top-right' },
+  { icon: Star, title: 'পয়েন্ট ও অগ্রগতি', desc: 'প্রতিদিনের চেষ্টা চোখের সামনে।', color: 'amber', pos: 'mid-left' },
+  { icon: Target, title: 'সাপ্তাহিক লক্ষ্য', desc: 'ছোট লক্ষ্য পূরণের আনন্দ।', color: 'sky', pos: 'mid-right' },
+  { icon: Gift, title: 'পারিবারিক পুরস্কার', desc: 'একসঙ্গে সময় ও পছন্দের উপহার।', color: 'emerald', pos: 'bottom-left' },
+  { icon: Users, title: 'একাধিক সন্তান', desc: 'প্রত্যেকের আলাদা অগ্রগতি।', color: 'amber', pos: 'bottom-right' },
 ]
+
+const COLOR_MAP: Record<string, { bg: string; text: string }> = {
+  emerald: { bg: 'bg-emerald-soft', text: 'text-emerald-deep' },
+  sky: { bg: 'bg-sky-soft', text: 'text-sky-deep' },
+  amber: { bg: 'bg-sunshine', text: 'text-sunshine-deep' },
+}
 
 export function FeatureShowcaseSection() {
   return (
-    <section id="features" className="border-t border-border bg-secondary/30 py-20">
+    <section id="features" className="border-t border-border bg-warm-mint py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">ফিচার</p>
-          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            ভালো অভ্যাস গড়তে যা যা দরকার
+          <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            আপনার পরিবারের জন্য যা যা থাকছে
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            একটি সম্পূর্ণ, প্রোডাকশন-গ্রেড অভ্যাস ও পুরস্কার প্ল্যাটফর্ম — শুধু একটি স্ট্যাটিক প্রোটোটাইপ নয়। প্রতিটি কাজ সত্যিকারের পারসিস্টেন্ট ডেটার সাথে যুক্ত।
+          <p className="mt-3 text-base text-muted-foreground">
+            সন্তানের প্রতিদিনের অভ্যাস গড়ার সব কিছু, এক জায়গায়।
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Desktop: infographic composition */}
+        <div className="relative mt-16 hidden lg:block">
+          <div className="relative mx-auto h-[520px] max-w-5xl">
+            {/* Center child */}
+            <div className="absolute left-1/2 top-1/2 z-10 w-56 -translate-x-1/2 -translate-y-1/2">
+              <CentralChildIllustration />
+            </div>
+
+            {/* Decorative connecting circles */}
+            <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-primary/15" aria-hidden="true" />
+            <div className="absolute left-1/2 top-1/2 h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-primary/10" aria-hidden="true" />
+
+            {/* Feature cards positioned around center */}
+            {FEATURES.map((f) => (
+              <FeatureCard key={f.title} feature={f} />
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile: vertical cards */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:hidden">
           {FEATURES.map((f) => {
             const Icon = f.icon
+            const c = COLOR_MAP[f.color]
             return (
-              <div
-                key={f.title}
-                className="rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-premium"
-              >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" />
+              <div key={f.title} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft">
+                <div className={`inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${c.bg}`}>
+                  <Icon className={`h-5 w-5 ${c.text}`} />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-bold text-foreground">{f.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.description}</p>
+                <div className="min-w-0">
+                  <p className="font-display text-sm font-bold text-foreground">{f.title}</p>
+                  <p className="text-xs text-muted-foreground">{f.desc}</p>
+                </div>
               </div>
             )
           })}
         </div>
       </div>
     </section>
+  )
+}
+
+function FeatureCard({ feature }: { feature: typeof FEATURES[number] }) {
+  const Icon = feature.icon
+  const c = COLOR_MAP[feature.color]
+  const posClass: Record<string, string> = {
+    'top-left': 'left-[2%] top-[8%]',
+    'top-right': 'right-[2%] top-[8%]',
+    'mid-left': 'left-0 top-1/2 -translate-y-1/2',
+    'mid-right': 'right-0 top-1/2 -translate-y-1/2',
+    'bottom-left': 'left-[6%] bottom-[8%]',
+    'bottom-right': 'right-[6%] bottom-[8%]',
+  }
+  return (
+    <div className={`absolute w-52 ${posClass[feature.pos]}`}>
+      <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-premium transition-transform hover:-translate-y-1">
+        <div className={`inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${c.bg}`}>
+          <Icon className={`h-5 w-5 ${c.text}`} />
+        </div>
+        <div className="min-w-0">
+          <p className="font-display text-sm font-bold text-foreground">{feature.title}</p>
+          <p className="text-xs text-muted-foreground">{feature.desc}</p>
+        </div>
+      </div>
+    </div>
   )
 }

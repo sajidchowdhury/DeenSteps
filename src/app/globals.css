@@ -182,6 +182,54 @@
   .shadow-premium {
     box-shadow: 0 2px 4px oklch(0.23 0.02 200 / 0.04), 0 8px 32px oklch(0.23 0.02 200 / 0.08);
   }
+
+  /* ── Redesign palette utilities ── */
+  .bg-cream { background-color: oklch(0.985 0.012 95); }
+  .bg-sky-soft { background-color: oklch(0.93 0.05 220); }
+  .bg-sunshine { background-color: oklch(0.92 0.13 90); }
+  .bg-emerald-soft { background-color: oklch(0.93 0.05 160); }
+  .bg-mint { background-color: oklch(0.95 0.03 160); }
+
+  .text-emerald-deep { color: oklch(0.38 0.1 162); }
+  .text-sky-deep { color: oklch(0.45 0.1 230); }
+  .text-sunshine-deep { color: oklch(0.5 0.12 85); }
+
+  /* Soft dotted pattern for section backgrounds */
+  .pattern-dots {
+    background-image: radial-gradient(circle, oklch(0.42 0.11 160 / 0.06) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  }
+  .pattern-dots-amber {
+    background-image: radial-gradient(circle, oklch(0.75 0.14 85 / 0.12) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  }
+
+  /* Warm gradient backgrounds for sections */
+  .bg-warm-cream {
+    background: linear-gradient(180deg, oklch(0.985 0.012 95), oklch(0.97 0.01 120));
+  }
+  .bg-warm-sky {
+    background: linear-gradient(180deg, oklch(0.96 0.02 220), oklch(0.985 0.012 95));
+  }
+  .bg-warm-mint {
+    background: linear-gradient(180deg, oklch(0.97 0.02 160), oklch(0.985 0.012 95));
+  }
+
+  /* Gentle floating animation for decorative elements */
+  @keyframes float-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-float-soft { animation: float-soft 6s ease-in-out infinite; }
+  .animate-float-soft-delay { animation: float-soft 6s ease-in-out infinite; animation-delay: -3s; }
+
+  /* Pop-in for badges/stars */
+  @keyframes pop-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .animate-pop-in { animation: pop-in 0.4s ease-out; }
 }
 
 /* Custom scrollbar for long lists */

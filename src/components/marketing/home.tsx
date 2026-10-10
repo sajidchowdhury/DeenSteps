@@ -3,10 +3,8 @@ import { MarketingFooter } from './marketing-footer'
 import { HeroSection } from './sections/hero'
 import { HowItWorksSection } from './sections/how-it-works'
 import { FeatureShowcaseSection } from './sections/feature-showcase'
-import { RewardsPreviewSection } from './sections/rewards-preview'
+import { ProductPreviewSection } from './sections/product-preview'
 import { IslamicValuesSection } from './sections/islamic-values'
-import { PricingSection } from './sections/pricing'
-import { FaqSection } from './sections/faq'
 import { CtaSection } from './sections/cta'
 
 export function Home() {
@@ -17,10 +15,8 @@ export function Home() {
         <HeroSection />
         <HowItWorksSection />
         <FeatureShowcaseSection />
-        <RewardsPreviewSection />
+        <ProductPreviewSection />
         <IslamicValuesSection />
-        <PricingSection />
-        <FaqSection />
         <CtaSection />
       </main>
       <MarketingFooter />

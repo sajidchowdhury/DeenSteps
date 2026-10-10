@@ -1,85 +1,78 @@
-import { Heart, BookOpen, HandHeart, Sparkles, ShieldCheck } from 'lucide-react'
+import { BookOpen, Heart, HandHeart } from 'lucide-react'
 
 const VALUES = [
   {
     icon: BookOpen,
-    title: 'নামাজ ও কুরআন',
-    description: 'অপশনাল টেমপ্লেট সন্তানকে উৎসাহিত করে প্রতিদিন নামাজ আর কুরআন পড়তে — আপনার সন্তানের বয়স ও সক্ষমতা অনুযায়ী।',
+    title: 'আল্লাহর সঙ্গে সম্পর্ক',
+    desc: 'নামাজ, কুরআন ও আল্লাহকে স্মরণ করার অভ্যাস।',
+    color: 'emerald',
   },
   {
     icon: Heart,
     title: 'সুন্দর চরিত্র',
-    description: 'সততা, দয়া, ধৈর্য আর কৃতজ্ঞতাও একটি অভ্যাস। দৈনিক রুটিনের মতোই সেগুলোকেও উদযাপন করুন।',
+    desc: 'সত্যবাদিতা, দয়া, সম্মান ও ধৈর্য।',
+    color: 'amber',
   },
   {
     icon: HandHeart,
-    title: 'সাহায্য ও দায়িত্ব',
-    description: 'সন্তানকে উৎসাহিত করুন পরিবারে সাহায্য করতে আর বয়স-উপযোগী দৈনন্দিন দায়িত্ব নিতে।',
-  },
-  {
-    icon: Sparkles,
-    title: 'অন্তর্নিহিত উৎসাহ',
-    description: 'পুরস্কার হলো উৎসাহ আর অভ্যাস গড়ার টুল — কখনোই আন্তরিক নিয়ত বা বাবা-মায়ের পথনির্দেশনার বিকল্প নয়।',
+    title: 'দায়িত্বশীল জীবন',
+    desc: 'পরিবারকে সাহায্য করা, কথা রাখা ও দায়িত্ব নেওয়া।',
+    color: 'sky',
   },
 ]
 
+const COLOR_MAP: Record<string, { bg: string; text: string }> = {
+  emerald: { bg: 'bg-emerald-soft', text: 'text-emerald-deep' },
+  amber: { bg: 'bg-sunshine', text: 'text-sunshine-deep' },
+  sky: { bg: 'bg-sky-soft', text: 'text-sky-deep' },
+}
+
 export function IslamicValuesSection() {
   return (
-    <section id="islamic-values" className="relative overflow-hidden border-t border-border bg-emerald-950 py-20 text-emerald-50">
-      <div
-        className="absolute inset-0 opacity-10"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 25% 25%, oklch(0.85 0.14 85) 2px, transparent 2px), radial-gradient(circle at 75% 75%, oklch(0.85 0.14 85) 2px, transparent 2px)',
-          backgroundSize: '40px 40px',
-          backgroundPosition: '0 0, 20px 20px',
-        }}
-      />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="islamic-values" className="border-t border-border bg-warm-cream py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-amber-300">ইসলামি মূল্যবোধ</p>
-          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            ঈমান, চরিত্র আর দায়িত্বশীলতা গড়ে তুলি
+          <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            সন্তানকে শুধু সফল নয়, সুন্দর মানুষ হিসেবেও গড়ে তুলুন
           </h2>
-          <p className="mt-4 text-lg text-emerald-100/80">
-            দীনস্টেপস বাবা-মাকে সাহায্য করে সন্তানের মধ্যে নামাজের অভ্যাস, কুরআন শেখা, সততা, দয়া, কৃতজ্ঞতা, সাহায্য আর ব্যক্তিগত দায়িত্বশীলতা গড়তে — প্রতিটি পরিবারের রীতি অনুযায়ী।
+          <p className="mt-3 text-base text-muted-foreground">
+            পয়েন্ট ঈমান বা তাকওয়া মাপে না — শুধু উৎসাহ জোগায়, অভ্যাস গড়ে।
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
           {VALUES.map((v) => {
             const Icon = v.icon
+            const c = COLOR_MAP[v.color]
             return (
               <div
                 key={v.title}
-                className="rounded-2xl border border-emerald-800/50 bg-emerald-900/40 p-6 backdrop-blur-sm"
+                className="rounded-3xl border border-border bg-card p-7 text-center shadow-soft transition-transform hover:-translate-y-1"
               >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-amber-400/20 text-amber-300">
-                  <Icon className="h-5 w-5" />
+                <div className={`mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl ${c.bg}`}>
+                  <Icon className={`h-7 w-7 ${c.text}`} />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-bold text-emerald-50">{v.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-emerald-100/75">{v.description}</p>
+                <h3 className="mt-4 font-display text-lg font-bold text-foreground">{v.title}</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">{v.desc}</p>
               </div>
             )
           })}
         </div>
 
-        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-amber-400/30 bg-amber-400/5 p-6 text-center">
-          <ShieldCheck className="mx-auto h-8 w-8 text-amber-300" />
-          <p className="mt-3 text-base leading-relaxed text-emerald-50">
-            <strong className="font-semibold text-amber-200">পয়েন্ট কখনোই ঈমান মাপে না।</strong>{' '}
-            দীনস্টেপস সন্তানের ধর্মপ্রাণতা, আধ্যাত্মিক মূল্য বা আল্লাহর কাছে তার অবস্থান মাপে না। পুরস্কার হলো উৎসাহ আর অভ্যাস গড়ার টুল — আন্তরিক নিয়ত, বাবা-মায়ের পথনির্দেশনা বা ইসলামি শিক্ষার বিকল্প নয়।
-          </p>
-        </div>
-
-        <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-emerald-700/50 bg-emerald-900/30 p-6 text-center">
-          <p className="text-sm leading-relaxed text-emerald-100/90">
-            রাসূলুল্লাহ ﷺ বলেছেন, <span className="font-medium text-amber-200">&ldquo;সবচেয়ে প্রিয় কাজ আল্লাহর কাছে তা-ই, যা ধারাবাহিকতার সাথে করা হয় — যদিও তা সামান্য হয়।&rdquo;</span> (বুখারি, মুসলিম)
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-emerald-100/80">
-            দীনস্টেপস সেই ধারাবাহিকতা গড়ে তুলতে সাহায্য করে — একেকটি ছোট ভালো কাজ, একেকটি পদক্ষেপ। আজকের ছোট ভালো কাজ আখিরাতে বড় পুরস্কার আনে, দুনিয়ায় সুন্দর জীবন গড়ে, আর আল্লাহর ভালোবাসা অর্জন করে।
-          </p>
+        {/* Qur'anic verse panel */}
+        <div className="relative mx-auto mt-12 max-w-2xl overflow-hidden rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-cream p-8 text-center shadow-soft dark:border-emerald-900 dark:from-emerald-950/40">
+          <div className="pattern-dots-amber absolute inset-0 opacity-40" aria-hidden="true" />
+          <div className="relative">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white">
+              <BookOpen className="h-5 w-5" />
+            </span>
+            <p className="mt-4 font-display text-xl font-semibold leading-relaxed text-emerald-deep sm:text-2xl">
+              &ldquo;তোমরা নিজেদেরকে এবং নিজেদের পরিবারকে আগুন থেকে রক্ষা করো।&rdquo;
+            </p>
+            <p className="mt-3 text-sm font-medium text-muted-foreground">
+              সূরা আত-তাহরীম, ৬৬:৬
+            </p>
+          </div>
         </div>
       </div>
     </section>

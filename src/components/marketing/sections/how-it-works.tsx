@@ -1,61 +1,81 @@
-import { Users, ListChecks, Trophy } from 'lucide-react'
+import { ClipboardList, HeartHandshake, PartyPopper } from 'lucide-react'
 
 const STEPS = [
   {
-    icon: Users,
-    title: '১. আপনার পরিবার তৈরি করুন',
-    description:
-      'বাবা-মা হিসেবে রেজিস্টার করুন। পরিবারের নাম দিন, টাইমজোন সিলেক্ট করুন, আর সন্তানদের প্রোফাইল যোগ করুন। সন্তানদের আলাদা ইমেইল লাগে না — তারা আপনার পরিবারের ওয়ার্কস্পেস থেকেই তাদের ড্যাশবোর্ড দেখবে।',
+    num: '০১',
+    icon: ClipboardList,
+    title: 'অভ্যাস ঠিক করুন',
+    desc: 'সন্তানের উপযোগী দৈনিক কাজ বেছে নিন।',
+    color: 'emerald',
   },
   {
-    icon: ListChecks,
-    title: '২. ভালো অভ্যাস গড়ে তুলুন',
-    description:
-      'বয়স অনুযায়ী দৈনিক, সাপ্তাহিক বা ব্যক্তিগত কাজ যোগ করুন। আমাদের ইসলামি অভ্যাস লাইব্রেরি থেকে বেছে নিন, নাহলে নিজেই তৈরি করুন। প্রতিটি কাজের জন্য পয়েন্ট, সময়সূচি আর অনুমোদন নীতি নির্ধারণ করুন।',
+    num: '০২',
+    icon: HeartHandshake,
+    title: 'একসঙ্গে এগিয়ে চলুন',
+    desc: 'সন্তান কাজ সম্পন্ন করে, আপনি দেখেন ও উৎসাহ দেন।',
+    color: 'sky',
   },
   {
-    icon: Trophy,
-    title: '৩. অগ্রগতি উদযাপন করুন',
-    description:
-      'সম্পন্ন কাজ রিভিউ করুন, পয়েন্ট প্রদান করুন, আর অর্থপূর্ণ পারিবারিক পুরস্কার আনলক করুন। সাপ্তাহিক চ্যালেঞ্জ আর মাসিক মাইলস্টোন একসাথে ট্র্যাক করুন। প্রতিটি ভালো কাজ আল্লাহর কাছে গণ্য — পয়েন্ট শুধু উৎসাহ জোগায়।',
+    num: '০৩',
+    icon: PartyPopper,
+    title: 'আনন্দ ভাগ করে নিন',
+    desc: 'পারিবারিক আনন্দ ও পুরস্কারে অগ্রগতি উদযাপন করুন।',
+    color: 'amber',
   },
 ]
+
+const COLOR_MAP: Record<string, { bg: string; ring: string; text: string }> = {
+  emerald: { bg: 'bg-emerald-soft', ring: 'ring-emerald-200', text: 'text-emerald-deep' },
+  sky: { bg: 'bg-sky-soft', ring: 'ring-sky-200', text: 'text-sky-deep' },
+  amber: { bg: 'bg-sunshine', ring: 'ring-amber-200', text: 'text-sunshine-deep' },
+}
 
 export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="border-t border-border bg-background py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">যেভাবে কাজ করে</p>
-          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            ভালো পরিবারিক অভ্যাসের তিনটি সহজ ধাপ
+          <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            ভালো অভ্যাস গড়ে উঠুক প্রতিদিন
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            মাত্র কয়েক মিনিটে আপনার পরিবার সেট আপ করুন। সন্তান যে কাজগুলো ভালোবাসে তা যোগ করুন। দেখুন ভালো অভ্যাস বাড়ে, একেক পদক্ষেপে।
+          <p className="mt-3 text-base text-muted-foreground">
+            তিনটি সহজ ধাপে শুরু হয় পরিবারের সুন্দর যাত্রা।
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {STEPS.map((s, i) => {
-            const Icon = s.icon
-            return (
-              <div
-                key={s.title}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 shadow-soft transition-all hover:-translate-y-1 hover:shadow-premium"
-              >
-                <div className="absolute -right-4 -top-4 font-display text-7xl font-extrabold text-primary/5">
-                  {['১', '২', '৩'][i]}
-                </div>
-                <div className="relative">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="h-6 w-6" />
+        {/* Steps with connecting journey */}
+        <div className="relative mt-16">
+          {/* Connecting line (desktop) */}
+          <div className="absolute left-0 right-0 top-12 hidden h-0.5 bg-gradient-to-r from-emerald-200 via-sky-200 to-amber-200 lg:block" aria-hidden="true" />
+
+          <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
+            {STEPS.map((step, i) => {
+              const Icon = step.icon
+              const c = COLOR_MAP[step.color]
+              return (
+                <div key={step.num} className="relative flex flex-col items-center text-center">
+                  {/* Number circle */}
+                  <div className={`relative z-10 inline-flex h-24 w-24 items-center justify-center rounded-full ${c.bg} ring-4 ${c.ring} shadow-soft`}>
+                    <Icon className={`h-9 w-9 ${c.text}`} />
+                    <span className={`absolute -top-2 -right-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-xs font-bold text-background`}>
+                      {step.num}
+                    </span>
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-bold text-foreground">{s.title.replace(/^\d+\.\s/, '')}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+                  <h3 className="mt-5 font-display text-xl font-bold text-foreground">{step.title}</h3>
+                  <p className="mt-2 max-w-xs text-sm text-muted-foreground">{step.desc}</p>
+
+                  {/* Arrow between steps (mobile) */}
+                  {i < STEPS.length - 1 && (
+                    <div className="mt-6 lg:hidden">
+                      <svg width="20" height="28" viewBox="0 0 20 28" fill="none" aria-hidden="true">
+                        <path d="M10 2v22m0 0l-7-7m7 7l7-7" stroke="oklch(0.7 0.02 140)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       </div>
     </section>

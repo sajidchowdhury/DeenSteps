@@ -9,12 +9,10 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '#features', label: 'ফিচার' },
   { href: '#how-it-works', label: 'যেভাবে কাজ করে' },
-  { href: '#rewards', label: 'পুরস্কার' },
+  { href: '#features', label: 'ফিচার' },
+  { href: '#preview', label: 'অগ্রগতি' },
   { href: '#islamic-values', label: 'ইসলামি মূল্যবোধ' },
-  { href: '#pricing', label: 'প্রাইসিং' },
-  { href: '#faq', label: 'প্রশ্নোত্তর' },
 ]
 
 export function MarketingHeader() {
