@@ -77,7 +77,7 @@ export default async function DashboardPage() {
           <SummaryCard icon={ShieldCheck} label="রিভিউ বাকি" value={data.stats.pendingApprovals} accent="amber" href="/review" />
           <SummaryCard icon={CheckCircle2} label="আজকের সম্পন্ন" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
           <SummaryCard icon={Star} label="এই সপ্তাহের তারা" value={data.stats.weekFamilyPoints} accent="gold" />
-          <SummaryCard icon={Target} label="সক্রিয় চ্যালেঞ্জ" value={data.stats.activeChallenges} accent="violet" href="/challenges" />
+          <SummaryCard icon={ListChecks} label="চ্যালেঞ্জ" value={data.stats.totalChildren > 0 ? '✓' : '—'} accent="violet" href="/tasks" />
           <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
 
@@ -166,10 +166,10 @@ export default async function DashboardPage() {
                 <CardTitle className="font-display text-lg">দ্রুত কাজ</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-2">
-                <QuickAction icon={Plus} label="নতুন কাজ" href="/tasks" />
+                <QuickAction icon={Plus} label="নতুন চ্যালেঞ্জ" href="/tasks" />
                 <QuickAction icon={ShieldCheck} label="সাবমিশন রিভিউ" href="/review" badge={data.stats.pendingApprovals} />
                 <QuickAction icon={Gift} label="পুরস্কার যোগ" href="/rewards" />
-                <QuickAction icon={Target} label="সাপ্তাহিক চ্যালেঞ্জ" href="/challenges" />
+                <QuickAction icon={Target} label="চ্যালেঞ্জ তৈরি করুন" href="/tasks" />
                 <QuickAction icon={TrendingUp} label="রিপোর্ট দেখুন" href="/reports" />
                 <QuickAction icon={Users} label="সন্তান ম্যানেজ" href="/children" />
               </CardContent>

@@ -24,16 +24,15 @@ export type SetupProgress = {
  * চেক করে পরিবারের সেটআপ কতটা হয়েছে:
  * ১. অন্তত ১টি সন্তান প্রোফাইল
  * ২. অন্তত ১টি পুরস্কার
- * ৩. অন্তত ১টি কাজ বা চ্যালেঞ্জ
+ * ৩. অন্তত ১টি চ্যালেঞ্জ (কাজ)
  */
 export async function getSetupProgress(): Promise<SetupProgress> {
   const { family } = await requireFamily()
 
-  const [childCount, rewardCount, taskCount, challengeCount] = await Promise.all([
+  const [childCount, rewardCount, taskCount] = await Promise.all([
     db.childProfile.count({ where: { familyId: family.id, status: 'ACTIVE' } }),
     db.reward.count({ where: { familyId: family.id, status: 'ACTIVE' } }),
     db.taskTemplate.count({ where: { familyId: family.id, status: 'ACTIVE' } }),
-    db.weeklyChallenge.count({ where: { familyId: family.id, status: 'ACTIVE' } }),
   ])
 
   const steps: SetupStep[] = [
@@ -55,11 +54,11 @@ export async function getSetupProgress(): Promise<SetupProgress> {
     },
     {
       key: 'tasks',
-      label: 'কাজ ও চ্যালেঞ্জ সেট করুন',
-      description: 'দৈনিক কাজ বা সাপ্তাহিক চ্যালেঞ্জ তৈরি করুন',
+      label: 'চ্যালেঞ্জ সেট করুন',
+      description: 'দৈনিক ও সাপ্তাহিক কাজ তৈরি করুন',
       href: '/tasks',
-      done: taskCount > 0 || challengeCount > 0,
-      count: taskCount + challengeCount,
+      done: taskCount > 0,
+      count: taskCount,
     },
   ]
 

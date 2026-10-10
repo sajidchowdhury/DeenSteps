@@ -10,7 +10,6 @@ import {
   ListChecks,
   ShieldCheck,
   Gift,
-  Target,
   BarChart3,
   Settings,
   LogOut,
@@ -29,10 +28,9 @@ import { cn } from '@/lib/utils'
 const NAV = [
   { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
   { href: '/children', label: 'সন্তান', icon: Users },
-  { href: '/tasks', label: 'কাজ', icon: ListChecks },
+  { href: '/tasks', label: 'চ্যালেঞ্জ', icon: ListChecks },
   { href: '/review', label: 'রিভিউ সেন্টার', icon: ShieldCheck, badgeKey: 'pending' },
   { href: '/rewards', label: 'পুরস্কার', icon: Gift },
-  { href: '/challenges', label: 'চ্যালেঞ্জ', icon: Target },
   { href: '/reports', label: 'রিপোর্ট', icon: BarChart3 },
   { href: '/settings', label: 'সেটিংস', icon: Settings },
 ]

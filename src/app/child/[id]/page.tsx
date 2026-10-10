@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Trophy, Target, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -104,12 +104,6 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
       }
     }
   }
-
-  // Active weekly challenge
-  const activeChallenge = await db.weeklyChallenge.findFirst({
-    where: { familyId: family.id, status: 'ACTIVE', startDate: { lte: new Date() }, endDate: { gte: new Date() } },
-    include: { participants: { where: { childId: child.id } } },
-  })
 
   // Rewards (sorted by required points)
   const rewards = await db.reward.findMany({
@@ -277,33 +271,6 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 )}
               </CardContent>
             </Card>
-
-            {/* Weekly challenge */}
-            {activeChallenge && activeChallenge.participants[0] && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-display text-lg flex items-center gap-2">
-                    <Target className="h-5 w-5 text-violet-500" /> সাপ্তাহিক চ্যালেঞ্জ
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold text-foreground">{activeChallenge.name}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{activeChallenge.description}</p>
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">লক্ষ্য: {activeChallenge.participants[0].targetPercent}%</span>
-                      <span className="font-medium text-foreground">{activeChallenge.participants[0].completionPercent}%</span>
-                    </div>
-                    <Progress value={activeChallenge.participants[0].completionPercent} className="mt-1 h-2" />
-                  </div>
-                  {activeChallenge.rewardTitle && (
-                    <p className="mt-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-900 dark:bg-amber-900/30 dark:text-amber-100">
-                      <Trophy className="mr-1 inline h-3 w-3" /> পুরস্কার: {activeChallenge.rewardTitle}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            )}
 
             {/* Achievements */}
             <Card>

@@ -629,10 +629,10 @@ export function TaskArchiveButton({
     try {
       const res = await archiveTask(taskId)
       if (!res.ok) {
-        toast.error(res.error ?? 'Could not archive task.')
+        toast.error(res.error ?? 'মুছতে সমস্যা হয়েছে।')
         return
       }
-      toast.success(`"${taskTitle}" archived.`)
+      toast.success(`"${taskTitle}" মুছে ফেলা হয়েছে।`)
       setOpen(false)
       router.refresh()
     } finally {
@@ -643,21 +643,21 @@ export function TaskArchiveButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {children ?? <button type="button" className="w-full px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-accent/50">Archive</button>}
+        {children ?? <button type="button" className="w-full px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-accent/50">মুছে ফেলুন</button>}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Archive this task?</DialogTitle>
+          <DialogTitle>এই চ্যালেঞ্জটি মুছবেন?</DialogTitle>
           <DialogDescription>
-            &ldquo;{taskTitle}&rdquo; will be hidden from your active list. Existing submissions and points are preserved.
+            &ldquo;{taskTitle}&rdquo; আপনার তালিকা থেকে সরে যাবে। আগের সাবমিশন ও পয়েন্ট থেকে যাবে।
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)} disabled={pending}>
-            Cancel
+            বাতিল
           </Button>
           <Button variant="destructive" onClick={onConfirm} disabled={pending}>
-            {pending ? 'Archiving…' : 'Archive task'}
+            {pending ? 'মুছছি…' : 'মুছে ফেলুন'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -696,7 +696,7 @@ export function TaskRowActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Task actions">
+        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="চ্যালেঞ্জ অ্যাকশন">
           <MoreVertical className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -718,7 +718,7 @@ export function TaskRowActions({
           }}
         >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Pencil className="mr-2 h-4 w-4" /> Edit
+            <Pencil className="mr-2 h-4 w-4" /> সম্পাদনা
           </DropdownMenuItem>
         </TaskFormDialog>
         <DropdownMenuSeparator />
@@ -730,7 +730,7 @@ export function TaskRowActions({
         {!isArchived && (
           <TaskArchiveButton taskId={task.id} taskTitle={task.title}>
             <DropdownMenuItem variant="destructive" onSelect={(e) => e.preventDefault()}>
-              <Archive className="mr-2 h-4 w-4" /> Archive
+              <Archive className="mr-2 h-4 w-4" /> মুছে ফেলুন
             </DropdownMenuItem>
           </TaskArchiveButton>
         )}

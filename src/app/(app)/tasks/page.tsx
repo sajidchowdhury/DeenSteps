@@ -100,10 +100,10 @@ export default async function TasksPage({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              কাজ
+              চ্যালেঞ্জ
             </h1>
             <p className="text-sm text-muted-foreground">
-              বারবার ঘটা কাজ তৈরি করুন আর সন্তানের জন্য নির্ধারণ করুন।
+              সন্তানের জন্য দৈনিক ও সাপ্তাহিক কাজ নির্ধারণ করুন। প্রতিদিনের পয়েন্ট জমে পুরস্কার আনলক করবে।
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -112,7 +112,7 @@ export default async function TasksPage({
             </ImportTasksDialog>
             <TaskFormDialog childrenList={childOptions}>
               <Button>
-                নতুন কাজ
+                নতুন চ্যালেঞ্জ
               </Button>
             </TaskFormDialog>
           </div>
@@ -241,19 +241,19 @@ function EmptyTasks({
           <ListChecks className="h-7 w-7" />
         </div>
         <p className="mt-4 font-display text-lg font-semibold text-foreground">
-          {hasAnyTasks ? 'ফিল্টারে কোনো কাজ নেই' : 'এখনো কোনো কাজ নেই'}
+          {hasAnyTasks ? 'ফিল্টারে কোনো চ্যালেঞ্জ নেই' : 'এখনো কোনো চ্যালেঞ্জ নেই'}
         </p>
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
           {hasAnyTasks
             ? 'সার্চ বা ক্যাটাগরি ফিল্টার পরিবর্তন করুন, বা সব দেখতে ফিল্টার মুছুন।'
-            : 'সাজেশন থেকে বাছাই করুন বা নিজে একটি কাজ তৈরি করে শুরু করুন।'}
+            : 'সাজেশন থেকে বাছাই করুন বা নিজে একটি চ্যালেঞ্জ তৈরি করে শুরু করুন।'}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <ImportTasksDialog childrenList={childrenList}>
             <Button variant="outline">সাজেশন থেকে বাছাই</Button>
           </ImportTasksDialog>
           <TaskFormDialog childrenList={childrenList}>
-            <Button>নতুন কাজ</Button>
+            <Button>নতুন চ্যালেঞ্জ</Button>
           </TaskFormDialog>
         </div>
       </CardContent>
