@@ -8,12 +8,12 @@ import { AppShell, Avatar } from '@/components/deensteps/app-shell'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import {
   RewardFormDialog,
-  ImportRewardsDialog,
   RewardRowActions,
   ApproveRedemptionButton,
   DeclineRedemptionButton,
   FulfillRedemptionButton,
 } from '@/components/deensteps/reward-dialogs'
+import { RewardQuickAdd } from '@/components/deensteps/reward-quick-add'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -93,19 +93,17 @@ export default async function RewardsPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Rewards
+              পুরস্কার
             </h1>
             <p className="text-sm text-muted-foreground">
-              Curate meaningful rewards and manage redemption requests from your children.
+              সন্তানের জন্য পুরস্কার তৈরি করুন আর রিডিম্পশন অনুরোধ ম্যানেজ করুন।
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <ImportRewardsDialog>
-              <Button variant="outline">Import from library</Button>
-            </ImportRewardsDialog>
+            <RewardQuickAdd />
             <RewardFormDialog>
               <Button>
-                <Gift className="h-4 w-4" /> New reward
+                <Gift className="h-4 w-4" /> নতুন পুরস্কার
               </Button>
             </RewardFormDialog>
           </div>
@@ -349,16 +347,14 @@ function EmptyCatalog() {
         <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Gift className="h-7 w-7" />
         </div>
-        <p className="mt-4 font-display text-lg font-semibold text-foreground">No rewards yet</p>
+        <p className="mt-4 font-display text-lg font-semibold text-foreground">এখনো কোনো পুরস্কার নেই</p>
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
-          Add a few rewards your child can work toward — experiences, books, or special family time. Keep them meaningful, not material.
+          সন্তানের জন্য কিছু পুরস্কার যোগ করুন — সাজেশন থেকে বাছাই করুন বা নিজে তৈরি করুন।
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <ImportRewardsDialog>
-            <Button variant="outline">Import from library</Button>
-          </ImportRewardsDialog>
+          <RewardQuickAdd />
           <RewardFormDialog>
-            <Button>Add a reward</Button>
+            <Button>নতুন পুরস্কার</Button>
           </RewardFormDialog>
         </div>
       </CardContent>

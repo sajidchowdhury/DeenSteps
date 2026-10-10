@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/server/actions/dashboard-actions'
+import { getSetupProgress } from '@/server/actions/setup-progress-actions'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { AppShell, Avatar } from '@/components/deensteps/app-shell'
@@ -23,6 +24,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -32,6 +34,7 @@ export default async function DashboardPage() {
   if (!family) redirect('/onboarding')
 
   const data = await getDashboardData()
+  const setupProgress = await getSetupProgress()
 
   // Children list for sidebar
   const childrenList = data.children.map((c) => ({
@@ -64,6 +67,9 @@ export default async function DashboardPage() {
             </Button>
           </div>
         </div>
+
+        {/* Setup progress bar — সেটআপ সম্পূর্ণ হলে আপনাআপনি গায়েব */}
+        <SetupProgressBar progress={setupProgress} />
 
         {/* Summary cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">

@@ -100,19 +100,19 @@ export default async function TasksPage({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Tasks
+              কাজ
             </h1>
             <p className="text-sm text-muted-foreground">
-              Build a library of recurring tasks and assign them to your children.
+              বারবার ঘটা কাজ তৈরি করুন আর সন্তানের জন্য নির্ধারণ করুন।
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <ImportTasksDialog childrenList={childOptions}>
-              <Button variant="outline">Import from library</Button>
+              <Button variant="outline">সাজেশন থেকে বাছাই</Button>
             </ImportTasksDialog>
             <TaskFormDialog childrenList={childOptions}>
               <Button>
-                New task
+                নতুন কাজ
               </Button>
             </TaskFormDialog>
           </div>
@@ -241,19 +241,19 @@ function EmptyTasks({
           <ListChecks className="h-7 w-7" />
         </div>
         <p className="mt-4 font-display text-lg font-semibold text-foreground">
-          {hasAnyTasks ? 'No tasks match your filters' : 'No tasks yet'}
+          {hasAnyTasks ? 'ফিল্টারে কোনো কাজ নেই' : 'এখনো কোনো কাজ নেই'}
         </p>
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
           {hasAnyTasks
-            ? 'Try adjusting your search or category filter, or clear filters to see everything.'
-            : 'Create your first task or import a few from the Islamic-inspired habit library to get started.'}
+            ? 'সার্চ বা ক্যাটাগরি ফিল্টার পরিবর্তন করুন, বা সব দেখতে ফিল্টার মুছুন।'
+            : 'সাজেশন থেকে বাছাই করুন বা নিজে একটি কাজ তৈরি করে শুরু করুন।'}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <ImportTasksDialog childrenList={childrenList}>
-            <Button variant="outline">Import from library</Button>
+            <Button variant="outline">সাজেশন থেকে বাছাই</Button>
           </ImportTasksDialog>
           <TaskFormDialog childrenList={childrenList}>
-            <Button>Create a task</Button>
+            <Button>নতুন কাজ</Button>
           </TaskFormDialog>
         </div>
       </CardContent>

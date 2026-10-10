@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { db } from '@/lib/db'
 import { requireFamily } from '@/lib/auth/session'
 import { revalidatePath } from 'next/cache'
+import { CHALLENGE_SUGGESTIONS } from '@/lib/constants'
 
 // ────────────────────────────────────────────────────────────────────────────
 // Weekly challenges
@@ -128,5 +129,50 @@ export async function refreshChallengeProgress(challengeId: string) {
     })
   }
   revalidatePath('/challenges')
+  return { ok: true }
+}
+
+/**
+ * সাজেশন থেকে এক ক্লিকে চ্যালেঞ্জ তৈরি করে।
+ * চলতি সপ্তাহের জন্য (রবি-শনি) চ্যালেঞ্জ তৈরি করে সব সক্রিয় সন্তানকে যোগ করে।
+ */
+export async function createChallengeFromSuggestion(suggestionIndex: number): Promise<{ ok: boolean; error?: string }> {
+  const { family } = await requireFamily()
+  const suggestion = CHALLENGE_SUGGESTIONS[suggestionIndex]
+  if (!suggestion) return { ok: false, error: 'সাজেশন পাওয়া যায়নি।' }
+
+  // চলতি সপ্তাহ (রবিবার শুরু)
+  const now = new Date()
+  const start = new Date(now)
+  start.setDate(start.getDate() - start.getDay()) // রবিবার
+  start.setHours(0, 0, 0, 0)
+  const end = new Date(start)
+  end.setDate(end.getDate() + 6) // শনিবার
+  end.setHours(23, 59, 59, 999)
+
+  // সব সক্রিয় সন্তান
+  const children = await db.childProfile.findMany({
+    where: { familyId: family.id, status: 'ACTIVE' },
+    select: { id: true },
+  })
+
+  await db.weeklyChallenge.create({
+    data: {
+      familyId: family.id,
+      name: suggestion.name,
+      description: suggestion.description,
+      startDate: start,
+      endDate: end,
+      targetPercent: suggestion.targetPercent,
+      rewardTitle: suggestion.rewardTitle,
+      status: 'ACTIVE',
+      participants: children.length > 0 ? {
+        create: children.map((c) => ({ childId: c.id, targetPercent: suggestion.targetPercent })),
+      } : undefined,
+    },
+  })
+
+  revalidatePath('/challenges')
+  revalidatePath('/dashboard')
   return { ok: true }
 }

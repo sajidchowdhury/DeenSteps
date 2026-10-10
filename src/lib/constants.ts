@@ -74,15 +74,63 @@ export const TASK_LIBRARY = [
 ] as const
 
 export const REWARD_LIBRARY = [
-  { title: 'রেস্টুরেন্ট বেছে নেওয়া', iconKey: 'utensils', requiredPoints: 80, description: 'এই সপ্তাহে পরিবার কোথায় খাবে তা বেছে নাও।' },
-  { title: 'পরিবারের সাথে বেড়াতে যাওয়া', iconKey: 'map', requiredPoints: 120, description: 'একসাথে বেড়াতে যাওয়ার জায়গা বেছে নাও।' },
-  { title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'ফ্যামিলি গেম নাইটের গেম বেছে নাও।' },
-  { title: 'পারিবারিক কার্যক্রম বেছে নেওয়া', iconKey: 'calendar', requiredPoints: 90, description: 'এই সপ্তাহের শেষে একটি কার্যক্রম পরিকল্পনা করো।' },
-  { title: 'আর্ট সাপ্লাই', iconKey: 'palette', requiredPoints: 100, description: 'নতুন আর্ট সাপ্লাই বেছে নাও।' },
-  { title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 80, description: 'তোমার সংগ্রহে নতুন একটি বই যোগ করো।' },
-  { title: 'একটি খেলনা', iconKey: 'gift', requiredPoints: 200, description: 'কাঙ্ক্ষিত একটি ছোট খেলনা বেছে নাও।' },
-  { title: 'নতুন পোশাক', iconKey: 'shirt', requiredPoints: 150, description: 'নতুন একটি পোশাক বেছে নাও।' },
-  { title: 'বিশেষ পারিবারিক অভিজ্ঞতা', iconKey: 'star', requiredPoints: 250, description: 'একসাথে পরিকল্পিত একটি বিশেষ দিন।' },
+  { title: 'বাসায় পিৎজা', iconKey: 'utensils', requiredPoints: 40, description: 'বাসায় পিৎজা অর্ডার করা হবে।' },
+  { title: 'বাসায় বার্গার', iconKey: 'utensils', requiredPoints: 30, description: 'বাসায় বার্গার বানানো হবে।' },
+  { title: 'বিকেলের নাস্তা রেস্টুরেন্টে', iconKey: 'utensils', requiredPoints: 60, description: 'বিকেলে রেস্টুরেন্টে নাস্তা।' },
+  { title: 'রেস্টুরেন্টে ডিনার', iconKey: 'utensils', requiredPoints: 100, description: 'পরিবারের সাথে রেস্টুরেন্টে রাতের খাবার।' },
+  { title: 'আইসক্রিম', iconKey: 'gift', requiredPoints: 20, description: 'পছন্দের আইসক্রিম।' },
+  { title: 'চকলেট', iconKey: 'gift', requiredPoints: 15, description: 'একটি চকলেট।' },
+  { title: 'একটি পুতুল', iconKey: 'gift', requiredPoints: 80, description: 'নতুন একটি পুতুল।' },
+  { title: 'একটি খেলনা', iconKey: 'gift', requiredPoints: 90, description: 'পছন্দের একটি খেলনা।' },
+  { title: 'একটি গেম', iconKey: 'dice', requiredPoints: 120, description: 'একটি নতুন গেম।' },
+  { title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'পরিবার মিলে গেম খেলা।' },
+  { title: 'পারিবারিক বেড়াতে যাওয়া', iconKey: 'map', requiredPoints: 150, description: 'পরিবারের সাথে বেড়াতে যাওয়া।' },
+  { title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন দেখা।' },
+  { title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।' },
+  { title: 'পার্কে খেলতে যাওয়া', iconKey: 'map', requiredPoints: 35, description: 'পার্কে খেলতে যাওয়া।' },
+  { title: 'অতিরিক্ত খেলার সময়', iconKey: 'star', requiredPoints: 25, description: '৩০ মিনিট অতিরিক্ত খেলার সময়।' },
+] as const
+
+/**
+ * সাপ্তাহিক চ্যালেঞ্জ সাজেশন — বাবা-মা এক ক্লিকে যোগ করতে পারবেন।
+ */
+export const CHALLENGE_SUGGESTIONS = [
+  {
+    name: 'ধারাবাহিক সকালের রুটিন',
+    description: 'এই সপ্তাহে প্রতিদিন সকালের কাজগুলো (নামাজ, কুরআন, বিছানা গোছানো) সম্পন্ন করো।',
+    targetPercent: 80,
+    rewardTitle: 'বাসায় পিৎজা',
+  },
+  {
+    name: 'প্রতিদিন কুরআন পড়া',
+    description: 'এই সপ্তাহে প্রতিদিন কুরআন তিলাওয়াত করো।',
+    targetPercent: 80,
+    rewardTitle: 'আইসক্রিম',
+  },
+  {
+    name: 'সততা সপ্তাহ',
+    description: 'এই সপ্তাহে প্রতিদিন সত্য কথা বলার অভ্যাস গড়ো।',
+    targetPercent: 80,
+    rewardTitle: 'ফ্যামিলি গেম নাইট',
+  },
+  {
+    name: 'পরিবারে সাহায্য',
+    description: 'প্রতিদিন পরিবারের কাউকে একটি কাজে সাহায্য করো।',
+    targetPercent: 80,
+    rewardTitle: 'পার্কে খেলতে যাওয়া',
+  },
+  {
+    name: 'পড়াশোনার ধারাবাহিকতা',
+    description: 'প্রতিদিন অন্তত ২০ মিনিট বই পড়ো।',
+    targetPercent: 80,
+    rewardTitle: 'নতুন একটি বই',
+  },
+  {
+    name: 'ধৈর্যের অনুশীলন',
+    description: 'কঠিন মুহূর্তে ধৈর্য ধরে শান্ত থাকার চেষ্টা করো।',
+    targetPercent: 80,
+    rewardTitle: 'সিনেমা/কার্টুন দেখা',
+  },
 ] as const
 
 /**

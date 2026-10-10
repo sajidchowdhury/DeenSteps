@@ -6,6 +6,7 @@ import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { AppShell, Avatar } from '@/components/deensteps/app-shell'
 import { ChallengeFormDialog } from '@/components/deensteps/challenge-dialogs'
+import { ChallengeQuickAdd } from '@/components/deensteps/challenge-quick-add'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -79,17 +80,20 @@ export default async function ChallengesPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Weekly challenges
+              সাপ্তাহিক চ্যালেঞ্জ
             </h1>
             <p className="text-sm text-muted-foreground">
-              Set a friendly weekly goal. Children aim to complete a target percentage of their tasks.
+              সপ্তাহের জন্য একটি লক্ষ্য নির্ধারণ করুন। সন্তান তার কাজের একটি নির্দিষ্ট শতাংশ সম্পন্ন করে পুরস্কার অর্জন করে।
             </p>
           </div>
-          <ChallengeFormDialog childrenList={childOptions}>
-            <Button>
-              <Plus className="h-4 w-4" /> New challenge
-            </Button>
-          </ChallengeFormDialog>
+          <div className="flex flex-wrap gap-2">
+            <ChallengeQuickAdd />
+            <ChallengeFormDialog childrenList={childOptions}>
+              <Button>
+                <Plus className="h-4 w-4" /> নতুন চ্যালেঞ্জ
+              </Button>
+            </ChallengeFormDialog>
+          </div>
         </div>
 
         {challenges.length === 0 ? (
@@ -263,14 +267,15 @@ function EmptyChallenges({
         <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
           <Target className="h-7 w-7" />
         </div>
-        <p className="mt-4 font-display text-lg font-semibold text-foreground">No challenges yet</p>
+        <p className="mt-4 font-display text-lg font-semibold text-foreground">এখনো কোনো চ্যালেঞ্জ নেই</p>
         <p className="mt-1 max-w-md text-sm text-muted-foreground">
-          A weekly challenge is a friendly goal — like aiming to complete 80% of tasks. Children love the structure, and it&apos;s a great way to celebrate consistency together.
+          সাপ্তাহিক চ্যালেঞ্জ একটি বান্ধব লক্ষ্য — যেমন সপ্তাহের ৮০% কাজ সম্পন্ন করা। সাজেশন থেকে বাছাই করুন বা নিজে তৈরি করুন।
         </p>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
+          <ChallengeQuickAdd />
           <ChallengeFormDialog childrenList={childrenList}>
             <Button>
-              <Plus className="h-4 w-4" /> Create your first challenge
+              <Plus className="h-4 w-4" /> নতুন চ্যালেঞ্জ
             </Button>
           </ChallengeFormDialog>
         </div>

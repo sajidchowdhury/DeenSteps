@@ -108,15 +108,15 @@ export default async function ChildrenPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Children
+              সন্তান
             </h1>
             <p className="text-sm text-muted-foreground">
-              Manage each child profile, track progress, and assign tasks.
+              প্রতিটি সন্তানের প্রোফাইল ম্যানেজ করুন, অগ্রগতি ট্র্যাক করুন, আর কাজ নির্ধারণ করুন।
             </p>
           </div>
           <CreateChildDialog>
             <Button>
-              <Plus className="h-4 w-4" /> Add child
+              <Plus className="h-4 w-4" /> সন্তান যোগ করুন
             </Button>
           </CreateChildDialog>
         </div>
