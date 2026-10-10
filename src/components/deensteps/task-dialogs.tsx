@@ -419,7 +419,7 @@ export function ImportTasksDialog({
 
   const onImport = async () => {
     if (selected.size === 0) {
-      toast.error('Select at least one task to import.')
+      toast.error('অন্তত একটি চ্যালেঞ্জ নির্বাচন করুন।')
       return
     }
     setPending(true)
@@ -432,9 +432,9 @@ export function ImportTasksDialog({
         else failed++
       }
       if (failed > 0) {
-        toast.error(`Imported ${ok}, ${failed} failed.`)
+        toast.error(`${ok}টি যোগ হয়েছে, ${failed}টিতে সমস্যা হয়েছে।`)
       } else {
-        toast.success(`Imported ${ok} ${ok === 1 ? 'task' : 'tasks'}.`)
+        toast.success(`${ok}টি চ্যালেঞ্জ যোগ হয়েছে!`)
       }
       setOpen(false)
       router.refresh()
@@ -453,15 +453,15 @@ export function ImportTasksDialog({
       <DialogTrigger asChild>
         {children ?? (
           <Button variant="outline">
-            <BookOpenCheck className="h-4 w-4" /> Import from library
+            <BookOpenCheck className="h-4 w-4" /> সাজেশন থেকে বাছাই
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Import from the habit library</DialogTitle>
+          <DialogTitle>সাজেশন থেকে চ্যালেঞ্জ বাছাই করুন</DialogTitle>
           <DialogDescription>
-            Optional Islamic-inspired suggestions. Pick the ones that fit your family — every task is fully editable after import.
+            ইসলামি অভ্যাসের সাজেশন। আপনার পরিবারের উপযোগী যেগুলো বেছে নিন — পরে সম্পাদনা করতে পারবেন।
           </DialogDescription>
         </DialogHeader>
 

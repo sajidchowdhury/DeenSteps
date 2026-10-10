@@ -31,8 +31,6 @@ const Schema = z.object({
 })
 type FormValues = z.infer<typeof Schema>
 
-const TIMEZONES = ['Asia/Dhaka', 'America/New_York', 'Europe/London', 'Asia/Dubai', 'Asia/Karachi', 'UTC']
-
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = React.useState(false)
@@ -49,16 +47,17 @@ export default function RegisterPage() {
   const onSubmit = handleSubmit(async (values) => {
     setLoading(true)
     try {
-      const tz = typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC'
+      // সবসময় বাংলা + Asia/Dhaka, পয়েন্টের নাম 'তারা'
       const result = await registerFamily({
         ...values,
-        timezone: TIMEZONES.includes(tz) ? tz : 'UTC',
-        locale: 'en',
+        timezone: 'Asia/Dhaka',
+        locale: 'bn',
       })
       if (!result.ok) {
         toast.error(result.error)
         return
       }
+      // স্বয়ংক্রিয় সাইন ইন
       const res = await signIn('credentials', {
         email: values.email,
         password: values.password,
@@ -69,8 +68,8 @@ export default function RegisterPage() {
         router.push('/login')
         return
       }
-      toast.success('দীনস্টেপসে স্বাগতম! চলুন পরিবার সেট আপ করি।')
-      router.push('/onboarding')
+      toast.success('দীনস্টেপসে স্বাগতম! চলুন শুরু করি।')
+      router.push('/dashboard')
       router.refresh()
     } catch (err) {
       toast.error('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।')

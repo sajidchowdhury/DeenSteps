@@ -245,13 +245,23 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
   const lib = TASK_LIBRARY[libraryIndex]
   if (!lib) return { ok: false, error: 'Library task not found.' }
 
-  // Check if a task with this title already exists in the family
+  // যদি কোনো সন্তান নির্বাচন করা না থাকে, সব সক্রিয় সন্তান অটো-নির্বাচন করো
+  let childIds = assignedChildIds
+  if (childIds.length === 0) {
+    const allChildren = await db.childProfile.findMany({
+      where: { familyId: family.id, status: 'ACTIVE' },
+      select: { id: true },
+    })
+    childIds = allChildren.map((c) => c.id)
+  }
+
+  // চেক করো একই নামের টাস্ক আগে থেকে আছে কিনা
   const existing = await db.taskTemplate.findFirst({
-    where: { familyId: family.id, title: lib.title, category: lib.category },
+    where: { familyId: family.id, title: lib.title, category: lib.category, status: 'ACTIVE' },
   })
   if (existing) {
-    // Just add assignments
-    for (const childId of assignedChildIds) {
+    // শুধু অ্যাসাইনমেন্ট যোগ করো
+    for (const childId of childIds) {
       await db.taskAssignment.upsert({
         where: { taskId_childId: { taskId: existing.id, childId } },
         update: {},
@@ -260,10 +270,11 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
     }
     await generateOccurrencesForTask(existing.id)
     revalidatePath('/tasks')
+    revalidatePath('/dashboard')
     return { ok: true, taskId: existing.id }
   }
 
-  return createTask({
+  const result = await createTask({
     title: lib.title,
     description: lib.description,
     category: lib.category,
@@ -273,6 +284,10 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
     frequency: lib.frequency as 'DAILY' | 'WEEKDAYS',
     dueTime: 'dueTime' in lib ? lib.dueTime : undefined,
     approvalPolicy: 'MANUAL',
-    assignedChildIds,
+    assignedChildIds: childIds,
   })
+
+  revalidatePath('/tasks')
+  revalidatePath('/dashboard')
+  return result
 }
