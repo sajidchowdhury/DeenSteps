@@ -22,6 +22,10 @@ RUN bun install --frozen-lockfile || npm install
 FROM node:20-slim AS builder
 WORKDIR /app
 
+# Install OpenSSL (needed by Prisma to detect libssl version cleanly)
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN npm install -g bun
 
 COPY --from=deps /app/node_modules ./node_modules

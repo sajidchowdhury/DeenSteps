@@ -29,6 +29,33 @@ const Schema = z.object({
 type FormValues = z.infer<typeof Schema>
 
 export default function LoginPage() {
+  return (
+    <React.Suspense fallback={<LoginFallback />}>
+      <LoginForm />
+    </React.Suspense>
+  )
+}
+
+function LoginFallback() {
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-secondary/30 px-4 py-12">
+      <div className="pattern-geometric absolute inset-0 opacity-50" aria-hidden="true" />
+      <div className="relative w-full max-w-md">
+        <div className="mb-6 flex justify-center">
+          <Logo className="text-2xl" />
+        </div>
+        <Card className="shadow-premium">
+          <CardHeader className="text-center">
+            <CardTitle className="font-display text-2xl">Welcome back</CardTitle>
+            <CardDescription>Loading…</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
   const params = useSearchParams()
   const callbackUrl = params.get('callbackUrl') ?? '/dashboard'
