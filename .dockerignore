@@ -33,4 +33,3 @@ DeenSteps/
 .DS_Store
 *.md
 !README.md
-docker-entrypoint.sh
