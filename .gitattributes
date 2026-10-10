@@ -1,0 +1,9 @@
+# Force LF line endings for shell scripts and Dockerfiles
+# This prevents CRLF issues when building Docker images on Windows
+*.sh         text eol=lf
+*.bash       text eol=lf
+Dockerfile   text eol=lf
+docker-entrypoint.sh text eol=lf
+
+# Normalize other text files (let git handle them normally)
+* text=auto

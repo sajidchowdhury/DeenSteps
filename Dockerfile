@@ -71,7 +71,8 @@ COPY --from=builder /app/package.json ./package.json
 
 # Copy entrypoint
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
+# Strip any CR characters (fixes Windows CRLF → Linux LF issues)
+RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 
 # Expose port
 EXPOSE 3000
