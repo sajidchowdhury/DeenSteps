@@ -1,0 +1,36 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+.git/
+.gitignore
+
+# database
+db/*.db
+db/*.db-journal
+
+# logs
+*.log
+dev.log
+server.log
+
+# sandbox / tooling (not needed in image)
+.zscripts/
+tool-results/
+upload/
+agent-ctx/
+download/
+tests/
+examples/
+DeenSteps/
+
+# env
+.env
+.env*.local
+
+# misc
+.DS_Store
+*.md
+!README.md
+docker-entrypoint.sh

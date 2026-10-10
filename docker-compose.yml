@@ -1,0 +1,26 @@
+# ──────────────────────────────────────────────────────────────────────────
+# DeenSteps — Docker Compose
+# Quick start:  docker compose up --build
+# ──────────────────────────────────────────────────────────────────────────
+
+services:
+  deensteps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: deensteps
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/db/deensteps.db
+      # Change this to a strong random string (openssl rand -base64 32)
+      - NEXTAUTH_SECRET=change-me-to-a-long-random-string-please
+      - NEXTAUTH_URL=http://localhost:3000
+    volumes:
+      # Persistent SQLite database — survives container restarts/rebuilds
+      - deensteps-db:/app/db
+    restart: unless-stopped
+
+volumes:
+  deensteps-db:

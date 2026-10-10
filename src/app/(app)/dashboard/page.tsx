@@ -1,0 +1,354 @@
+import Link from 'next/link'
+import {
+  Users,
+  ShieldCheck,
+  CheckCircle2,
+  Star,
+  Target,
+  Gift,
+  Plus,
+  ArrowRight,
+  Clock,
+  TrendingUp,
+  Award,
+} from 'lucide-react'
+import { redirect } from 'next/navigation'
+import { getDashboardData } from '@/server/actions/dashboard-actions'
+import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
+import { db } from '@/lib/db'
+import { AppShell, Avatar } from '@/components/deensteps/app-shell'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { TASK_STATUS_META } from '@/lib/constants'
+import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { format, formatDistanceToNow } from 'date-fns'
+
+export default async function DashboardPage() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/login')
+  const family = await getUserFamily(user.id)
+  if (!family) redirect('/onboarding')
+
+  const data = await getDashboardData()
+
+  // Children list for sidebar
+  const childrenList = data.children.map((c) => ({
+    id: c.child.id,
+    displayName: c.child.displayName,
+    avatarColor: c.child.avatarColor,
+  }))
+
+  return (
+    <AppShell familyName={family.name} pendingCount={data.stats.pendingApprovals} childrenList={childrenList}>
+      <div className="mx-auto max-w-7xl space-y-6">
+        {/* Greeting */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Assalamu alaikum, {user.name?.split(' ')[0] ?? 'there'} 👋
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {format(new Date(), 'EEEE, MMMM d')} · Here's how your family is doing today.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> New task</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/review">
+                <ShieldCheck className="mr-1.5 h-4 w-4" /> Review ({data.stats.pendingApprovals})
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        {/* Summary cards */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          <SummaryCard icon={Users} label="Children" value={data.stats.totalChildren} accent="emerald" href="/children" />
+          <SummaryCard icon={ShieldCheck} label="Pending review" value={data.stats.pendingApprovals} accent="amber" href="/review" />
+          <SummaryCard icon={CheckCircle2} label="Today's completion" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
+          <SummaryCard icon={Star} label="Points this week" value={data.stats.weekFamilyPoints} accent="gold" />
+          <SummaryCard icon={Target} label="Active challenges" value={data.stats.activeChallenges} accent="violet" href="/challenges" />
+          <SummaryCard icon={Gift} label="Available rewards" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
+        </div>
+
+        {/* Family overview */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <CardTitle className="font-display">Family overview</CardTitle>
+              <CardDescription>Each child's progress today and this week.</CardDescription>
+            </div>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/children">Manage <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {data.children.length === 0 ? (
+              <EmptyState
+                icon={Users}
+                title="No children yet"
+                description="Add your first child profile to start assigning tasks."
+                action={<Button asChild><Link href="/children">Add a child</Link></Button>}
+              />
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {data.children.map((c) => (
+                  <ChildCard key={c.child.id} data={c} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Two-column: activity + quick actions */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Recent submissions */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="font-display text-lg">Recent activity</CardTitle>
+              <CardDescription>The latest task submissions across your family.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {data.recentSubmissions.length === 0 ? (
+                <EmptyState
+                  icon={Clock}
+                  title="No submissions yet"
+                  description="When your children submit tasks, they'll appear here."
+                />
+              ) : (
+                <ul className="space-y-3">
+                  {data.recentSubmissions.map((s) => (
+                    <li key={s.id} className="flex items-start gap-3 rounded-lg border border-border bg-card/50 p-3">
+                      <Avatar color={s.child.avatarColor} name={s.child.displayName} size="sm" />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="truncate text-sm font-medium text-foreground">
+                            {s.child.displayName} submitted{' '}
+                            <span className="text-primary">{s.occurrence.task.title}</span>
+                          </p>
+                          <span className="flex-shrink-0 text-xs text-muted-foreground">
+                            {formatDistanceToNow(s.submittedAt, { addSuffix: true })}
+                          </span>
+                        </div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <Badge variant="outline" className={TASK_STATUS_META[s.decision ?? (s.occurrence.status as string)]?.tone ?? ''}>
+                            {TASK_STATUS_META[s.decision ?? (s.occurrence.status as string)]?.label ?? s.occurrence.status}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{s.occurrence.task.category}</span>
+                          {s.pointsAwarded > 0 && (
+                            <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> +{s.pointsAwarded}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick actions + recent points */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg">Quick actions</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-2">
+                <QuickAction icon={Plus} label="Create task" href="/tasks" />
+                <QuickAction icon={ShieldCheck} label="Review submissions" href="/review" badge={data.stats.pendingApprovals} />
+                <QuickAction icon={Gift} label="Add reward" href="/rewards" />
+                <QuickAction icon={Target} label="Weekly challenge" href="/challenges" />
+                <QuickAction icon={TrendingUp} label="View reports" href="/reports" />
+                <QuickAction icon={Users} label="Manage children" href="/children" />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg">Recent points</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {data.recentTxns.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No points awarded yet.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {data.recentTxns.map((t) => (
+                      <li key={t.id} className="flex items-center gap-2 text-sm">
+                        <Avatar color={t.child.avatarColor} name={t.child.displayName} size="sm" />
+                        <span className="min-w-0 flex-1 truncate text-muted-foreground">{t.description}</span>
+                        <span className={t.amount >= 0 ? 'font-semibold text-emerald-600' : 'font-semibold text-rose-600'}>
+                          {t.amount >= 0 ? '+' : ''}{t.amount}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </AppShell>
+  )
+}
+
+function SummaryCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+  href,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  value: string | number
+  accent: 'emerald' | 'amber' | 'sage' | 'gold' | 'violet' | 'rose'
+  href?: string
+}) {
+  const accentClass: Record<string, string> = {
+    emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200',
+    amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200',
+    sage: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200',
+    gold: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-200',
+    violet: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-200',
+    rose: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200',
+  }
+  const content = (
+    <Card className="overflow-hidden transition-shadow hover:shadow-premium">
+      <CardContent className="p-5">
+        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${accentClass[accent]}`}>
+          <Icon className="h-4.5 w-4.5" />
+        </div>
+        <p className="mt-3 text-2xl font-bold text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+      </CardContent>
+    </Card>
+  )
+  if (href) {
+    return <Link href={href} className="block">{content}</Link>
+  }
+  return content
+}
+
+function ChildCard({ data }: { data: Awaited<ReturnType<typeof getDashboardData>>['children'][number] }) {
+  const { child, todayCompletion, balance, weekPoints, pendingSubmissions, nextReward, todayTotal, todayApproved } = data
+  const rewardProgress = nextReward && nextReward.requiredPoints > 0
+    ? Math.min(100, Math.round((balance / nextReward.requiredPoints) * 100))
+    : 0
+  const rewardRemaining = nextReward ? Math.max(0, nextReward.requiredPoints - balance) : 0
+
+  return (
+    <Link href={`/child/${child.id}`} className="block">
+      <Card className="h-full overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-premium">
+        <CardContent className="p-5">
+          <div className="flex items-center gap-3">
+            <Avatar color={child.avatarColor} name={child.displayName} size="lg" />
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-lg font-bold text-foreground">{child.displayName}</p>
+              <p className="text-xs text-muted-foreground">
+                {child.ageRange ? `${child.ageRange} years` : 'Age not set'}
+                {pendingSubmissions > 0 && (
+                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                    {pendingSubmissions} pending
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Today</span>
+              <span className="font-semibold text-foreground">{todayApproved}/{todayTotal} tasks · {todayCompletion}%</span>
+            </div>
+            <Progress value={todayCompletion} className="mt-1.5 h-1.5" />
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-lg bg-secondary/50 p-3">
+              <p className="text-xs text-muted-foreground">Balance</p>
+              <p className="mt-0.5 inline-flex items-center gap-1 text-lg font-bold text-foreground">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                {balance}
+              </p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 p-3">
+              <p className="text-xs text-muted-foreground">This week</p>
+              <p className="mt-0.5 inline-flex items-center gap-1 text-lg font-bold text-foreground">
+                <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+                +{weekPoints}
+              </p>
+            </div>
+          </div>
+
+          {nextReward && (
+            <div className="mt-3 rounded-lg border border-border p-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-foreground">Next: {nextReward.title}</span>
+                <span className="text-muted-foreground">{rewardRemaining} to go</span>
+              </div>
+              <Progress value={rewardProgress} className="mt-1.5 h-1" />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </Link>
+  )
+}
+
+function QuickAction({
+  icon: Icon,
+  label,
+  href,
+  badge,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  href: string
+  badge?: number
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-3 rounded-lg border border-border bg-card/50 p-3 text-sm font-medium text-foreground transition-colors hover:bg-accent/40"
+    >
+      <Icon className="h-4 w-4 text-primary" />
+      <span className="flex-1">{label}</span>
+      {badge !== undefined && badge > 0 && (
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+          {badge > 9 ? '9+' : badge}
+        </span>
+      )}
+      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+    </Link>
+  )
+}
+
+function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
+  action?: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card/30 px-6 py-10 text-center">
+      <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Icon className="h-6 w-6" />
+      </div>
+      <p className="mt-3 font-display font-semibold text-foreground">{title}</p>
+      <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
+      {action && <div className="mt-4">{action}</div>}
+    </div>
+  )
+}

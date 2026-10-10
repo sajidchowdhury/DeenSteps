@@ -1,0 +1,403 @@
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowLeft, Star, Trophy, Target, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
+import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
+import { db } from '@/lib/db'
+import { Avatar } from '@/components/deensteps/app-shell'
+import { Logo } from '@/components/deensteps/brand'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { ChildTaskList } from '@/components/deensteps/child-task-list'
+import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
+import { TASK_STATUS_META } from '@/lib/constants'
+import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
+
+export default async function ChildDashboardPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: childId } = await params
+  const user = await getCurrentUser()
+  if (!user) redirect('/login')
+  const family = await getUserFamily(user.id)
+  if (!family) redirect('/onboarding')
+
+  const child = await db.childProfile.findFirst({
+    where: { id: childId, familyId: family.id },
+  })
+  if (!child) redirect('/dashboard')
+  if (child.status === 'ARCHIVED') redirect('/children')
+
+  // Today's occurrences for this child
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  const todayEnd = new Date()
+  todayEnd.setHours(23, 59, 59, 999)
+
+  const todayOccurrences = await db.taskOccurrence.findMany({
+    where: {
+      task: { assignments: { some: { childId: child.id } }, status: 'ACTIVE' },
+      scheduledDate: { gte: todayStart, lte: todayEnd },
+    },
+    include: {
+      task: true,
+      submission: true,
+    },
+    orderBy: { dueTime: 'asc' },
+  })
+
+  // Stats
+  const balance = await db.pointsTransaction.aggregate({
+    where: { childId: child.id },
+    _sum: { amount: true },
+  })
+  const currentBalance = balance._sum.amount ?? 0
+
+  const weekStart = startOfWeek(new Date())
+  const weekEnd = endOfWeek(new Date())
+  const weekPoints = await db.pointsTransaction.aggregate({
+    where: { childId: child.id, type: 'EARNED', createdAt: { gte: weekStart, lte: weekEnd } },
+    _sum: { amount: true },
+  })
+
+  // Lifetime points
+  const lifetime = await db.pointsTransaction.aggregate({
+    where: { childId: child.id, type: 'EARNED' },
+    _sum: { amount: true },
+  })
+
+  // Today's completion
+  const todayTotal = todayOccurrences.length
+  const todayApproved = todayOccurrences.filter((o) => o.status === 'APPROVED').length
+  const todaySubmitted = todayOccurrences.filter((o) => o.status === 'SUBMITTED').length
+  const todayCompletion = todayTotal > 0 ? Math.round((todayApproved / todayTotal) * 100) : 0
+
+  // Streak: count consecutive days (ending today or yesterday) with at least one approved task
+  const recentApprovedDates = await db.taskOccurrence.findMany({
+    where: {
+      task: { assignments: { some: { childId: child.id } } },
+      status: 'APPROVED',
+      scheduledDate: { gte: subDays(new Date(), 30) },
+    },
+    select: { scheduledDate: true },
+    distinct: ['scheduledDate'],
+    orderBy: { scheduledDate: 'desc' },
+  })
+  let streak = 0
+  if (recentApprovedDates.length > 0) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const first = new Date(recentApprovedDates[0].scheduledDate)
+    first.setHours(0, 0, 0, 0)
+    if (differenceInCalendarDays(today, first) <= 1) {
+      streak = 1
+      for (let i = 1; i < recentApprovedDates.length; i++) {
+        const prev = new Date(recentApprovedDates[i - 1].scheduledDate)
+        prev.setHours(0, 0, 0, 0)
+        const curr = new Date(recentApprovedDates[i].scheduledDate)
+        curr.setHours(0, 0, 0, 0)
+        if (differenceInCalendarDays(prev, curr) === 1) {
+          streak++
+        } else {
+          break
+        }
+      }
+    }
+  }
+
+  // Active weekly challenge
+  const activeChallenge = await db.weeklyChallenge.findFirst({
+    where: { familyId: family.id, status: 'ACTIVE', startDate: { lte: new Date() }, endDate: { gte: new Date() } },
+    include: { participants: { where: { childId: child.id } } },
+  })
+
+  // Rewards (sorted by required points)
+  const rewards = await db.reward.findMany({
+    where: { familyId: family.id, status: 'ACTIVE', rewardType: 'POINTS' },
+    orderBy: { requiredPoints: 'asc' },
+  })
+
+  // Recent achievements
+  const achievements = await db.childAchievement.findMany({
+    where: { childId: child.id },
+    include: { achievement: true },
+    orderBy: { awardedAt: 'desc' },
+    take: 6,
+  })
+
+  // Recent point transactions
+  const recentTxns = await db.pointsTransaction.findMany({
+    where: { childId: child.id },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+  })
+
+  // Recent redemptions
+  const recentRedemptions = await db.rewardRedemption.findMany({
+    where: { childId: child.id },
+    orderBy: { requestedAt: 'desc' },
+    take: 3,
+    include: { reward: true },
+  })
+
+  // Pending parent approvals (submitted tasks awaiting review)
+  const pendingApprovals = todayOccurrences.filter((o) => o.status === 'SUBMITTED').length
+
+  return (
+    <div className="min-h-screen bg-secondary/20">
+      {/* Child dashboard header — separate from parent app shell */}
+      <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/dashboard"><ArrowLeft className="mr-1 h-4 w-4" /> Back to family</Link>
+            </Button>
+          </div>
+          <Logo />
+          <div className="flex items-center gap-2">
+            <Avatar color={child.avatarColor} name={child.displayName} size="sm" />
+            <span className="hidden text-sm font-medium text-foreground sm:inline">{child.displayName}</span>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        {/* Greeting */}
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            {format(new Date(), 'EEEE, MMMM d')}
+          </div>
+          <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Assalamu alaikum, {child.displayName}! 👋
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">
+            Here are your tasks for today. Take them one step at a time — every good habit counts.
+          </p>
+        </div>
+
+        {/* Stat cards */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard icon={Star} label="My stars" value={currentBalance} accent="amber" />
+          <StatCard icon={TrendingUp} label="This week" value={`+${weekPoints._sum.amount ?? 0}`} accent="emerald" />
+          <StatCard icon={Flame} label="Day streak" value={streak} accent="orange" />
+          <StatCard icon={CheckCircle2} label="Today done" value={`${todayApproved}/${todayTotal}`} accent="sage" />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Today's tasks */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="font-display text-xl">Today's tasks</CardTitle>
+                    <CardDescription>
+                      {todayTotal === 0
+                        ? 'No tasks scheduled for today. Enjoy your day!'
+                        : `${todayApproved} of ${todayTotal} done · ${todayCompletion}%`}
+                    </CardDescription>
+                  </div>
+                  {pendingApprovals > 0 && (
+                    <Badge variant="secondary" className="gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                      <Clock className="h-3 w-3" /> {pendingApprovals} awaiting review
+                    </Badge>
+                  )}
+                </div>
+                {todayTotal > 0 && (
+                  <Progress value={todayCompletion} className="mt-2 h-2" />
+                )}
+              </CardHeader>
+              <CardContent>
+                <ChildTaskList occurrences={todayOccurrences.map((o) => ({
+                  id: o.id,
+                  status: o.status,
+                  dueTime: o.dueTime,
+                  taskTitle: o.task.title,
+                  taskDescription: o.task.description,
+                  taskInstructions: o.task.instructions,
+                  category: o.task.category,
+                  iconKey: o.task.iconKey,
+                  pointsValue: o.task.pointsValue,
+                  approvalPolicy: o.task.approvalPolicy,
+                  submissionNote: o.submission?.note ?? null,
+                  reviewerNote: o.submission?.reviewerNote ?? null,
+                  childId: child.id,
+                }))} />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar: rewards + challenge + achievements */}
+          <div className="space-y-6">
+            {/* Rewards */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Gift className="h-5 w-5 text-amber-500" /> Rewards
+                </CardTitle>
+                <CardDescription>Save up your stars to unlock these.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {rewards.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No rewards yet — ask your parent to add some!</p>
+                ) : (
+                  rewards.slice(0, 4).map((r) => {
+                    const progress = r.requiredPoints > 0 ? Math.min(100, Math.round((currentBalance / r.requiredPoints) * 100)) : 100
+                    const remaining = Math.max(0, r.requiredPoints - currentBalance)
+                    const eligible = currentBalance >= r.requiredPoints
+                    return (
+                      <div key={r.id} className="rounded-xl border border-border bg-card p-3">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                            <DynamicIcon iconKey={r.iconKey} className="h-4 w-4" />
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-foreground">{r.title}</p>
+                            <p className="text-xs text-muted-foreground">{r.requiredPoints} stars</p>
+                          </div>
+                        </div>
+                        <div className="mt-2 flex items-center justify-between text-xs">
+                          <span className="text-muted-foreground">
+                            {eligible ? 'Ready!' : `${remaining} more to go`}
+                          </span>
+                          <span className="font-medium text-foreground">{progress}%</span>
+                        </div>
+                        <Progress value={progress} className="mt-1 h-1.5" />
+                        <RewardRequestButton
+                          rewardId={r.id}
+                          childId={child.id}
+                          eligible={eligible}
+                          requiredPoints={r.requiredPoints}
+                          currentBalance={currentBalance}
+                        />
+                      </div>
+                    )
+                  })
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Weekly challenge */}
+            {activeChallenge && activeChallenge.participants[0] && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-display text-lg flex items-center gap-2">
+                    <Target className="h-5 w-5 text-violet-500" /> Weekly challenge
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-semibold text-foreground">{activeChallenge.name}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{activeChallenge.description}</p>
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Target: {activeChallenge.participants[0].targetPercent}%</span>
+                      <span className="font-medium text-foreground">{activeChallenge.participants[0].completionPercent}%</span>
+                    </div>
+                    <Progress value={activeChallenge.participants[0].completionPercent} className="mt-1 h-2" />
+                  </div>
+                  {activeChallenge.rewardTitle && (
+                    <p className="mt-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-900 dark:bg-amber-900/30 dark:text-amber-100">
+                      <Trophy className="mr-1 inline h-3 w-3" /> Reward: {activeChallenge.rewardTitle}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Achievements */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Award className="h-5 w-5 text-amber-500" /> Achievements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {achievements.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Complete tasks to earn your first badge!</p>
+                ) : (
+                  <div className="grid grid-cols-3 gap-2">
+                    {achievements.map((a) => (
+                      <div key={a.id} className="flex flex-col items-center rounded-lg border border-border bg-card p-2 text-center">
+                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                          <DynamicIcon iconKey={a.achievement.iconKey} className="h-4 w-4" />
+                        </span>
+                        <p className="mt-1 text-[10px] font-medium text-foreground">{a.achievement.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Recent activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg">Recent stars</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {recentTxns.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No stars earned yet.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {recentTxns.map((t) => (
+                      <li key={t.id} className="flex items-center justify-between text-sm">
+                        <span className="min-w-0 flex-1 truncate text-muted-foreground">{t.description}</span>
+                        <span className={t.amount >= 0 ? 'font-semibold text-emerald-600' : 'font-semibold text-rose-600'}>
+                          {t.amount >= 0 ? '+' : ''}{t.amount}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {recentRedemptions.length > 0 && (
+                  <div className="mt-3 border-t border-border pt-3">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recent redemptions</p>
+                    <ul className="space-y-1.5">
+                      {recentRedemptions.map((r) => (
+                        <li key={r.id} className="flex items-center justify-between text-xs">
+                          <span className="truncate text-foreground">{r.reward.title}</span>
+                          <Badge variant="outline" className="ml-2 text-[10px]">{r.status.toLowerCase()}</Badge>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  value: string | number
+  accent: 'emerald' | 'amber' | 'sage' | 'orange'
+}) {
+  const accentClass: Record<string, string> = {
+    emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200',
+    amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200',
+    sage: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200',
+    orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-200',
+  }
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${accentClass[accent]}`}>
+          <Icon className="h-4 w-4" />
+        </div>
+        <p className="mt-2 text-2xl font-extrabold text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+      </CardContent>
+    </Card>
+  )
+}
