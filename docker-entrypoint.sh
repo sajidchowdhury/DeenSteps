@@ -3,14 +3,11 @@ set -e
 
 echo "🚀 Starting DeenSteps..."
 
-# Call the Prisma CLI directly via node (avoids npx/.bin symlink issues)
-PRISMA="node /app/node_modules/prisma/build/index.js"
-
 echo "📦 Generating Prisma client..."
-$PRISMA generate
+npx prisma generate
 
 echo "🗄️  Pushing schema to database..."
-$PRISMA db push --accept-data-loss
+npx prisma db push --accept-data-loss
 
 # Seed if the database hasn't been seeded yet (check for a marker file)
 if [ ! -f /app/db/.seeded ]; then

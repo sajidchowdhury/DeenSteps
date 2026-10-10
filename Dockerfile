@@ -6,14 +6,11 @@
 FROM node:20-slim AS deps
 WORKDIR /app
 
-# Install bun for fast installs
 RUN npm install -g bun
 
-# Copy lockfile and package.json
 COPY package.json bun.lock* package-lock.json* ./
 COPY prisma ./prisma
 
-# Install dependencies
 RUN bun install --frozen-lockfile || npm install
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -22,7 +19,6 @@ RUN bun install --frozen-lockfile || npm install
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Install OpenSSL (needed by Prisma to detect libssl version cleanly)
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
@@ -31,10 +27,7 @@ RUN npm install -g bun
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma client
 RUN bun run db:generate || npx prisma generate
-
-# Build Next.js (standalone output)
 RUN bun run build || npm run build
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -43,42 +36,34 @@ RUN bun run build || npm run build
 FROM node:20-slim AS runner
 WORKDIR /app
 
-# Install openssl (needed by Prisma) and create db directory
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /app/db
 
-# Set environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="file:/app/db/deensteps.db"
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Copy standalone build + static + public
+# Copy standalone Next.js server (includes server.js + trimmed node_modules)
 COPY --from=builder /app/.next/standalone ./
+# Copy FULL node_modules (overwrites trimmed one — needed for prisma CLI + all transitive deps)
+COPY --from=builder /app/node_modules ./node_modules
+# Copy static assets
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-
-# Copy Prisma schema + seed script so we can run migrations on startup
+# Copy Prisma schema + scripts for runtime migrations/seed
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/scripts ./scripts
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --from=builder /app/package.json ./package.json
 
 # Copy entrypoint
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-# Strip any CR characters (fixes Windows CRLF → Linux LF issues)
 RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 
-# Expose port
 EXPOSE 3000
 
-# Volume for persistent SQLite database
 VOLUME ["/app/db"]
 
-# Entrypoint: run migrations + seed, then start the server
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
