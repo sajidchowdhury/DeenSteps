@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist, Geist_Mono, Plus_Jakarta_Sans, Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
@@ -23,31 +23,38 @@ const jakarta = Plus_Jakarta_Sans({
   weight: ["500", "600", "700", "800"],
 });
 
+const hindSiliguri = Hind_Siliguri({
+  variable: "--font-bn",
+  subsets: ["bengali"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "DeenSteps — Small Good Habits. Meaningful Growth.",
+  title: "দীনস্টেপস — ছোট ভালো অভ্যাস, বড় পরিবর্তন",
   description:
-    "A joyful family habit-building platform that helps parents nurture Islamic practices, good character, daily responsibility, and consistency through personalized tasks and meaningful rewards.",
+    "একটি আনন্দময় পরিবার-কেন্দ্রিক অভ্যাস গড়ার প্ল্যাটফর্ম। বাবা-মা তাদের সন্তানদের শেখায় ইসলামি অভ্যাস, সুন্দর চরিত্র, দৈনন্দিন দায়িত্ব আর ধারাবাহিকতা — ছোট ছোট কাজ আর অর্থপূর্ণ পুরস্কারের মাধ্যমে।",
   keywords: [
     "DeenSteps",
-    "family habits",
-    "Islamic habits",
-    "children rewards",
-    "parenting",
-    "habit tracker",
-    "family dashboard",
+    "দীনস্টেপস",
+    "পরিবার",
+    "ইসলামি অভ্যাস",
+    "শিশু",
+    "প্যারেন্টিং",
+    "আখিরাত",
+    "দুনিয়া",
   ],
   authors: [{ name: "DeenSteps" }],
   openGraph: {
-    title: "DeenSteps — Raise Good Habits. Celebrate Every Step.",
+    title: "দীনস্টেপস — ভালো অভ্যাস গড়ুন, প্রতিটি পদক্ষেপ উদযাপন করুন",
     description:
-      "A joyful family habit-building platform for Islamic practices, good character, and daily responsibility.",
+      "ইসলামি অভ্যাস, সুন্দর চরিত্র আর দৈনন্দিন দায়িত্ব শেখাও এমন একটি আনন্দময় পরিবার-কেন্দ্রিক প্ল্যাটফর্ম।",
     siteName: "DeenSteps",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "DeenSteps",
-    description: "Raise Good Habits. Celebrate Every Step.",
+    description: "ভালো অভ্যাস গড়ুন, প্রতিটি পদক্ষেপ উদযাপন করুন।",
   },
 };
 
@@ -57,9 +64,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="bn" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jakarta.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jakarta.variable} ${hindSiliguri.variable} antialiased bg-background text-foreground`}
       >
         <ThemeProvider
           attribute="class"

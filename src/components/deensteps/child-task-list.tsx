@@ -53,8 +53,8 @@ export function ChildTaskList({ occurrences }: { occurrences: ChildTask[] }) {
     return (
       <div className="rounded-xl border border-dashed border-border bg-card/30 px-6 py-10 text-center">
         <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" />
-        <p className="mt-3 font-display text-lg font-semibold text-foreground">Nothing to do today</p>
-        <p className="mt-1 text-sm text-muted-foreground">Enjoy your day — check back tomorrow for new tasks!</p>
+        <p className="mt-3 font-display text-lg font-semibold text-foreground">আজ কোনো কাজ নেই</p>
+        <p className="mt-1 text-sm text-muted-foreground">দিনটি উপভোগ করো — আগামীকাল নতুন কাজের জন্য দেখো!</p>
       </div>
     )
   }
@@ -146,14 +146,14 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
 
           {task.submissionNote && (
             <div className="mt-2 rounded-lg bg-secondary/60 p-2 text-xs text-foreground">
-              <span className="font-medium">Your note: </span>{task.submissionNote}
+              <span className="font-medium">তোমার নোট: </span>{task.submissionNote}
             </div>
           )}
 
           {task.reviewerNote && (
             <div className="mt-2 rounded-lg border border-orange-200 bg-orange-50 p-2 text-xs text-orange-900 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-100">
               <MessageSquare className="mr-1 inline h-3 w-3" />
-              <span className="font-medium">From parent: </span>{task.reviewerNote}
+              <span className="font-medium">বাবা-মা থেকে: </span>{task.reviewerNote}
             </div>
           )}
 
@@ -163,12 +163,12 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
               className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
             >
               {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-              {expanded ? 'Hide details' : 'Show details'}
+              {expanded ? 'বিস্তারিত লুকান' : 'বিস্তারিত দেখুন'}
             </button>
           )}
           {expanded && task.taskInstructions && (
             <div className="mt-2 rounded-lg bg-secondary/40 p-2.5 text-xs text-foreground">
-              <p className="font-medium">Instructions</p>
+              <p className="font-medium">নির্দেশনা</p>
               <p className="mt-0.5 text-muted-foreground">{task.taskInstructions}</p>
             </div>
           )}
@@ -177,23 +177,23 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {isAssigned && (
               <Button size="sm" onClick={() => setSubmitOpen(true)} disabled={pending}>
-                <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> Mark as done
+                <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" /> সম্পন্ন করেছি
               </Button>
             )}
             {isSubmitted && (
               <p className="inline-flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-300">
                 <Info className="h-3.5 w-3.5" />
-                Waiting for your parent to review. {task.approvalPolicy === 'AUTO' ? 'Stars will be added automatically.' : 'Stars are added after approval.'}
+                বাবা-মার রিভিউর অপেক্ষায়। {task.approvalPolicy === 'AUTO' ? 'তারা স্বয়ংক্রিয়ভাবে যোগ হবে।' : 'অনুমোদনের পর তারা যোগ হবে।'}
               </p>
             )}
             {isNeedsAttention && (
               <Button size="sm" onClick={() => setSubmitOpen(true)} disabled={pending}>
-                Try again
+                আবার চেষ্টা করো
               </Button>
             )}
             {isApproved && (
               <p className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
-                <CheckCircle2 className="h-3.5 w-3.5" /> +{task.pointsValue} stars earned!
+                <CheckCircle2 className="h-3.5 w-3.5" /> +{task.pointsValue} তারা অর্জিত!
               </p>
             )}
           </div>
@@ -204,30 +204,30 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
       <Dialog open={submitOpen} onOpenChange={setSubmitOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mark &ldquo;{task.taskTitle}&rdquo; as done?</DialogTitle>
+            <DialogTitle>&ldquo;{task.taskTitle}&rdquo; সম্পন্ন করেছ?</DialogTitle>
             <DialogDescription>
               {task.approvalPolicy === 'AUTO'
-                ? 'Stars will be added to your balance right away!'
-                : 'Your parent will review this before stars are added to your balance.'}
+                ? 'তারা সাথে সাথে তোমার ব্যালেন্সে যোগ হবে!'
+                : 'বাবা-মা রিভিউ করার পর তারা যোগ হবে।'}
               {' '}
-              You can add an optional note.
+              চাইলে একটি নোট যোগ করতে পারো।
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label htmlFor="child-note">Note for your parent (optional)</Label>
+            <Label htmlFor="child-note">বাবা-মার জন্য নোট (অপশনাল)</Label>
             <Textarea
               id="child-note"
-              placeholder="I finished reading 2 pages of Quran today!"
+              placeholder="আজ কুরআনের ২ পৃষ্ঠা পড়েছি!"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSubmitOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setSubmitOpen(false)}>বাতিল</Button>
             <Button onClick={handleSubmit} disabled={pending}>
               {pending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />}
-              Submit
+              জমা দিন
             </Button>
           </DialogFooter>
         </DialogContent>

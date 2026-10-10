@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '#features', label: 'Features' },
-  { href: '#how-it-works', label: 'How It Works' },
-  { href: '#rewards', label: 'Rewards' },
-  { href: '#islamic-values', label: 'Islamic Values' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '#features', label: 'ফিচার' },
+  { href: '#how-it-works', label: 'যেভাবে কাজ করে' },
+  { href: '#rewards', label: 'পুরস্কার' },
+  { href: '#islamic-values', label: 'ইসলামি মূল্যবোধ' },
+  { href: '#pricing', label: 'প্রাইসিং' },
+  { href: '#faq', label: 'প্রশ্নোত্তর' },
 ]
 
 export function MarketingHeader() {
@@ -39,11 +39,11 @@ export function MarketingHeader() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center" aria-label="DeenSteps home">
+        <Link href="/" className="flex items-center" aria-label="দীনস্টেপস হোম">
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="প্রাথমিক">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
@@ -58,15 +58,15 @@ export function MarketingHeader() {
         <div className="hidden items-center gap-2 md:flex">
           {session?.user ? (
             <Button asChild>
-              <Link href="/dashboard">Open dashboard</Link>
+              <Link href="/dashboard">ড্যাশবোর্ড খুলুন</Link>
             </Button>
           ) : (
             <>
               <Button variant="ghost" asChild>
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">সাইন ইন</Link>
               </Button>
               <Button asChild>
-                <Link href="/register">Get started free</Link>
+                <Link href="/register">ফ্রি শুরু করুন</Link>
               </Button>
             </>
           )}
@@ -75,7 +75,7 @@ export function MarketingHeader() {
         <button
           type="button"
           className="inline-flex items-center justify-center rounded-md p-2 text-foreground md:hidden"
-          aria-label="Toggle menu"
+          aria-label="মেনু খুলুন"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -85,7 +85,7 @@ export function MarketingHeader() {
 
       {open && (
         <div className="border-t bg-background md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 sm:px-6" aria-label="Mobile">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 sm:px-6" aria-label="মোবাইল">
             {NAV_LINKS.map((l) => (
               <Link
                 key={l.href}
@@ -99,15 +99,15 @@ export function MarketingHeader() {
             <div className="mt-2 flex flex-col gap-2 border-t pt-3">
               {session?.user ? (
                 <Button asChild>
-                  <Link href="/dashboard">Open dashboard</Link>
+                  <Link href="/dashboard">ড্যাশবোর্ড খুলুন</Link>
                 </Button>
               ) : (
                 <>
                   <Button variant="outline" asChild>
-                    <Link href="/login">Sign in</Link>
+                    <Link href="/login">সাইন ইন</Link>
                   </Button>
                   <Button asChild>
-                    <Link href="/register">Get started free</Link>
+                    <Link href="/register">ফ্রি শুরু করুন</Link>
                   </Button>
                 </>
               )}

@@ -59,10 +59,10 @@ export default async function ReviewPage() {
       <div className="mx-auto max-w-5xl space-y-6">
         <div>
           <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Review Center
+            রিভিউ সেন্টার
           </h1>
           <p className="text-sm text-muted-foreground">
-            Review task submissions, approve to award points, request revisions, or reject with a constructive note.
+            কাজের সাবমিশন রিভিউ করুন। অনুমোদন দিলে তারা যোগ হয়, সংশোধন চান, বা গঠনমূলক মন্তব্যসহ ফেরত পাঠান।
           </p>
         </div>
 
@@ -73,9 +73,9 @@ export default async function ReviewPage() {
               <div>
                 <CardTitle className="font-display text-lg flex items-center gap-2">
                   <Clock className="h-5 w-5 text-amber-500" />
-                  Pending review
+                  রিভিউ বাকি
                 </CardTitle>
-                <CardDescription>{pending.length} submission{pending.length === 1 ? '' : 's'} awaiting your review.</CardDescription>
+                <CardDescription>{pending.length}টি সাবমিশন আপনার রিভিউর অপেক্ষায়।</CardDescription>
               </div>
               <Badge variant="secondary" className="text-sm">{pending.length}</Badge>
             </div>
@@ -84,8 +84,8 @@ export default async function ReviewPage() {
             {pending.length === 0 ? (
               <EmptyState
                 icon={ShieldCheck}
-                title="All caught up!"
-                description="No submissions are waiting for review right now. You'll see them here as soon as your children submit tasks."
+                title="সব শেষ!"
+                description="এখন কোনো সাবমিশন রিভিউর জন্য বাকি নেই। সন্তান কাজ জমা দিলে এখানে দেখা যাবে।"
               />
             ) : (
               <ul className="space-y-3">
@@ -136,12 +136,12 @@ export default async function ReviewPage() {
         {/* Recently reviewed */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-display text-lg">Recently reviewed</CardTitle>
-            <CardDescription>The last 20 review decisions.</CardDescription>
+            <CardTitle className="font-display text-lg">সাম্প্রতিক রিভিউ</CardTitle>
+            <CardDescription>সর্বশেষ ২০টি রিভিউ সিদ্ধান্ত।</CardDescription>
           </CardHeader>
           <CardContent>
             {recent.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No reviews yet.</p>
+              <p className="text-sm text-muted-foreground">এখনো কোনো রিভিউ নেই।</p>
             ) : (
               <ul className="divide-y divide-border">
                 {recent.map((s) => {

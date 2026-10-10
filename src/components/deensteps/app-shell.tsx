@@ -27,14 +27,14 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/children', label: 'Children', icon: Users },
-  { href: '/tasks', label: 'Tasks', icon: ListChecks },
-  { href: '/review', label: 'Review Center', icon: ShieldCheck, badgeKey: 'pending' },
-  { href: '/rewards', label: 'Rewards', icon: Gift },
-  { href: '/challenges', label: 'Challenges', icon: Target },
-  { href: '/reports', label: 'Reports', icon: BarChart3 },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
+  { href: '/children', label: 'সন্তান', icon: Users },
+  { href: '/tasks', label: 'কাজ', icon: ListChecks },
+  { href: '/review', label: 'রিভিউ সেন্টার', icon: ShieldCheck, badgeKey: 'pending' },
+  { href: '/rewards', label: 'পুরস্কার', icon: Gift },
+  { href: '/challenges', label: 'চ্যালেঞ্জ', icon: Target },
+  { href: '/reports', label: 'রিপোর্ট', icon: BarChart3 },
+  { href: '/settings', label: 'সেটিংস', icon: Settings },
 ]
 
 export function AppShell({
@@ -97,7 +97,7 @@ export function AppShell({
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md p-2 text-foreground lg:hidden"
-            aria-label="Open menu"
+            aria-label="মেনু খুলুন"
             onClick={() => setOpen(true)}
           >
             <Menu className="h-5 w-5" />
@@ -114,12 +114,12 @@ export function AppShell({
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Toggle theme"
+              aria-label="থিম পরিবর্তন"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
               {mounted && theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Notifications" asChild>
+            <Button variant="ghost" size="icon" aria-label="নোটিফিকেশন" asChild>
               <Link href="/dashboard">
                 <Bell className="h-4 w-4" />
                 {pendingCount > 0 && (
@@ -163,7 +163,7 @@ function SidebarContent({
           <Logo />
         </Link>
         {onNavigate && (
-          <button onClick={onNavigate} className="rounded-md p-1 text-muted-foreground lg:hidden" aria-label="Close menu">
+          <button onClick={onNavigate} className="rounded-md p-1 text-muted-foreground lg:hidden" aria-label="মেনু বন্ধ করুন">
             <X className="h-5 w-5" />
           </button>
         )}
@@ -205,7 +205,7 @@ function SidebarContent({
         {childrenList.length > 0 && (
           <div className="mt-6">
             <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Children
+              সন্তান
             </p>
             <div className="space-y-1">
               {childrenList.map((c) => (
@@ -231,7 +231,7 @@ function SidebarContent({
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
         >
           <LogOut className="h-4 w-4" />
-          Sign out
+          সাইন আউট
         </button>
       </div>
     </>

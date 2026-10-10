@@ -23,8 +23,8 @@ import {
 } from '@/components/ui/card'
 
 const Schema = z.object({
-  email: z.string().email('Enter a valid email address.'),
-  password: z.string().min(1, 'Enter your password.'),
+  email: z.string().email('একটি সঠিক ইমেইল লিখুন।'),
+  password: z.string().min(1, 'আপনার পাসওয়ার্ড লিখুন।'),
 })
 type FormValues = z.infer<typeof Schema>
 
@@ -46,8 +46,8 @@ function LoginFallback() {
         </div>
         <Card className="shadow-premium">
           <CardHeader className="text-center">
-            <CardTitle className="font-display text-2xl">Welcome back</CardTitle>
-            <CardDescription>Loading…</CardDescription>
+            <CardTitle className="font-display text-2xl">স্বাগতম</CardTitle>
+            <CardDescription>লোড হচ্ছে…</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -79,14 +79,14 @@ function LoginForm() {
         redirect: false,
       })
       if (res?.error) {
-        toast.error('Incorrect email or password. Please try again.')
+        toast.error('ভুল ইমেইল বা পাসওয়ার্ড। আবার চেষ্টা করুন।')
         return
       }
-      toast.success('Welcome back!')
+      toast.success('স্বাগতম!')
       router.push(callbackUrl)
       router.refresh()
     } catch (err) {
-      toast.error('Something went wrong. Please try again.')
+      toast.error('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।')
     } finally {
       setLoading(false)
     }
@@ -97,19 +97,19 @@ function LoginForm() {
       <div className="pattern-geometric absolute inset-0 opacity-50" aria-hidden="true" />
       <div className="relative w-full max-w-md">
         <div className="mb-6 flex justify-center">
-          <Link href="/" aria-label="DeenSteps home">
+          <Link href="/" aria-label="দীনস্টেপস হোম">
             <Logo className="text-2xl" />
           </Link>
         </div>
         <Card className="shadow-premium">
           <CardHeader className="text-center">
-            <CardTitle className="font-display text-2xl">Welcome back</CardTitle>
-            <CardDescription>Sign in to your family workspace.</CardDescription>
+            <CardTitle className="font-display text-2xl">স্বাগতম</CardTitle>
+            <CardDescription>আপনার পারিবারিক ওয়ার্কস্পেসে সাইন ইন করুন।</CardDescription>
           </CardHeader>
           <form onSubmit={onSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">ইমেইল</Label>
                 <Input
                   id="email"
                   type="email"
@@ -121,9 +121,9 @@ function LoginForm() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">পাসওয়ার্ড</Label>
                   <Link href="/login?reset=1" className="text-xs text-muted-foreground hover:text-primary">
-                    Forgot password?
+                    পাসওয়ার্ড ভুলে গেছেন?
                   </Link>
                 </div>
                 <Input
@@ -138,20 +138,20 @@ function LoginForm() {
             <CardFooter className="flex flex-col gap-3">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Sign in
+                সাইন ইন
                 {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>
             </CardFooter>
           </form>
         </Card>
         <div className="mt-4 rounded-lg border border-dashed border-border bg-card/50 p-3 text-center text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">Demo account:</span>{' '}
+          <span className="font-medium text-foreground">ডেমো অ্যাকাউন্ট:</span>{' '}
           parent@deensteps.demo / Password123!
         </div>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          New to DeenSteps?{' '}
+          নতুন দীনস্টেপসে?{' '}
           <Link href="/register" className="font-medium text-primary hover:underline">
-            Create your family
+            আপনার পরিবার তৈরি করুন
           </Link>
         </p>
       </div>

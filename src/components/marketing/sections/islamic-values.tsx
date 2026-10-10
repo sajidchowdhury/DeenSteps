@@ -3,23 +3,23 @@ import { Heart, BookOpen, HandHeart, Sparkles, ShieldCheck } from 'lucide-react'
 const VALUES = [
   {
     icon: BookOpen,
-    title: 'Prayer & Quran',
-    description: 'Optional templates encourage daily prayer practice and Quran reading — adapted by you to your child\u2019s age and ability.',
+    title: 'নামাজ ও কুরআন',
+    description: 'অপশনাল টেমপ্লেট সন্তানকে উৎসাহিত করে প্রতিদিন নামাজ আর কুরআন পড়তে — আপনার সন্তানের বয়স ও সক্ষমতা অনুযায়ী।',
   },
   {
     icon: Heart,
-    title: 'Good Character',
-    description: 'Honesty, kindness, patience, and gratitude are habits too. Celebrate them the same way you celebrate daily routines.',
+    title: 'সুন্দর চরিত্র',
+    description: 'সততা, দয়া, ধৈর্য আর কৃতজ্ঞতাও একটি অভ্যাস। দৈনিক রুটিনের মতোই সেগুলোকেও উদযাপন করুন।',
   },
   {
     icon: HandHeart,
-    title: 'Helpfulness & Responsibility',
-    description: 'Encourage children to help around the home and take ownership of age-appropriate daily responsibilities.',
+    title: 'সাহায্য ও দায়িত্ব',
+    description: 'সন্তানকে উৎসাহিত করুন পরিবারে সাহায্য করতে আর বয়স-উপযোগী দৈনন্দিন দায়িত্ব নিতে।',
   },
   {
     icon: Sparkles,
-    title: 'Intrinsic Motivation',
-    description: 'Rewards are tools for encouragement and habit development — never a replacement for sincere intention or parental guidance.',
+    title: 'অন্তর্নিহিত উৎসাহ',
+    description: 'পুরস্কার হলো উৎসাহ আর অভ্যাস গড়ার টুল — কখনোই আন্তরিক নিয়ত বা বাবা-মায়ের পথনির্দেশনার বিকল্প নয়।',
   },
 ]
 
@@ -38,14 +38,12 @@ export function IslamicValuesSection() {
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-amber-300">Islamic Values</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-amber-300">ইসলামি মূল্যবোধ</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Nurturing faith, character, and responsibility
+            ঈমান, চরিত্র আর দায়িত্বশীলতা গড়ে তুলি
           </h2>
           <p className="mt-4 text-lg text-emerald-100/80">
-            DeenSteps supports parents in encouraging prayer habits, Quran
-            learning, honesty, kindness, gratitude, helpfulness, and personal
-            responsibility — adapted to every family\u2019s practices.
+            দীনস্টেপস বাবা-মাকে সাহায্য করে সন্তানের মধ্যে নামাজের অভ্যাস, কুরআন শেখা, সততা, দয়া, কৃতজ্ঞতা, সাহায্য আর ব্যক্তিগত দায়িত্বশীলতা গড়তে — প্রতিটি পরিবারের রীতি অনুযায়ী।
           </p>
         </div>
 
@@ -70,11 +68,17 @@ export function IslamicValuesSection() {
         <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-amber-400/30 bg-amber-400/5 p-6 text-center">
           <ShieldCheck className="mx-auto h-8 w-8 text-amber-300" />
           <p className="mt-3 text-base leading-relaxed text-emerald-50">
-            <strong className="font-semibold text-amber-200">Points never measure faith.</strong>{' '}
-            DeenSteps does not score a child\u2019s piety, spiritual worth, or
-            standing before Allah. Rewards are tools for encouragement and habit
-            development — not a replacement for sincere intention, parental
-            guidance, or Islamic education.
+            <strong className="font-semibold text-amber-200">পয়েন্ট কখনোই ঈমান মাপে না।</strong>{' '}
+            দীনস্টেপস সন্তানের ধর্মপ্রাণতা, আধ্যাত্মিক মূল্য বা আল্লাহর কাছে তার অবস্থান মাপে না। পুরস্কার হলো উৎসাহ আর অভ্যাস গড়ার টুল — আন্তরিক নিয়ত, বাবা-মায়ের পথনির্দেশনা বা ইসলামি শিক্ষার বিকল্প নয়।
+          </p>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-emerald-700/50 bg-emerald-900/30 p-6 text-center">
+          <p className="text-sm leading-relaxed text-emerald-100/90">
+            রাসূলুল্লাহ ﷺ বলেছেন, <span className="font-medium text-amber-200">&ldquo;সবচেয়ে প্রিয় কাজ আল্লাহর কাছে তা-ই, যা ধারাবাহিকতার সাথে করা হয় — যদিও তা সামান্য হয়।&rdquo;</span> (বুখারি, মুসলিম)
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-emerald-100/80">
+            দীনস্টেপস সেই ধারাবাহিকতা গড়ে তুলতে সাহায্য করে — একেকটি ছোট ভালো কাজ, একেকটি পদক্ষেপ। আজকের ছোট ভালো কাজ আখিরাতে বড় পুরস্কার আনে, দুনিয়ায় সুন্দর জীবন গড়ে, আর আল্লাহর ভালোবাসা অর্জন করে।
           </p>
         </div>
       </div>

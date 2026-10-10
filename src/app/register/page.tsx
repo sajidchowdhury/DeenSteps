@@ -24,10 +24,10 @@ import {
 import { registerFamily } from '@/server/actions/auth-actions'
 
 const Schema = z.object({
-  name: z.string().min(1, 'Please enter your name.').max(80),
-  email: z.string().email('Enter a valid email address.'),
-  password: z.string().min(8, 'Password must be at least 8 characters.'),
-  familyName: z.string().min(1, 'Please enter a family name.').max(80),
+  name: z.string().min(1, 'আপনার নাম লিখুন।').max(80),
+  email: z.string().email('একটি সঠিক ইমেইল লিখুন।'),
+  password: z.string().min(8, 'পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে।'),
+  familyName: z.string().min(1, 'পরিবারের নাম লিখুন।').max(80),
 })
 type FormValues = z.infer<typeof Schema>
 
@@ -59,22 +59,21 @@ export default function RegisterPage() {
         toast.error(result.error)
         return
       }
-      // Auto sign-in
       const res = await signIn('credentials', {
         email: values.email,
         password: values.password,
         redirect: false,
       })
       if (res?.error) {
-        toast.error('Account created. Please sign in.')
+        toast.error('অ্যাকাউন্ট তৈরি হয়েছে। সাইন ইন করুন।')
         router.push('/login')
         return
       }
-      toast.success('Welcome to DeenSteps! Let\u2019s set up your family.')
+      toast.success('দীনস্টেপসে স্বাগতম! চলুন পরিবার সেট আপ করি।')
       router.push('/onboarding')
       router.refresh()
     } catch (err) {
-      toast.error('Something went wrong. Please try again.')
+      toast.error('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।')
     } finally {
       setLoading(false)
     }
@@ -85,57 +84,57 @@ export default function RegisterPage() {
       <div className="pattern-geometric absolute inset-0 opacity-50" aria-hidden="true" />
       <div className="relative w-full max-w-md">
         <div className="mb-6 flex justify-center">
-          <Link href="/" aria-label="DeenSteps home">
+          <Link href="/" aria-label="দীনস্টেপস হোম">
             <Logo className="text-2xl" />
           </Link>
         </div>
         <Card className="shadow-premium">
           <CardHeader className="text-center">
-            <CardTitle className="font-display text-2xl">Create your family</CardTitle>
+            <CardTitle className="font-display text-2xl">আপনার পরিবার তৈরি করুন</CardTitle>
             <CardDescription>
-              Start your journey in under a minute. No credit card required.
+              মাত্র এক মিনিটে শুরু করুন। ক্রেডিট কার্ড লাগবে না।
             </CardDescription>
           </CardHeader>
           <form onSubmit={onSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Your name</Label>
-                <Input id="name" autoComplete="name" placeholder="Aisha Rahman" {...register('name')} />
+                <Label htmlFor="name">আপনার নাম</Label>
+                <Input id="name" autoComplete="name" placeholder="আয়েশা রহমান" {...register('name')} />
                 {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">ইমেইল</Label>
                 <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" {...register('email')} />
                 {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" autoComplete="new-password" placeholder="At least 8 characters" {...register('password')} />
+                <Label htmlFor="password">পাসওয়ার্ড</Label>
+                <Input id="password" type="password" autoComplete="new-password" placeholder="অন্তত ৮ অক্ষর" {...register('password')} />
                 {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="familyName">Family name</Label>
-                <Input id="familyName" placeholder="The Rahman Family" {...register('familyName')} />
+                <Label htmlFor="familyName">পরিবারের নাম</Label>
+                <Input id="familyName" placeholder="রহমান পরিবার" {...register('familyName')} />
                 {errors.familyName && <p className="text-xs text-destructive">{errors.familyName.message}</p>}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-3">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Create family account
+                পারিবারিক অ্যাকাউন্ট তৈরি করুন
                 {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>
               <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
                 <CheckCheck className="h-3.5 w-3.5 text-emerald-600" />
-                No credit card required · Free forever plan
+                ক্রেডিট কার্ড লাগবে না · ফ্রি প্ল্যান চিরকাল
               </p>
             </CardFooter>
           </form>
         </Card>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          আগে থেকেই অ্যাকাউন্ট আছে?{' '}
           <Link href="/login" className="font-medium text-primary hover:underline">
-            Sign in
+            সাইন ইন
           </Link>
         </p>
       </div>

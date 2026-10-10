@@ -3,31 +3,31 @@ import { Star, Trophy, Target, Gift, CheckCheck } from 'lucide-react'
 const PREVIEW_CARDS = [
   {
     icon: Star,
-    label: 'Current points',
-    value: '72',
+    label: 'বর্তমান তারা',
+    value: '৭২',
     accent: 'amber',
-    description: 'Available balance earned through approved tasks. Tracked in an immutable ledger — every point is auditable.',
+    description: 'অনুমোদিত কাজ থেকে অর্জিত। প্রতিটি তারা একটি অডিটযোগ্য লেজারে ট্র্যাক করা — কখনোই মুছে ফেলা যায় না।',
   },
   {
     icon: Gift,
-    label: 'Available rewards',
-    value: '5',
+    label: 'উপলব্ধ পুরস্কার',
+    value: '৫',
     accent: 'emerald',
-    description: 'Family-configured rewards your child can work toward. Each shows the points required and current progress.',
+    description: 'পরিবার-কনফিগার করা পুরস্কার যা আপনার সন্তান অর্জন করতে পারে। প্রয়োজনীয় তারা আর বর্তমান অগ্রগতি দেখায়।',
   },
   {
     icon: Target,
-    label: 'Weekly challenge',
-    value: '64%',
+    label: 'সাপ্তাহিক চ্যালেঞ্জ',
+    value: '৬৪%',
     accent: 'sage',
-    description: 'Live progress toward the weekly target. Completion is calculated from eligible scheduled tasks, not from the number of tasks created.',
+    description: 'সাপ্তাহিক লক্ষ্যের দিকে লাইভ অগ্রগতি। শুধু তৈরি করা কাজ নয়, নির্ধারিত কাজ থেকে সম্পন্ন হওয়া কাজ গণনা করে।',
   },
   {
     icon: Trophy,
-    label: 'Monthly milestone',
-    value: '2 / 4',
+    label: 'মাসিক মাইলস্টোন',
+    value: '২ / ৪',
     accent: 'gold',
-    description: 'Qualifying weeks so far this month. Once earned, a qualification is never silently removed by a later unsuccessful week.',
+    description: 'এই মাসে কোয়ালিফাইং সপ্তাহ। একবার অর্জিত হলে, পরবর্তী ব্যর্থ সপ্তাহ তা মুছে দেয় না।',
   },
 ]
 
@@ -44,22 +44,20 @@ export function RewardsPreviewSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-primary">Rewards</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-primary">পুরস্কার</p>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Make progress visible and motivating
+              অগ্রগতি দৃশ্যমান আর উৎসাহজনক করুন
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Children see exactly how close they are to their next reward. Parents
-              control the catalog, the points required, and whether approval is
-              needed before redemption.
+              সন্তান ঠিক দেখতে পায় কতটা কাছে আছে তার পরবর্তী পুরস্কার। বাবা-মা নিয়ন্ত্রণ করেন ক্যাটালগ, প্রয়োজনীয় তারা, আর রিডিম্পশনের আগে অনুমোদন লাগবে কিনা।
             </p>
 
             <ul className="mt-6 space-y-3">
               {[
-                'Points balance, progress bar, and remaining points for every reward.',
-                'Two redemption models: point-based purchases and achievement-based rewards.',
-                'Atomic transactions prevent overspending and duplicate redemptions.',
-                'Eligibility rules, expiration, and per-child limits fully configurable.',
+                'প্রতিটি পুরস্কারের জন্য তারার ব্যালেন্স, প্রগ্রেস বার, আর বাকি তারা।',
+                'দুই ধরনের রিডিম্পশন: পয়েন্ট-ভিত্তিক আর অর্জন-ভিত্তিক পুরস্কার।',
+                'অ্যাটমিক ট্রানজেকশন ওভারস্পেন্ড আর ডুপ্লিকেট রিডিম্পশন রোধ করে।',
+                'এলিজিবিলিটি নিয়ম, মেয়াদ শেষ, আর সন্তান-ভিত্তিক লিমিট সম্পূর্ণ কনফিগারযোগ্য।',
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3 text-sm text-foreground">
                   <CheckCheck className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-600" />

@@ -150,7 +150,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Button asChild variant="ghost" size="sm">
-              <Link href="/dashboard"><ArrowLeft className="mr-1 h-4 w-4" /> Back to family</Link>
+              <Link href="/dashboard"><ArrowLeft className="mr-1 h-4 w-4" /> পরিবারে ফিরুন</Link>
             </Button>
           </div>
           <Logo />
@@ -169,19 +169,19 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             {format(new Date(), 'EEEE, MMMM d')}
           </div>
           <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Assalamu alaikum, {child.displayName}! 👋
+            আসসালামু আলাইকুম, {child.displayName}! 👋
           </h1>
           <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-            Here are your tasks for today. Take them one step at a time — every good habit counts.
+            আজকের কাজগুলো এখানে। একেক পদক্ষেপে এগিয়ে যাও — প্রতিটি ভালো কাজ গণ্য হয়।
           </p>
         </div>
 
         {/* Stat cards */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard icon={Star} label="My stars" value={currentBalance} accent="amber" />
-          <StatCard icon={TrendingUp} label="This week" value={`+${weekPoints._sum.amount ?? 0}`} accent="emerald" />
-          <StatCard icon={Flame} label="Day streak" value={streak} accent="orange" />
-          <StatCard icon={CheckCircle2} label="Today done" value={`${todayApproved}/${todayTotal}`} accent="sage" />
+          <StatCard icon={Star} label="আমার তারা" value={currentBalance} accent="amber" />
+          <StatCard icon={TrendingUp} label="এই সপ্তাহ" value={`+${weekPoints._sum.amount ?? 0}`} accent="emerald" />
+          <StatCard icon={Flame} label="ধারাবাহিক দিন" value={streak} accent="orange" />
+          <StatCard icon={CheckCircle2} label="আজ সম্পন্ন" value={`${todayApproved}/${todayTotal}`} accent="sage" />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -191,16 +191,16 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="font-display text-xl">Today's tasks</CardTitle>
+                    <CardTitle className="font-display text-xl">আজকের কাজ</CardTitle>
                     <CardDescription>
                       {todayTotal === 0
-                        ? 'No tasks scheduled for today. Enjoy your day!'
-                        : `${todayApproved} of ${todayTotal} done · ${todayCompletion}%`}
+                        ? 'আজ কোনো কাজ নির্ধারিত নেই। দিনটি উপভোগ করো!'
+                        : `${todayApproved} / ${todayTotal} সম্পন্ন · ${todayCompletion}%`}
                     </CardDescription>
                   </div>
                   {pendingApprovals > 0 && (
                     <Badge variant="secondary" className="gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                      <Clock className="h-3 w-3" /> {pendingApprovals} awaiting review
+                      <Clock className="h-3 w-3" /> {pendingApprovals} অপেক্ষমান
                     </Badge>
                   )}
                 </div>
@@ -234,13 +234,13 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             <Card>
               <CardHeader>
                 <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <Gift className="h-5 w-5 text-amber-500" /> Rewards
+                  <Gift className="h-5 w-5 text-amber-500" /> পুরস্কার
                 </CardTitle>
-                <CardDescription>Save up your stars to unlock these.</CardDescription>
+                <CardDescription>তারা জমিয়ে এগুলো আনলক করো।</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {rewards.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No rewards yet — ask your parent to add some!</p>
+                  <p className="text-sm text-muted-foreground">এখনো কোনো পুরস্কার নেই — বাবা-মাকে যোগ করতে বলো!</p>
                 ) : (
                   rewards.slice(0, 4).map((r) => {
                     const progress = r.requiredPoints > 0 ? Math.min(100, Math.round((currentBalance / r.requiredPoints) * 100)) : 100
@@ -257,9 +257,9 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                             <p className="text-xs text-muted-foreground">{r.requiredPoints} stars</p>
                           </div>
                         </div>
-                        <div className="mt-2 flex items-center justify-between text-xs">
+                        <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">
-                            {eligible ? 'Ready!' : `${remaining} more to go`}
+                            {eligible ? 'প্রস্তুত!' : `${remaining} তারা বাকি`}
                           </span>
                           <span className="font-medium text-foreground">{progress}%</span>
                         </div>
@@ -283,7 +283,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               <Card>
                 <CardHeader>
                   <CardTitle className="font-display text-lg flex items-center gap-2">
-                    <Target className="h-5 w-5 text-violet-500" /> Weekly challenge
+                    <Target className="h-5 w-5 text-violet-500" /> সাপ্তাহিক চ্যালেঞ্জ
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -291,14 +291,14 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   <p className="mt-1 text-xs text-muted-foreground">{activeChallenge.description}</p>
                   <div className="mt-3">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Target: {activeChallenge.participants[0].targetPercent}%</span>
+                      <span className="text-muted-foreground">লক্ষ্য: {activeChallenge.participants[0].targetPercent}%</span>
                       <span className="font-medium text-foreground">{activeChallenge.participants[0].completionPercent}%</span>
                     </div>
                     <Progress value={activeChallenge.participants[0].completionPercent} className="mt-1 h-2" />
                   </div>
                   {activeChallenge.rewardTitle && (
                     <p className="mt-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-900 dark:bg-amber-900/30 dark:text-amber-100">
-                      <Trophy className="mr-1 inline h-3 w-3" /> Reward: {activeChallenge.rewardTitle}
+                      <Trophy className="mr-1 inline h-3 w-3" /> পুরস্কার: {activeChallenge.rewardTitle}
                     </p>
                   )}
                 </CardContent>
@@ -309,12 +309,12 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             <Card>
               <CardHeader>
                 <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <Award className="h-5 w-5 text-amber-500" /> Achievements
+                  <Award className="h-5 w-5 text-amber-500" /> অর্জন
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {achievements.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Complete tasks to earn your first badge!</p>
+                  <p className="text-sm text-muted-foreground">প্রথম ব্যাজ অর্জন করতে কাজ সম্পন্ন করো!</p>
                 ) : (
                   <div className="grid grid-cols-3 gap-2">
                     {achievements.map((a) => (
@@ -333,11 +333,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             {/* Recent activity */}
             <Card>
               <CardHeader>
-                <CardTitle className="font-display text-lg">Recent stars</CardTitle>
+                <CardTitle className="font-display text-lg">সাম্প্রতিক তারা</CardTitle>
               </CardHeader>
               <CardContent>
                 {recentTxns.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No stars earned yet.</p>
+                  <p className="text-sm text-muted-foreground">এখনো কোনো তারা অর্জিত হয়নি।</p>
                 ) : (
                   <ul className="space-y-2">
                     {recentTxns.map((t) => (
@@ -352,7 +352,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 )}
                 {recentRedemptions.length > 0 && (
                   <div className="mt-3 border-t border-border pt-3">
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recent redemptions</p>
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">সাম্প্রতিক রিডিম্পশন</p>
                     <ul className="space-y-1.5">
                       {recentRedemptions.map((r) => (
                         <li key={r.id} className="flex items-center justify-between text-xs">

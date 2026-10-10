@@ -74,7 +74,7 @@ export default function OnboardingPage() {
       await importLibraryTasksForChild(child.id, chosenCategories)
     }
     setLoading(false)
-    toast.success('Your family workspace is ready!')
+    toast.success('আপনার পারিবারিক ওয়ার্কস্পেস প্রস্তুত!')
     router.push('/dashboard')
     router.refresh()
   }
@@ -87,7 +87,7 @@ export default function OnboardingPage() {
         <div className="mb-6 flex items-center justify-between">
           <Logo />
           <Badge variant="secondary" className="gap-1">
-            <Sparkles className="h-3 w-3" /> Step {step} of {TOTAL_STEPS}
+            <Sparkles className="h-3 w-3" /> ধাপ {step} / {TOTAL_STEPS}
           </Badge>
         </div>
         <Progress value={progress} className="mb-8 h-2" />
@@ -96,25 +96,25 @@ export default function OnboardingPage() {
         {step === 1 && (
           <StepCard
             icon={Users}
-            title="Welcome to DeenSteps"
-            description="Let's set up your family workspace. This takes about two minutes — you can skip optional steps and finish them later."
+            title="দীনস্টেপসে স্বাগতম"
+            description="চলুন আপনার পারিবারিক ওয়ার্কস্পেস সেট আপ করি। মাত্র দুই মিনিট লাগে — অপশনাল ধাপগুলো স্কিপ করে পরে শেষ করতে পারেন।"
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="familyName">Family name</Label>
+                <Label htmlFor="familyName">পরিবারের নাম</Label>
                 <Input
                   id="familyName"
-                  placeholder="The Rahman Family"
+                  placeholder="রহমান পরিবার"
                   value={familyName}
                   onChange={(e) => setFamilyName(e.target.value)}
                 />
-                <p className="text-xs text-muted-foreground">You can change this later in Settings.</p>
+                <p className="text-xs text-muted-foreground">পরে সেটিংস থেকে পরিবর্তন করতে পারবেন।</p>
               </div>
               <Button className="w-full" onClick={() => goTo(2)} disabled={!familyName.trim()}>
-                Continue <ArrowRight className="ml-2 h-4 w-4" />
+                এগিয়ে যান <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="ghost" className="w-full" onClick={() => router.push('/dashboard')}>
-                Skip setup for now
+                এখনই স্কিপ করুন
               </Button>
             </div>
           </StepCard>
@@ -123,25 +123,25 @@ export default function OnboardingPage() {
         {step === 2 && (
           <StepCard
             icon={BookOpen}
-            title="Language & timezone"
-            description="We'll use these to schedule tasks and format dates for your family."
+            title="ভাষা ও টাইমজোন"
+            description="আপনার পরিবারের জন্য কাজ সিডিউল আর তারিখ ফরম্যাট করতে এগুলো ব্যবহার করব।"
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="language">Preferred language</Label>
+                <Label htmlFor="language">পছন্দের ভাষা</Label>
                 <select
                   id="language"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                 >
+                  <option value="bn">বাংলা</option>
                   <option value="en">English</option>
-                  <option value="bn">বাংলা (Bengali) — coming soon</option>
-                  <option value="ar">العربية (Arabic) — coming soon</option>
+                  <option value="ar">العربية (আরবি) — শীঘ্রই</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="timezone">Timezone</Label>
+                <Label htmlFor="timezone">টাইমজোন</Label>
                 <select
                   id="timezone"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
@@ -154,8 +154,8 @@ export default function OnboardingPage() {
                 </select>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => goTo(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                <Button className="flex-1" onClick={() => goTo(3)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                <Button variant="outline" onClick={() => goTo(1)}><ArrowLeft className="mr-2 h-4 w-4" /> ফিরে যান</Button>
+                <Button className="flex-1" onClick={() => goTo(3)}>এগিয়ে যান <ArrowRight className="ml-2 h-4 w-4" /></Button>
               </div>
             </div>
           </StepCard>
@@ -164,21 +164,21 @@ export default function OnboardingPage() {
         {step === 3 && (
           <StepCard
             icon={Users}
-            title="Add your first child"
-            description="Create a profile for your child. No email needed — they'll access their dashboard through your family workspace."
+            title="প্রথম সন্তান যোগ করুন"
+            description="আপনার সন্তানের জন্য একটি প্রোফাইল তৈরি করুন। ইমেইল লাগে না — তারা আপনার পারিবারিক ওয়ার্কস্পেস থেকেই ড্যাশবোর্ড দেখবে।"
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="childName">Child's name or nickname</Label>
+                <Label htmlFor="childName">সন্তানের নাম বা ডাকনাম</Label>
                 <Input
                   id="childName"
-                  placeholder="Zayd"
+                  placeholder="জাইদ"
                   value={child.displayName}
                   onChange={(e) => setChild((c) => ({ ...c, displayName: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Age range</Label>
+                <Label>বয়স</Label>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {AGE_RANGES.map((a) => (
                     <button
@@ -198,7 +198,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Avatar color</Label>
+                <Label>অ্যাভাটার রঙ</Label>
                 <div className="flex flex-wrap gap-2">
                   {AVATAR_COLORS.map((c) => (
                     <button
@@ -218,7 +218,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => goTo(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                <Button variant="outline" onClick={() => goTo(2)}><ArrowLeft className="mr-2 h-4 w-4" /> ফিরে যান</Button>
                 <Button
                   className="flex-1"
                   onClick={async () => {
@@ -228,7 +228,7 @@ export default function OnboardingPage() {
                   disabled={!child.displayName.trim() || loading}
                 >
                   {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                  Create profile <ArrowRight className="ml-2 h-4 w-4" />
+                  প্রোফাইল তৈরি করুন <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -238,8 +238,8 @@ export default function OnboardingPage() {
         {step === 4 && (
           <StepCard
             icon={BookOpen}
-            title="Choose habit categories"
-            description="Pick the categories you'd like to start with. We'll import a small set of optional, configurable templates for your child."
+            title="অভ্যাসের ক্যাটাগরি বেছে নিন"
+            description="যে ক্যাটাগরিগুলো দিয়ে শুরু করতে চান বেছে নিন। আপনার সন্তানের জন্য ছোট একটি অপশনাল, কনফিগারযোগ্য টেমপ্লেট সেট ইমপোর্ট করব।"
           >
             <div className="space-y-3">
               {TASK_CATEGORIES.map((cat) => {
@@ -273,9 +273,9 @@ export default function OnboardingPage() {
               })}
             </div>
             <div className="mt-6 flex gap-2">
-              <Button variant="outline" onClick={() => goTo(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+              <Button variant="outline" onClick={() => goTo(3)}><ArrowLeft className="mr-2 h-4 w-4" /> ফিরে যান</Button>
               <Button className="flex-1" onClick={() => goTo(5)} disabled={chosenCategories.length === 0}>
-                Continue <ArrowRight className="ml-2 h-4 w-4" />
+                এগিয়ে যান <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </StepCard>
@@ -284,32 +284,32 @@ export default function OnboardingPage() {
         {step === 5 && (
           <StepCard
             icon={Star}
-            title="Configure points & rewards"
-            description="What would you like to call your points? You can change the rewards catalog later."
+            title="পয়েন্ট ও পুরস্কার কনফিগার করুন"
+            description="আপনার পয়েন্টকে কী বলতে চান? পুরস্কার ক্যাটালগ পরে পরিবর্তন করতে পা�রবেন।"
           >
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="pointsName">Points name</Label>
+                <Label htmlFor="pointsName">পয়েন্টের নাম</Label>
                 <Input
                   id="pointsName"
-                  placeholder="Stars"
+                  placeholder="তারা"
                   value={pointsName}
                   onChange={(e) => setPointsName(e.target.value)}
                 />
-                <p className="text-xs text-muted-foreground">Children will see this name throughout their dashboard.</p>
+                <p className="text-xs text-muted-foreground">সন্তান তাদের ড্যাশবোর্ডে এই নাম দেখবে।</p>
               </div>
               <div className="rounded-lg border border-dashed border-border bg-card/50 p-4">
-                <p className="text-sm font-medium text-foreground">Sample rewards to start</p>
+                <p className="text-sm font-medium text-foreground">শুরুর স্যাম্পল পুরস্কার</p>
                 <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                  <li>· Family Game Night — 50 {pointsName || 'points'}</li>
-                  <li>· A New Book — 80 {pointsName || 'points'}</li>
-                  <li>· Choose a Family Outing — 100 {pointsName || 'points'}</li>
+                  <li>· ফ্যামিলি গেম নাইট — ৫০ {pointsName || 'পয়েন্ট'}</li>
+                  <li>· নতুন একটি বই — ৮০ {pointsName || 'পয়েন্ট'}</li>
+                  <li>· পরিবারের সাথে বেড়াতে যাওয়া — ১০০ {pointsName || 'পয়েন্ট'}</li>
                 </ul>
-                <p className="mt-2 text-xs text-muted-foreground">You can customize, add, or remove rewards from the Rewards page.</p>
+                <p className="mt-2 text-xs text-muted-foreground">পুরস্কার পেইজ থেকে কাস্টমাইজ, যোগ বা মুছতে পারবেন।</p>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => goTo(4)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                <Button className="flex-1" onClick={() => goTo(6)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                <Button variant="outline" onClick={() => goTo(4)}><ArrowLeft className="mr-2 h-4 w-4" /> ফিরে যান</Button>
+                <Button className="flex-1" onClick={() => goTo(6)}>এগিয়ে যান <ArrowRight className="ml-2 h-4 w-4" /></Button>
               </div>
             </div>
           </StepCard>
@@ -318,8 +318,8 @@ export default function OnboardingPage() {
         {step === 6 && (
           <StepCard
             icon={BookOpen}
-            title="Sample weekly plan"
-            description="Here's a preview of what your child's first week could look like, based on your selections."
+            title="স্যাম্পল সাপ্তাহিক প্ল্যান"
+            description="আপনার সিলেকশন অনুযায়ী আপনার সন্তানের প্রথম সপ্তাহ কেমন হতে পারে তার একটি প্রিভিউ।"
           >
             <div className="space-y-3">
               {chosenCategories.flatMap((cat) =>
@@ -331,15 +331,15 @@ export default function OnboardingPage() {
                 ))
               )}
               <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-                <p className="text-sm font-medium text-foreground">Weekly challenge suggestion</p>
+                <p className="text-sm font-medium text-foreground">সাপ্তাহিক চ্যালেঞ্জ সাজেশন</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  &ldquo;Build a Consistent Morning Routine&rdquo; — Complete 80% of morning tasks this week to unlock a family activity reward.
+                  &ldquo;ধারাবাহিক সকালের রুটিন গড়ুন&rdquo; — এই সপ্তাহে সকালের কাজের ৮০% সম্পন্ন করলে একটি পারিবারিক পুরস্কার আনলক হবে।
                 </p>
               </div>
             </div>
             <div className="mt-6 flex gap-2">
-              <Button variant="outline" onClick={() => goTo(5)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-              <Button className="flex-1" onClick={() => goTo(7)}>Continue <ArrowRight className="ml-2 h-4 w-4" /></Button>
+              <Button variant="outline" onClick={() => goTo(5)}><ArrowLeft className="mr-2 h-4 w-4" /> ফিরে যান</Button>
+              <Button className="flex-1" onClick={() => goTo(7)}>এগিয়ে যান <ArrowRight className="ml-2 h-4 w-4" /></Button>
             </div>
           </StepCard>
         )}
@@ -347,22 +347,22 @@ export default function OnboardingPage() {
         {step === 7 && (
           <StepCard
             icon={Rocket}
-            title="You're ready to go!"
-            description="Your family workspace is set up. You can adjust everything from the dashboard — add more children, customize tasks, and build your reward catalog."
+            title="আপনি প্রস্তুত!"
+            description="আপনার পারিবারিক ওয়ার্কস্পেস সেট আপ হয়ে গেছে। ড্যাশবোর্ড থেকে সব সমন্বয় করতে পারবেন — আরও সন্তান যোগ করুন, কাজ কাস্টমাইজ করুন, পুরস্কার ক্যাটালগ তৈরি করুন।"
           >
             <div className="space-y-4">
               <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950/40">
-                <p className="font-medium text-emerald-900 dark:text-emerald-100">Setup summary</p>
+                <p className="font-medium text-emerald-900 dark:text-emerald-100">সেটআপ সারসংক্ষেপ</p>
                 <ul className="mt-2 space-y-1 text-sm text-emerald-800 dark:text-emerald-200">
-                  <li>· Family: <strong>{familyName || 'Your family'}</strong></li>
-                  <li>· First child: <strong>{child.displayName || '—'}</strong></li>
-                  <li>· Categories: <strong>{chosenCategories.join(', ')}</strong></li>
-                  <li>· Points: <strong>{pointsName || 'Points'}</strong></li>
+                  <li>· পরিবার: <strong>{familyName || 'আপনার পরিবার'}</strong></li>
+                  <li>· প্রথম সন্তান: <strong>{child.displayName || '—'}</strong></li>
+                  <li>· ক্যাটাগরি: <strong>{chosenCategories.join(', ')}</strong></li>
+                  <li>· পয়েন্ট: <strong>{pointsName || 'পয়েন্ট'}</strong></li>
                 </ul>
               </div>
               <Button className="w-full" size="lg" onClick={handleFinish} disabled={loading}>
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Open family dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                পারিবারিক ড্যাশবোর্ড খুলুন <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </StepCard>

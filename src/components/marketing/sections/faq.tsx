@@ -14,13 +14,12 @@ export function FaqSection() {
     <section id="faq" className="border-t border-border bg-secondary/30 py-20">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">FAQ</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">প্রশ্নোত্তর</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Frequently asked questions
+            সাধারণ জিজ্ঞাসা
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Everything you need to know about DeenSteps. Still have a question?
-            Reach out any time.
+            দীনস্টেপস সম্পর্কে যা জানা দরকার। এখনো প্রশ্ন আছে? যেকোনো সময় যোগাযোগ করুন।
           </p>
         </div>
 

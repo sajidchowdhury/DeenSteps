@@ -3,30 +3,30 @@ import { Logo } from '@/components/deensteps/brand'
 
 const FOOTER_SECTIONS = [
   {
-    title: 'Product',
+    title: 'প্রোডাক্ট',
     links: [
-      { label: 'Features', href: '#features' },
-      { label: 'How It Works', href: '#how-it-works' },
-      { label: 'Rewards', href: '#rewards' },
-      { label: 'Pricing', href: '#pricing' },
+      { label: 'ফিচার', href: '#features' },
+      { label: 'যেভাবে কাজ করে', href: '#how-it-works' },
+      { label: 'পুরস্কার', href: '#rewards' },
+      { label: 'প্রাইসিং', href: '#pricing' },
     ],
   },
   {
-    title: 'Family',
+    title: 'পরিবার',
     links: [
-      { label: 'Islamic Values', href: '#islamic-values' },
-      { label: 'FAQ', href: '#faq' },
-      { label: 'Get Started', href: '/register' },
-      { label: 'Sign in', href: '/login' },
+      { label: 'ইসলামি মূল্যবোধ', href: '#islamic-values' },
+      { label: 'প্রশ্নোত্তর', href: '#faq' },
+      { label: 'শুরু করুন', href: '/register' },
+      { label: 'সাইন ইন', href: '/login' },
     ],
   },
   {
-    title: 'Legal',
+    title: 'আইনি',
     links: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
-      { label: 'Child Safety & Family Privacy', href: '#' },
-      { label: 'Islamic Values & Usage Guidelines', href: '#' },
+      { label: 'প্রাইভেসি পলিসি', href: '#' },
+      { label: 'টার্মস অফ সার্ভিস', href: '#' },
+      { label: 'শিশু সুরক্ষা ও পরিবার প্রাইভেসি', href: '#' },
+      { label: 'ইসলামি মূল্যবোধ ও ব্যবহার নির্দেশিকা', href: '#' },
     ],
   },
 ]
@@ -39,11 +39,10 @@ export function MarketingFooter() {
           <div className="col-span-2 md:col-span-1">
             <Logo />
             <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-              Small Good Habits. Meaningful Growth.
+              ছোট ভালো অভ্যাস, বড় পরিবর্তন।
             </p>
             <p className="mt-3 text-xs text-muted-foreground">
-              A joyful family habit-building platform that helps parents nurture
-              Islamic practices, good character, and daily responsibility.
+              একটি আনন্দময় পরিবার-কেন্দ্রিক অভ্যাস গড়ার প্ল্যাটফর্ম। বাবা-মা তাদের সন্তানদের শেখায় ইসলামি অভ্যাস, সুন্দর চরিত্র আর দৈনন্দিন দায়িত্ব।
             </p>
           </div>
           {FOOTER_SECTIONS.map((s) => (
@@ -66,10 +65,10 @@ export function MarketingFooter() {
         </div>
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 sm:flex-row sm:items-center">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} DeenSteps. All rights reserved.
+            © {new Date().getFullYear()} দীনস্টেপস। সর্বস্বত্ব সংরক্ষিত।
           </p>
           <p className="text-xs text-muted-foreground">
-            Built with care for families. Made for parents, loved by children.
+            পরিবারের জন্য ভালোবাসায় তৈরি। বাবা-মায়ের ভালো লাগে, সন্তানের আনন্দ পায়।
           </p>
         </div>
       </div>

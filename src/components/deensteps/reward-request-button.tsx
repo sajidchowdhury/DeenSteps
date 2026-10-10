@@ -38,11 +38,11 @@ export function RewardRequestButton({
     startTransition(async () => {
       const res = await requestRedemption(rewardId, childId)
       if (res.ok) {
-        toast.success('Redemption requested! Your parent will review it soon.')
+        toast.success('রিডিম্পশন অনুরোধ করা হয়েছে! বাবা-মা শীঘ্রই রিভিউ করবেন।')
         setOpen(false)
         router.refresh()
       } else {
-        toast.error(res.error ?? 'Could not request reward.')
+        toast.error(res.error ?? 'পুরস্কার অনুরোধ করা যায়নি।')
       }
     })
   }
@@ -50,7 +50,7 @@ export function RewardRequestButton({
   if (!eligible) {
     return (
       <Button size="sm" variant="ghost" disabled className="mt-2 w-full text-xs">
-        <Lock className="mr-1 h-3 w-3" /> Need {requiredPoints - currentBalance} more
+        <Lock className="mr-1 h-3 w-3" /> আরও {requiredPoints - currentBalance} তারা দরকার
       </Button>
     )
   }
@@ -59,27 +59,25 @@ export function RewardRequestButton({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="mt-2 w-full bg-amber-500 text-xs text-white hover:bg-amber-600">
-          <Gift className="mr-1 h-3 w-3" /> Redeem reward
+          <Gift className="mr-1 h-3 w-3" /> পুরস্কার নাও
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Redeem this reward?</DialogTitle>
+          <DialogTitle>এই পুরস্কারটি নিতে চাও?</DialogTitle>
           <DialogDescription>
-            {requiredPoints} stars will be reserved from your balance. Your parent
-            will be notified and can approve or decline. If declined, your stars
-            are returned to your balance.
+            {requiredPoints} তারা তোমার ব্যালেন্স থেকে আরক্ষিত হবে। বাবা-মা নোটিফাই হবেন আর অনুমোদন বা প্রত্যাখ্যান করতে পারবেন। প্রত্যাখ্যাত হলে তোমার তারা ফেরত পাবে।
           </DialogDescription>
         </DialogHeader>
         <div className="rounded-lg bg-secondary/60 p-3 text-sm">
-          <p className="text-foreground">Current balance: <strong>{currentBalance} stars</strong></p>
-          <p className="text-foreground">After redemption: <strong>{currentBalance - requiredPoints} stars</strong></p>
+          <p className="text-foreground">বর্তমান ব্যালেন্স: <strong>{currentBalance} তারা</strong></p>
+          <p className="text-foreground">রিডিম্পশনের পর: <strong>{currentBalance - requiredPoints} তারা</strong></p>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>বাতিল</Button>
           <Button onClick={handleRequest} disabled={pending} className="bg-amber-500 hover:bg-amber-600 text-white">
             {pending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />}
-            Confirm redemption
+            রিডিম্পশন নিশ্চিত করো
           </Button>
         </DialogFooter>
       </DialogContent>

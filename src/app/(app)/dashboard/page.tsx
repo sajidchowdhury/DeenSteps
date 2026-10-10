@@ -47,19 +47,19 @@ export default async function DashboardPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Assalamu alaikum, {user.name?.split(' ')[0] ?? 'there'} 👋
+              আসসালামু আলাইকুম, {user.name?.split(' ')[0] ?? 'সাথী'} 👋
             </h1>
             <p className="text-sm text-muted-foreground">
-              {format(new Date(), 'EEEE, MMMM d')} · Here's how your family is doing today.
+              {format(new Date(), 'EEEE, MMMM d')} · আজকে আপনার পরিবার কেমন আছে দেখুন।
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> New task</Link>
+              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> নতুন কাজ</Link>
             </Button>
             <Button asChild size="sm">
               <Link href="/review">
-                <ShieldCheck className="mr-1.5 h-4 w-4" /> Review ({data.stats.pendingApprovals})
+                <ShieldCheck className="mr-1.5 h-4 w-4" /> রিভিউ ({data.stats.pendingApprovals})
               </Link>
             </Button>
           </div>
@@ -67,32 +67,32 @@ export default async function DashboardPage() {
 
         {/* Summary cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-          <SummaryCard icon={Users} label="Children" value={data.stats.totalChildren} accent="emerald" href="/children" />
-          <SummaryCard icon={ShieldCheck} label="Pending review" value={data.stats.pendingApprovals} accent="amber" href="/review" />
-          <SummaryCard icon={CheckCircle2} label="Today's completion" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
-          <SummaryCard icon={Star} label="Points this week" value={data.stats.weekFamilyPoints} accent="gold" />
-          <SummaryCard icon={Target} label="Active challenges" value={data.stats.activeChallenges} accent="violet" href="/challenges" />
-          <SummaryCard icon={Gift} label="Available rewards" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
+          <SummaryCard icon={Users} label="সন্তান" value={data.stats.totalChildren} accent="emerald" href="/children" />
+          <SummaryCard icon={ShieldCheck} label="রিভিউ বাকি" value={data.stats.pendingApprovals} accent="amber" href="/review" />
+          <SummaryCard icon={CheckCircle2} label="আজকের সম্পন্ন" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
+          <SummaryCard icon={Star} label="এই সপ্তাহের তারা" value={data.stats.weekFamilyPoints} accent="gold" />
+          <SummaryCard icon={Target} label="সক্রিয় চ্যালেঞ্জ" value={data.stats.activeChallenges} accent="violet" href="/challenges" />
+          <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
 
         {/* Family overview */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <div>
-              <CardTitle className="font-display">Family overview</CardTitle>
-              <CardDescription>Each child's progress today and this week.</CardDescription>
+              <CardTitle className="font-display">পরিবারের সারসংক্ষেপ</CardTitle>
+              <CardDescription>আজ আর এই সপ্তাহে প্রতিটি সন্তানের অগ্রগতি।</CardDescription>
             </div>
             <Button asChild variant="ghost" size="sm">
-              <Link href="/children">Manage <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+              <Link href="/children">ম্যানেজ <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
             </Button>
           </CardHeader>
           <CardContent>
             {data.children.length === 0 ? (
               <EmptyState
                 icon={Users}
-                title="No children yet"
-                description="Add your first child profile to start assigning tasks."
-                action={<Button asChild><Link href="/children">Add a child</Link></Button>}
+                title="এখনো কোনো সন্তান নেই"
+                description="প্রথম সন্তানের প্রোফাইল যোগ করে কাজ নির্ধারণ শুরু করুন।"
+                action={<Button asChild><Link href="/children">সন্তান যোগ করুন</Link></Button>}
               />
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -109,15 +109,15 @@ export default async function DashboardPage() {
           {/* Recent submissions */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="font-display text-lg">Recent activity</CardTitle>
-              <CardDescription>The latest task submissions across your family.</CardDescription>
+              <CardTitle className="font-display text-lg">সাম্প্রতিক কার্যকলাপ</CardTitle>
+              <CardDescription>আপনার পরিবারের সর্বশেষ কাজের সাবমিশন।</CardDescription>
             </CardHeader>
             <CardContent>
               {data.recentSubmissions.length === 0 ? (
                 <EmptyState
                   icon={Clock}
-                  title="No submissions yet"
-                  description="When your children submit tasks, they'll appear here."
+                  title="এখনো কোনো সাবমিশন নেই"
+                  description="সন্তান কাজ জমা দিলে এখানে দেখা যাবে।"
                 />
               ) : (
                 <ul className="space-y-3">
@@ -157,25 +157,25 @@ export default async function DashboardPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="font-display text-lg">Quick actions</CardTitle>
+                <CardTitle className="font-display text-lg">দ্রুত কাজ</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-2">
-                <QuickAction icon={Plus} label="Create task" href="/tasks" />
-                <QuickAction icon={ShieldCheck} label="Review submissions" href="/review" badge={data.stats.pendingApprovals} />
-                <QuickAction icon={Gift} label="Add reward" href="/rewards" />
-                <QuickAction icon={Target} label="Weekly challenge" href="/challenges" />
-                <QuickAction icon={TrendingUp} label="View reports" href="/reports" />
-                <QuickAction icon={Users} label="Manage children" href="/children" />
+                <QuickAction icon={Plus} label="নতুন কাজ" href="/tasks" />
+                <QuickAction icon={ShieldCheck} label="সাবমিশন রিভিউ" href="/review" badge={data.stats.pendingApprovals} />
+                <QuickAction icon={Gift} label="পুরস্কার যোগ" href="/rewards" />
+                <QuickAction icon={Target} label="সাপ্তাহিক চ্যালেঞ্জ" href="/challenges" />
+                <QuickAction icon={TrendingUp} label="রিপোর্ট দেখুন" href="/reports" />
+                <QuickAction icon={Users} label="সন্তান ম্যানেজ" href="/children" />
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-display text-lg">Recent points</CardTitle>
+                <CardTitle className="font-display text-lg">সাম্প্রতিক তারা</CardTitle>
               </CardHeader>
               <CardContent>
                 {data.recentTxns.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No points awarded yet.</p>
+                  <p className="text-sm text-muted-foreground">এখনো কোনো তারা অর্জিত হয়নি।</p>
                 ) : (
                   <ul className="space-y-2">
                     {data.recentTxns.map((t) => (

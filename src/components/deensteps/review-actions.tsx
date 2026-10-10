@@ -37,10 +37,10 @@ export function ReviewActions({
     startTransition(async () => {
       const res = await reviewSubmission(submissionId, 'APPROVED')
       if (res.ok) {
-        toast.success(`Approved! +${pointsValue} stars awarded.`)
+        toast.success(`অনুমোদিত! +${pointsValue} তারা যোগ হয়েছে।`)
         router.refresh()
       } else {
-        toast.error(res.error ?? 'Could not approve.')
+        toast.error(res.error ?? 'অনুমোদন দেওয়া যায়নি।')
       }
     })
   }
@@ -49,12 +49,12 @@ export function ReviewActions({
     startTransition(async () => {
       const res = await reviewSubmission(submissionId, 'NEEDS_REVISION', note)
       if (res.ok) {
-        toast.success('Revision requested. The task was returned to your child for another try.')
+        toast.success('সংশোধন চাওয়া হয়েছে। কাজটি সন্তানের কাছে ফেরত গেছে আবার চেষ্টার জন্য।')
         setRevisionOpen(false)
         setNote('')
         router.refresh()
       } else {
-        toast.error(res.error ?? 'Could not request revision.')
+        toast.error(res.error ?? 'সংশোধন চাওয়া যায়নি।')
       }
     })
   }
@@ -63,12 +63,12 @@ export function ReviewActions({
     startTransition(async () => {
       const res = await reviewSubmission(submissionId, 'REJECTED', note)
       if (res.ok) {
-        toast.success('Submission rejected. The task is available for your child to retry.')
+        toast.success('সাবমিশন প্রত্যাখ্যাত। কাজটি সন্তান আবার চেষ্টা করতে পারবে।')
         setRejectOpen(false)
         setNote('')
         router.refresh()
       } else {
-        toast.error(res.error ?? 'Could not reject.')
+        toast.error(res.error ?? 'প্রত্যাখ্যান করা যায়নি।')
       }
     })
   }
@@ -82,37 +82,37 @@ export function ReviewActions({
         className="bg-emerald-600 hover:bg-emerald-700 text-white"
       >
         {pending ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> : <ShieldCheck className="mr-1 h-3.5 w-3.5" />}
-        Approve
+        অনুমোদন
       </Button>
 
       <Dialog open={revisionOpen} onOpenChange={setRevisionOpen}>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline" disabled={pending}>
-            <RotateCcw className="mr-1 h-3.5 w-3.5" /> Revision
+            <RotateCcw className="mr-1 h-3.5 w-3.5" /> সংশোধন
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Request revision</DialogTitle>
+            <DialogTitle>সংশোধন চান</DialogTitle>
             <DialogDescription>
-              Send a gentle, constructive message back to your child about &ldquo;{taskTitle}&rdquo;.
+              &ldquo;{taskTitle}&rdquo;-এর জন্য সন্তানের কাছে একটি গঠনমূলক, কোমল বার্তা পাঠান।
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label htmlFor="rev-note">Message for your child</Label>
+            <Label htmlFor="rev-note">সন্তানের জন্য বার্তা</Label>
             <Textarea
               id="rev-note"
-              placeholder="Great effort! Let's try again — this time remember to..."
+              placeholder="দারুণ চেষ্টা! আবার চেষ্টা করো — এবার..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRevisionOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setRevisionOpen(false)}>বাতিল</Button>
             <Button onClick={handleRevision} disabled={pending}>
               {pending ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> : null}
-              Send back for revision
+              সংশোধনের জন্য ফেরত পাঠান
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -121,31 +121,31 @@ export function ReviewActions({
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogTrigger asChild>
           <Button size="sm" variant="outline" disabled={pending} className="text-rose-600 hover:bg-rose-50 hover:text-rose-700">
-            <XCircle className="mr-1 h-3.5 w-3.5" /> Reject
+            <XCircle className="mr-1 h-3.5 w-3.5" /> প্রত্যাখ্যান
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject submission</DialogTitle>
+            <DialogTitle>সাবমিশন প্রত্যাখ্যান</DialogTitle>
             <DialogDescription>
-              The task will be returned to &ldquo;Not started&rdquo; so your child can try again. Please add a constructive note.
+              কাজটি &ldquo;শুরু হয়নি&rdquo;-এ ফিরে যাবে যাতে সন্তান আবার চেষ্টা করতে পারে। একটি গঠনমূলক মন্তব্য যোগ করুন।
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label htmlFor="rej-note">Note (optional)</Label>
+            <Label htmlFor="rej-note">মন্তব্য (অপশনাল)</Label>
             <Textarea
               id="rej-note"
-              placeholder="This wasn't quite finished yet — let's try again tomorrow."
+              placeholder="এটা এখনো শেষ হয়নি — আগামীকাল আবার চেষ্টা করো।"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setRejectOpen(false)}>বাতিল</Button>
             <Button variant="destructive" onClick={handleReject} disabled={pending}>
               {pending ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> : null}
-              Reject submission
+              সাবমিশন প্রত্যাখ্যান
             </Button>
           </DialogFooter>
         </DialogContent>

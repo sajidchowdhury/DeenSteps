@@ -9,14 +9,12 @@ export function PricingSection() {
     <section id="pricing" className="border-t border-border bg-background py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Pricing</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">প্রাইসিং</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Simple plans for every family
+            প্রতিটি পরিবারের জন্য সহজ প্ল্যান
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Start free, forever. Upgrade when you need more profiles, advanced
-            reports, or monthly milestones. Pricing is configurable and stored
-            separately from application code.
+            চিরকাল ফ্রি শুরু করুন। আপগ্রেড করুন যখন আরও প্রোফাইল, অ্যাডভান্সড রিপোর্ট বা মাসিক মাইলস্টোন দরকার। প্রাইসিং কনফিগারযোগ্য আর অ্যাপ্লিকেশন কোড থেকে আলাদা।
           </p>
         </div>
 
@@ -34,7 +32,7 @@ export function PricingSection() {
               {plan.highlight && (
                 <div className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
                   <Star className="h-3 w-3 fill-current" />
-                  Most popular
+                  সবচেয়ে জনপ্রিয়
                 </div>
               )}
               <div>
@@ -62,7 +60,7 @@ export function PricingSection() {
               </Button>
               {plan.comingSoon && (
                 <p className="mt-2 text-center text-xs text-muted-foreground">
-                  Join the waitlist to be notified.
+                  ওয়েটলিস্টে যুক্ত হয়ে নোটিফিকেশন পান।
                 </p>
               )}
             </div>
@@ -70,8 +68,7 @@ export function PricingSection() {
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-muted-foreground">
-          Sample pricing shown. Payment integration is not configured in this
-          deployment — DeenSteps never simulates successful payments.
+          স্যাম্পল প্রাইসিং দেখানো হয়েছে। এই ডেপ্লয়মেন্টে পেমেন্ট ইন্টিগ্রেশন কনফিগার করা নেই — দীনস্টেপস কখনোই সফল পেমেন্ট সিমুলেট করে না।
         </p>
       </div>
     </section>

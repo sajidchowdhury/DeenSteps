@@ -3,21 +3,21 @@ import { Users, ListChecks, Trophy } from 'lucide-react'
 const STEPS = [
   {
     icon: Users,
-    title: '1. Create Your Family',
+    title: '১. আপনার পরিবার তৈরি করুন',
     description:
-      'Register your parent account, set your family name, timezone, and add your children\u2019s profiles. No email needed for kids — they access their dashboard through your family workspace.',
+      'বাবা-মা হিসেবে রেজিস্টার করুন। পরিবারের নাম দিন, টাইমজোন সিলেক্ট করুন, আর সন্তানদের প্রোফাইল যোগ করুন। সন্তানদের আলাদা ইমেইল লাগে না — তারা আপনার পরিবারের ওয়ার্কস্পেস থেকেই তাদের ড্যাশবোর্ড দেখবে।',
   },
   {
     icon: ListChecks,
-    title: '2. Build Good Habits',
+    title: '২. ভালো অভ্যাস গড়ে তুলুন',
     description:
-      'Assign age-appropriate daily, weekly, and personal tasks from our Islamic habit library or create your own. Configure points, schedules, and approval policies for each task.',
+      'বয়স অনুযায়ী দৈনিক, সাপ্তাহিক বা ব্যক্তিগত কাজ যোগ করুন। আমাদের ইসলামি অভ্যাস লাইব্রেরি থেকে বেছে নিন, নাহলে নিজেই তৈরি করুন। প্রতিটি কাজের জন্য পয়েন্ট, সময়সূচি আর অনুমোদন নীতি নির্ধারণ করুন।',
   },
   {
     icon: Trophy,
-    title: '3. Celebrate Progress',
+    title: '৩. অগ্রগতি উদযাপন করুন',
     description:
-      'Review completed tasks, award points through auditable transactions, and unlock meaningful family rewards. Track weekly challenges and monthly milestones together.',
+      'সম্পন্ন কাজ রিভিউ করুন, পয়েন্ট প্রদান করুন, আর অর্থপূর্ণ পারিবারিক পুরস্কার আনলক করুন। সাপ্তাহিক চ্যালেঞ্জ আর মাসিক মাইলস্টোন একসাথে ট্র্যাক করুন। প্রতিটি ভালো কাজ আল্লাহর কাছে গণ্য — পয়েন্ট শুধু উৎসাহ জোগায়।',
   },
 ]
 
@@ -26,13 +26,12 @@ export function HowItWorksSection() {
     <section id="how-it-works" className="border-t border-border bg-background py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">How It Works</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">যেভাবে কাজ করে</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Three simple steps to better family habits
+            ভালো পরিবারিক অভ্যাসের তিনটি সহজ ধাপ
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Set up your family in minutes. Add tasks your children will love
-            completing. Watch good habits grow, one step at a time.
+            মাত্র কয়েক মিনিটে আপনার পরিবার সেট আপ করুন। সন্তান যে কাজগুলো ভালোবাসে তা যোগ করুন। দেখুন ভালো অভ্যাস বাড়ে, একেক পদক্ষেপে।
           </p>
         </div>
 
@@ -45,7 +44,7 @@ export function HowItWorksSection() {
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 shadow-soft transition-all hover:-translate-y-1 hover:shadow-premium"
               >
                 <div className="absolute -right-4 -top-4 font-display text-7xl font-extrabold text-primary/5">
-                  {i + 1}
+                  {['১', '২', '৩'][i]}
                 </div>
                 <div className="relative">
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">

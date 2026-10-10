@@ -19,24 +19,23 @@ export function CtaSection() {
           <div className="relative">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-amber-100">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Free forever plan — no credit card required</span>
+              <span>ফ্রি প্ল্যান চিরকাল — ক্রেডিট কার্ড লাগবে না</span>
             </div>
             <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Start building good habits today
+              আজই ভালো অভ্যাস গড়া শুরু করুন
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-50/90">
-              Join families nurturing Islamic practices, good character, and
-              daily responsibility — one small, meaningful step at a time.
+              পরিবারের সাথে যুক্ত হন — ইসলামি অভ্যাস, সুন্দর চরিত্র আর দৈনন্দিন দায়িত্ব গড়ে তুলুন। একেকটি ছোট, অর্থপূর্ণ পদক্ষেপে।
             </p>
             <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" variant="secondary" className="w-full sm:w-auto">
                 <Link href="/register">
-                  Start Your Family Journey
+                  আপনার পরিবার শুরু করুন
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="w-full border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white sm:w-auto">
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">সাইন ইন</Link>
               </Button>
             </div>
           </div>
