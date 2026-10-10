@@ -11,6 +11,7 @@ import {
   Clock,
   TrendingUp,
   Award,
+  ListChecks,
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/server/actions/dashboard-actions'
@@ -25,6 +26,8 @@ import { Progress } from '@/components/ui/progress'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
+import { ReviewActions } from '@/components/deensteps/review-actions'
+import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -58,13 +61,15 @@ export default async function DashboardPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> নতুন কাজ</Link>
+              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> নতুন চ্যালেঞ্জ</Link>
             </Button>
-            <Button asChild size="sm">
-              <Link href="/review">
-                <ShieldCheck className="mr-1.5 h-4 w-4" /> রিভিউ ({data.stats.pendingApprovals})
-              </Link>
-            </Button>
+            {data.stats.pendingApprovals > 0 && (
+              <Button asChild size="sm">
+                <Link href="#review">
+                  <ShieldCheck className="mr-1.5 h-4 w-4" /> রিভিউ ({data.stats.pendingApprovals})
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -110,6 +115,105 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Inline Review section — ড্যাশবোর্ডেই রিভিউ করুন */}
+        {data.pendingReviewSubmissions.length > 0 && (
+          <Card id="review" className="scroll-mt-20 border-amber-200 bg-amber-50/30 dark:border-amber-900 dark:bg-amber-950/10">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="font-display text-lg flex items-center gap-2">
+                    <ShieldCheck className="h-5 w-5 text-amber-500" />
+                    রিভিউ বাকি ({data.pendingReviewSubmissions.length})
+                  </CardTitle>
+                  <CardDescription>সন্তানের সাবমিশন এখানেই অনুমোদন বা ফেরত দিন।</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                {data.pendingReviewSubmissions.map((s) => (
+                  <li key={s.id} className="rounded-xl border border-border bg-card p-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex items-start gap-3">
+                        <Avatar color={s.child.avatarColor} name={s.child.displayName} size="md" />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-foreground">{s.child.displayName}</p>
+                            <span className="text-xs text-muted-foreground">·</span>
+                            <span className="text-xs text-muted-foreground">{formatDistanceToNow(s.submittedAt, { addSuffix: true })}</span>
+                          </div>
+                          <div className="mt-1 flex items-center gap-2">
+                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+                              <DynamicIcon iconKey={s.occurrence.task.iconKey} className="h-3.5 w-3.5" />
+                            </span>
+                            <p className="font-medium text-foreground">{s.occurrence.task.title}</p>
+                          </div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                            <Badge variant="outline" className="text-xs">{s.occurrence.task.category}</Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              +{s.occurrence.task.pointsValue} {s.occurrence.task.approvalPolicy === 'AUTO' ? '(অটো)' : 'তারা'}
+                            </Badge>
+                          </div>
+                          {s.note && (
+                            <div className="mt-2 rounded-lg bg-secondary/60 p-2.5 text-xs text-foreground">
+                              <span className="font-medium">সন্তানের নোট: </span>{s.note}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-shrink-0">
+                        <ReviewActions submissionId={s.id} pointsValue={s.occurrence.task.pointsValue} taskTitle={s.occurrence.task.title} />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Charts section — চার্ট ও ইনসাইট */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* 7-day trend line chart */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="font-display text-lg flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-emerald-600" />
+                গত ৭ দিনের তারা অর্জন
+              </CardTitle>
+              <CardDescription>প্রতিদিনের পয়েন্ট ট্রেন্ড — সন্তান অনুযায়ী।</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WeeklyTrendChart data={data.trendByChild} />
+            </CardContent>
+          </Card>
+
+          {/* Category donut chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-display text-lg">৩০ দিনের কাজের ধরন</CardTitle>
+              <CardDescription>কোন ক্যাটাগরিতে বেশি কাজ হচ্ছে।</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CategoryDonutChart counts={data.categoryCounts} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Child-wise progress bars */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              <Users className="h-5 w-5 text-emerald-600" />
+              আজকের সম্পন্ন — সন্তান অনুযায়ী
+            </CardTitle>
+            <CardDescription>প্রতিটি সন্তানের আজকের কাজ সম্পন্নের শতাংশ।</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChildProgressBars childStats={data.children} />
+          </CardContent>
+        </Card>
+
         {/* Two-column: activity + quick actions */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent submissions */}
@@ -133,7 +237,7 @@ export default async function DashboardPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
                           <p className="truncate text-sm font-medium text-foreground">
-                            {s.child.displayName} submitted{' '}
+                            {s.child.displayName} জমা দিয়েছে{' '}
                             <span className="text-primary">{s.occurrence.task.title}</span>
                           </p>
                           <span className="flex-shrink-0 text-xs text-muted-foreground">
@@ -167,9 +271,7 @@ export default async function DashboardPage() {
               </CardHeader>
               <CardContent className="grid gap-2">
                 <QuickAction icon={Plus} label="নতুন চ্যালেঞ্জ" href="/tasks" />
-                <QuickAction icon={ShieldCheck} label="সাবমিশন রিভিউ" href="/review" badge={data.stats.pendingApprovals} />
                 <QuickAction icon={Gift} label="পুরস্কার যোগ" href="/rewards" />
-                <QuickAction icon={Target} label="চ্যালেঞ্জ তৈরি করুন" href="/tasks" />
                 <QuickAction icon={TrendingUp} label="রিপোর্ট দেখুন" href="/reports" />
                 <QuickAction icon={Users} label="সন্তান ম্যানেজ" href="/children" />
               </CardContent>

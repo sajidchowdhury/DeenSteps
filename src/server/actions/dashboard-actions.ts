@@ -150,6 +150,75 @@ export async function getDashboardData() {
     include: { child: true },
   })
 
+  // ── Pending submissions for inline review (with full data) ─────────────
+  const pendingReviewSubmissions = await db.taskSubmission.findMany({
+    where: {
+      child: { familyId: family.id },
+      decision: null,
+    },
+    orderBy: { submittedAt: 'asc' },
+    include: {
+      child: true,
+      occurrence: { include: { task: true } },
+    },
+  })
+
+  // ── 7-day points trend per child (for line chart) ──────────────────────
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
+  sevenDaysAgo.setHours(0, 0, 0, 0)
+
+  const weekTrendTxns = await db.pointsTransaction.findMany({
+    where: {
+      familyId: family.id,
+      type: 'EARNED',
+      createdAt: { gte: sevenDaysAgo },
+    },
+    select: { childId: true, amount: true, createdAt: true },
+  })
+
+  // Build per-child 7-day arrays
+  const trendByChild: { childId: string; childName: string; avatarColor: string; days: { date: string; points: number }[] }[] = []
+  for (const c of children) {
+    const days: { date: string; points: number }[] = []
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      d.setHours(0, 0, 0, 0)
+      const next = new Date(d)
+      next.setDate(next.getDate() + 1)
+      const points = weekTrendTxns
+        .filter((t) => t.childId === c.id && t.createdAt >= d && t.createdAt < next)
+        .reduce((sum, t) => sum + t.amount, 0)
+      days.push({ date: d.toISOString().slice(0, 10), points })
+    }
+    trendByChild.push({
+      childId: c.id,
+      childName: c.displayName,
+      avatarColor: c.avatarColor,
+      days,
+    })
+  }
+
+  // ── Category breakdown (last 30 days, for pie/donut chart) ─────────────
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+  const categoryTxns = await db.taskSubmission.findMany({
+    where: {
+      child: { familyId: family.id },
+      decision: 'APPROVED',
+      reviewedAt: { gte: thirtyDaysAgo },
+    },
+    include: { occurrence: { include: { task: { select: { category: true } } } } },
+  })
+
+  const categoryCounts: Record<string, number> = {}
+  for (const s of categoryTxns) {
+    const cat = s.occurrence.task.category
+    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1
+  }
+
   return {
     family,
     user,
@@ -164,5 +233,8 @@ export async function getDashboardData() {
     children: childStats,
     recentSubmissions,
     recentTxns,
+    pendingReviewSubmissions,
+    trendByChild,
+    categoryCounts,
   }
 }

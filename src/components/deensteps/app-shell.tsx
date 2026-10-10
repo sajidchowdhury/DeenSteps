@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   Users,
   ListChecks,
-  ShieldCheck,
   Gift,
   BarChart3,
   Settings,
@@ -29,7 +28,6 @@ const NAV = [
   { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
   { href: '/children', label: 'সন্তান', icon: Users },
   { href: '/tasks', label: 'চ্যালেঞ্জ', icon: ListChecks },
-  { href: '/review', label: 'রিভিউ সেন্টার', icon: ShieldCheck, badgeKey: 'pending' },
   { href: '/rewards', label: 'পুরস্কার', icon: Gift },
   { href: '/reports', label: 'রিপোর্ট', icon: BarChart3 },
   { href: '/settings', label: 'সেটিংস', icon: Settings },
@@ -190,11 +188,6 @@ function SidebarContent({
               >
                 <Icon className="h-4 w-4 flex-shrink-0" />
                 <span className="flex-1">{item.label}</span>
-                {item.badgeKey === 'pending' && pendingCount > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
-                    {pendingCount > 9 ? '9+' : pendingCount}
-                  </span>
-                )}
               </Link>
             )
           })}
