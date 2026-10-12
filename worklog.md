@@ -327,6 +327,44 @@ Stage Summary:
 - 8/20 sessions complete (40%)
 - Next: S2.2 — Enforce frequency limits & cooldown at redemption time
 
+---
+Task ID: S2.2
+Agent: main (Super Z)
+Task: Frequency limits & cooldown — enforce maxPerWeek, maxPerMonth, cooldownDays at redemption
+
+Work Log:
+- Re-read requestRedemption action in reward-actions.ts for context
+- Imported date-fns functions: differenceInCalendarDays, startOfWeek, startOfMonth
+- Added maxPerWeek check inside requestRedemption transaction:
+  - Counts redemptions this week (from startOfWeek) with status REQUESTED/APPROVED/FULFILLED
+  - Blocks if count >= maxPerWeek
+  - Bengali error: "এই সপ্তাহে এই পুরস্কারের সীমা পূর্ণ (সপ্তাহে Xবার)। পরের সপ্তাহে আবার চেষ্টা করো।"
+- Added maxPerMonth check:
+  - Counts redemptions this month (from startOfMonth)
+  - Blocks if count >= maxPerMonth
+  - Bengali error: "এই মাসে এই পুরস্কারের সীমা পূর্ণ (মাসে Xবার)। পরের মাসে আবার চেষ্টা করো।"
+- Added cooldownDays check:
+  - Finds last redemption for this reward+child
+  - Calculates days since last redemption
+  - Blocks if daysSince < cooldownDays
+  - Bengali error: "এই পুরস্কার এখনও কুলডাউনে আছে। আর X দিন অপেক্ষা করো।"
+- Also translated existing redemptionLimit error to Bengali
+- All checks inside the transaction (atomic, safe)
+- Updated child dashboard reward cards to show category label badges
+- Lint clean
+
+Stage Summary:
+- All 3 frequency controls enforced at redemption time:
+  1. ✅ maxPerWeek — limits per-week redemptions
+  2. ✅ maxPerMonth — limits per-month redemptions
+  3. ✅ cooldownDays — enforces minimum days between redemptions
+- All checks atomic (inside db.$transaction)
+- All error messages in Bengali, encouraging tone
+- Existing redemptionLimit (lifetime) still works alongside new limits
+- 9/20 sessions complete (45%)
+- Next: S2.3 — Family budget (monthly limit, committed/remaining tracking)
+
+
 
 
 

@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S2.1 complete
+> **Last updated:** Session S2.2 complete
 
 ### Phase 0 — Audit & Foundation
 
@@ -44,7 +44,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Session | Scope | Status |
 |---------|-------|--------|
 | **S2.1** | Reward categories — Experiences, Learning, Privileges, Food | ✅ **DONE** |
-| S2.2 | Frequency limits & cooldown — maxPerWeek, maxPerMonth, cooldownDays | ⬜ |
+| **S2.2** | Frequency limits & cooldown — maxPerWeek, maxPerMonth, cooldownDays | ✅ **DONE** |
 | S2.3 | Family budget — monthly limit, committed/remaining tracking | ⬜ |
 | S2.4 | Non-food & low-cost alternatives — category tabs, promotion | ⬜ |
 
@@ -78,11 +78,11 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 |-------|----------|-----------|-----------|
 | Phase 0 | 2 | 2 | 0 |
 | Phase 1 | 5 | 5 | 0 |
-| Phase 2 | 4 | 1 | 3 |
+| Phase 2 | 4 | 2 | 2 |
 | Phase 3 | 3 | 0 | 3 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **8** | **12** |
+| **Total** | **20** | **9** | **11** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S2.2 — Frequency limits & cooldown (enforce maxPerWeek, maxPerMonth, cooldownDays at redemption)
+**Next session:** S2.3 — Family budget (monthly limit, committed/remaining tracking, budget enforcement)
 
 ---
 

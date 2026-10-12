@@ -293,6 +293,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                     const progress = r.requiredPoints > 0 ? Math.min(100, Math.round((currentBalance / r.requiredPoints) * 100)) : 100
                     const remaining = Math.max(0, r.requiredPoints - currentBalance)
                     const eligible = currentBalance >= r.requiredPoints
+                    const catLabel = r.category === 'EXPERIENCE' ? 'অভিজ্ঞতা' : r.category === 'LEARNING' ? 'শেখা' : r.category === 'PRIVILEGE' ? 'সুবিধা' : 'খাবার'
                     return (
                       <div key={r.id} className="rounded-xl border border-border bg-card p-3">
                         <div className="flex items-center gap-2">
@@ -300,8 +301,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                             <DynamicIcon iconKey={r.iconKey} className="h-4 w-4" />
                           </span>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-semibold text-foreground">{r.title}</p>
-                            <p className="text-xs text-muted-foreground">{r.requiredPoints} stars</p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="truncate text-sm font-semibold text-foreground">{r.title}</p>
+                              <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[9px] text-muted-foreground">{catLabel}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">{r.requiredPoints} তারা</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between text-xs">

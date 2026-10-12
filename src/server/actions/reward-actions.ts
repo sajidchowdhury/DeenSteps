@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { z } from 'zod'
+import { differenceInCalendarDays, startOfWeek, startOfMonth } from 'date-fns'
 import { db } from '@/lib/db'
 import { requireFamily } from '@/lib/auth/session'
 import { revalidatePath } from 'next/cache'
@@ -167,13 +168,61 @@ export async function requestRedemption(rewardId: string, childId: string): Prom
         throw new Error(`Not enough stars. You need ${r.requiredPoints}, you have ${balance}.`)
       }
 
-      // Check redemption limit per child
+      // Check redemption limit per child (lifetime)
       if (r.redemptionLimit) {
         const count = await tx.rewardRedemption.count({
           where: { rewardId, childId, status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] } },
         })
         if (count >= r.redemptionLimit) {
-          throw new Error('Redemption limit reached for this reward.')
+          throw new Error('এই পুরস্কারের সীমা পূর্ণ হয়ে গেছে।')
+        }
+      }
+
+      // Phase 2 (S2.2): Check weekly limit
+      if (r.maxPerWeek) {
+        const weekStart = startOfWeek(new Date())
+        const weekCount = await tx.rewardRedemption.count({
+          where: {
+            rewardId, childId,
+            status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] },
+            requestedAt: { gte: weekStart },
+          },
+        })
+        if (weekCount >= r.maxPerWeek) {
+          throw new Error(`এই সপ্তাহে এই পুরস্কারের সীমা পূর্ণ (সপ্তাহে ${r.maxPerWeek}বার)। পরের সপ্তাহে আবার চেষ্টা করো।`)
+        }
+      }
+
+      // Phase 2 (S2.2): Check monthly limit
+      if (r.maxPerMonth) {
+        const monthStart = startOfMonth(new Date())
+        const monthCount = await tx.rewardRedemption.count({
+          where: {
+            rewardId, childId,
+            status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] },
+            requestedAt: { gte: monthStart },
+          },
+        })
+        if (monthCount >= r.maxPerMonth) {
+          throw new Error(`এই মাসে এই পুরস্কারের সীমা পূর্ণ (মাসে ${r.maxPerMonth}বার)। পরের মাসে আবার চেষ্টা করো।`)
+        }
+      }
+
+      // Phase 2 (S2.2): Check cooldown
+      if (r.cooldownDays > 0) {
+        const lastRedemption = await tx.rewardRedemption.findFirst({
+          where: {
+            rewardId, childId,
+            status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] },
+          },
+          orderBy: { requestedAt: 'desc' },
+        })
+        if (lastRedemption) {
+          const daysSince = differenceInCalendarDays(new Date(), lastRedemption.requestedAt)
+          if (daysSince < r.cooldownDays) {
+            const daysLeft = r.cooldownDays - daysSince
+            throw new Error(`এই পুরস্কার এখনও কুলডাউনে আছে। আর ${daysLeft} দিন অপেক্ষা করো।`)
+          }
         }
       }
 
