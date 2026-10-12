@@ -18,6 +18,7 @@ import {
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { Nur } from '@/components/deensteps/mascot'
 import { requestSadaqah } from '@/server/actions/sadaqah-actions'
+import { playSound } from '@/lib/sounds'
 import { cn } from '@/lib/utils'
 
 type SadaqahCause = {
@@ -79,6 +80,8 @@ export function SadaqahButton({
       if (res.ok) {
         setOpen(false)
         setCelebrationOpen(true)
+        // Phase E (E3): Play sadaqah celebration sound.
+        playSound('sadaqah-confirmed')
         setSelectedCause('')
         setStars(10)
         router.refresh()

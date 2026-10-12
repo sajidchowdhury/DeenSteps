@@ -5,6 +5,7 @@ import { Nur } from '@/components/deensteps/mascot'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { playSound } from '@/lib/sounds'
 import Link from 'next/link'
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -33,7 +34,7 @@ export function AchievementBadge({ achievement, size = 'md' }: { achievement: Ac
           'inline-flex items-center justify-center rounded-full',
           tileSize,
           achievement.awarded
-            ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300'
+            ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300 animate-pop-in'
             : 'bg-muted text-muted-foreground'
         )}
       >
@@ -125,6 +126,8 @@ export function AchievementCelebrationOverlay({
     if (firstUnseen) {
       setUnseen(firstUnseen)
       setShowConfetti(true)
+      // Phase E (E3): Play celebration sound on overlay appear.
+      playSound('achievement-unlocked')
     }
   }, [childId, earnedAchievements])
 

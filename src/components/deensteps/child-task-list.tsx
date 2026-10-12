@@ -33,6 +33,7 @@ import {
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { submitTaskOccurrence } from '@/server/actions/review-actions'
 import { TASK_STATUS_META } from '@/lib/constants'
+import { playSound } from '@/lib/sounds'
 import { cn } from '@/lib/utils'
 
 export type ChildTask = {
@@ -189,11 +190,14 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
       const res = await submitTaskOccurrence(task.id, task.childId, note.trim() || undefined)
       if (res.ok) {
         toast.success('জমা হয়েছে! বাবা-মা শীঘ্রই রিভিউ করবেন।')
+        // Phase E (E4): Play submission sound.
+        playSound('task-submitted')
         setSubmitOpen(false)
         setNote('')
         router.refresh()
       } else {
         toast.error(res.error ?? 'কাজ জমা দেওয়া যায়নি।')
+        playSound('error')
       }
     })
   }

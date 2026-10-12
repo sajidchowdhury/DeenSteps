@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
-import { Nur } from '@/components/deensteps/mascot'
+import { Nur, NurSpeechBubble } from '@/components/deensteps/mascot'
 import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
@@ -20,6 +20,7 @@ import { getChildAchievementStatus, getEarnedChildAchievements } from '@/server/
 import { AchievementGrid, AchievementCelebrationOverlay } from '@/components/deensteps/achievement-celebration'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
+import { cn } from '@/lib/utils'
 
 export default async function ChildDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: childId } = await params
@@ -201,13 +202,23 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             ════════════════════════════════════════════════════════════════ */}
         <div className="mb-6 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-cream to-emerald-50/50 dark:border-amber-900/40 dark:from-amber-950/30 dark:via-secondary dark:to-emerald-950/20">
           <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-7">
-            {/* Nūr mascot — mood depends on today's progress */}
-            <div className="flex-shrink-0 self-center">
+            {/* Nūr mascot — mood + speech bubble depends on today's progress */}
+            <div className="flex flex-shrink-0 flex-col items-center gap-2 self-center">
               <Nur
                 state={todayApproved > 0 ? 'proud' : 'happy'}
                 size="lg"
                 className="drop-shadow-sm"
               />
+              {/* Phase E (E5): Contextual speech bubble */}
+              <NurSpeechBubble size="sm">
+                {todayTotal === 0
+                  ? 'আজ কোনো কাজ নেই! 🌿'
+                  : todayApproved === todayTotal
+                    ? 'আলহামদুলিল্লাহ! সব শেষ! 🎉'
+                    : todayApproved > 0
+                      ? `দারুণ এগিয়ে চলোছ! 💪`
+                      : 'শুরু করা যাক! ✨'}
+              </NurSpeechBubble>
             </div>
 
             {/* Mission content */}
@@ -244,7 +255,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   {currentBalance} তারা
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1.5 text-sm font-bold text-orange-800 dark:bg-orange-900/40 dark:text-orange-200">
-                  <Flame className="h-4 w-4 text-orange-500" />
+                  <Flame className={cn("h-4 w-4 text-orange-500", streak > 0 && "animate-flame-flicker")} />
                   {streak} দিন ধারাবাহিক
                 </span>
                 <Link
@@ -297,7 +308,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
             <div className="flex items-center gap-3">
               <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">
-                <Heart className="h-6 w-6" />
+                <Heart className="h-6 w-6 animate-heart-beat" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display font-bold text-foreground">সাদাকাহ</p>
@@ -372,7 +383,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 <div className="mt-2 flex items-center gap-2">
                   <Progress
                     value={Math.min(100, Math.round((milestoneProgress.qualifyingWeeks / milestoneProgress.requiredWeeks) * 100))}
-                    className="h-2 flex-1"
+                    className={cn(
+                      'h-2 flex-1',
+                      // Phase E (E6): Glow-pulse when ≥80% of milestone
+                      milestoneProgress.qualifyingWeeks / milestoneProgress.requiredWeeks >= 0.8 && !milestoneProgress.qualified && 'animate-glow-pulse'
+                    )}
                   />
                   <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">
                     {milestoneProgress.qualifyingWeeks}/{milestoneProgress.requiredWeeks}

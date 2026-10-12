@@ -230,6 +230,75 @@
     100% { transform: scale(1); opacity: 1; }
   }
   .animate-pop-in { animation: pop-in 0.4s ease-out; }
+
+  /* ════════════════════════════════════════════════════════════════
+     Phase E (E1): Animation system
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Slide-down for done-pile expanding */
+  @keyframes slide-down {
+    0% { transform: translateY(-8px); opacity: 0; max-height: 0; }
+    100% { transform: translateY(0); opacity: 1; max-height: 500px; }
+  }
+  .animate-slide-down { animation: slide-down 0.3s ease-in-out forwards; overflow: hidden; }
+
+  /* Wiggle for Nūr's thinking state */
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  .animate-wiggle { animation: wiggle 2s ease-in-out infinite; transform-origin: top center; }
+
+  /* Glow-pulse for milestone progress bar when ≥80% */
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 4px 1px oklch(0.6 0.15 280 / 0.3); }
+    50% { box-shadow: 0 0 12px 3px oklch(0.6 0.15 280 / 0.5); }
+  }
+  .animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+
+  /* Shimmer for locked achievement badges (on hover) */
+  @keyframes shimmer {
+    0% { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent 0%, oklch(0.75 0.14 85 / 0.15) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Heart-beat for sadaqah heart icon */
+  @keyframes heart-beat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+    60% { transform: scale(1); }
+  }
+  .animate-heart-beat { animation: heart-beat 2s ease-in-out infinite; }
+
+  /* Star count-up pop */
+  @keyframes star-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .animate-star-pop { animation: star-pop 0.5s ease-out; }
+
+  /* Flame grow for streak */
+  @keyframes flame-flicker {
+    0%, 100% { transform: scale(1) rotate(-1deg); }
+    25% { transform: scale(1.08) rotate(1deg); }
+    50% { transform: scale(0.95) rotate(-1deg); }
+    75% { transform: scale(1.05) rotate(1deg); }
+  }
+  .animate-flame-flicker { animation: flame-flicker 1.5s ease-in-out infinite; transform-origin: bottom center; }
+
+  /* Progress bar fill animation */
+  @keyframes fill-bar {
+    from { width: 0%; }
+  }
+  .animate-fill-bar { animation: fill-bar 0.8s ease-out; }
 }
 
 /* Custom scrollbar for long lists */
