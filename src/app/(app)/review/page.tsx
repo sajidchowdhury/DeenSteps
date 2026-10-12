@@ -1,17 +1,12 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { CheckCircle2, XCircle, RotateCcw, Clock, ShieldCheck, ArrowRight, MessageSquare } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { AppShell, Avatar } from '@/components/deensteps/app-shell'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { EmptyState } from '@/components/deensteps/empty-state'
-import { ReviewActions } from '@/components/deensteps/review-actions'
-import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { ReviewQueueClient, type ReviewQueueItem } from '@/components/deensteps/review-queue-client'
 import { TASK_STATUS_META } from '@/lib/constants'
-import { format, formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 
 export default async function ReviewPage() {
   const user = await getCurrentUser()
@@ -54,6 +49,21 @@ export default async function ReviewPage() {
 
   const pendingCount = pending.length
 
+  // Phase C (C5): Map pending submissions to the client component's shape
+  const queueItems: ReviewQueueItem[] = pending.map((s) => ({
+    id: s.id,
+    submittedAt: s.submittedAt.toISOString(),
+    childId: s.childId,
+    childName: s.child.displayName,
+    childAvatarColor: s.child.avatarColor,
+    taskTitle: s.occurrence.task.title,
+    taskIconKey: s.occurrence.task.iconKey,
+    taskCategory: s.occurrence.task.category,
+    pointsValue: s.occurrence.task.pointsValue,
+    approvalPolicy: s.occurrence.task.approvalPolicy,
+    note: s.note,
+  }))
+
   return (
     <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
       <div className="mx-auto max-w-5xl space-y-6">
@@ -66,72 +76,8 @@ export default async function ReviewPage() {
           </p>
         </div>
 
-        {/* Pending */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-amber-500" />
-                  রিভিউ বাকি
-                </CardTitle>
-                <CardDescription>এখানে সব অপেক্ষমান সাবমিশন দেখা যাচ্ছে।</CardDescription>
-              </div>
-              <Badge variant="secondary" className="text-sm">{pending.length}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {pending.length === 0 ? (
-              <EmptyState
-                icon={ShieldCheck}
-                title="সব শেষ!"
-                description="এখন কোনো সাবমিশন রিভিউর জন্য বাকি নেই। সন্তান কাজ জমা দিলে এখানে দেখা যাবে।"
-              />
-            ) : (
-              <ul className="space-y-3">
-                {pending.map((s) => (
-                  <li key={s.id} className="rounded-xl border border-border bg-card p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="flex items-start gap-3">
-                        <Avatar color={s.child.avatarColor} name={s.child.displayName} size="md" />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-semibold text-foreground">{s.child.displayName}</p>
-                            <span className="text-xs text-muted-foreground">·</span>
-                            <span className="text-xs text-muted-foreground">{formatDistanceToNow(s.submittedAt, { addSuffix: true })}</span>
-                          </div>
-                          <div className="mt-1 flex items-center gap-2">
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
-                              <DynamicIcon iconKey={s.occurrence.task.iconKey} className="h-3.5 w-3.5" />
-                            </span>
-                            <p className="font-medium text-foreground">{s.occurrence.task.title}</p>
-                          </div>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                            <Badge variant="outline" className="text-xs">{s.occurrence.task.category}</Badge>
-                            <Badge variant="outline" className="text-xs">
-                              {format(s.occurrence.scheduledDate, 'MMM d')}
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs">
-                              {s.occurrence.task.pointsValue} {s.occurrence.task.approvalPolicy === 'AUTO' ? '(স্বয়ংক্রিয়)' : 'তারা'}
-                            </Badge>
-                          </div>
-                          {s.note && (
-                            <div className="mt-2 rounded-lg bg-secondary/60 p-2.5 text-xs text-foreground">
-                              <span className="font-medium">সন্তানের নোট: </span>{s.note}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-shrink-0 gap-2">
-                        <ReviewActions submissionId={s.id} pointsValue={s.occurrence.task.pointsValue} taskTitle={s.occurrence.task.title} />
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
+        {/* Phase C (C5): Review queue with filters + batch approve */}
+        <ReviewQueueClient items={queueItems} />
 
         {/* Recently reviewed */}
         <Card>

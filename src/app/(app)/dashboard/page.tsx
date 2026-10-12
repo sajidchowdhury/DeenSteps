@@ -4,14 +4,13 @@ import {
   ShieldCheck,
   CheckCircle2,
   Star,
-  Target,
   Gift,
   Plus,
   ArrowRight,
-  Clock,
   TrendingUp,
-  Award,
   ListChecks,
+  AlertCircle,
+  Heart,
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/server/actions/dashboard-actions'
@@ -21,12 +20,8 @@ import { db } from '@/lib/db'
 import { AppShell, Avatar } from '@/components/deensteps/app-shell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { TASK_STATUS_META } from '@/lib/constants'
-import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
-import { ReviewActions } from '@/components/deensteps/review-actions'
 import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
 import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
 import { IncidentsSection } from '@/components/deensteps/incidents-section'
@@ -35,7 +30,7 @@ import { SadaqahReviewSection } from '@/components/deensteps/sadaqah-review-sect
 import { SadaqahHistorySection } from '@/components/deensteps/sadaqah-history-section'
 import { WeeklyReflectionSection } from '@/components/deensteps/weekly-reflection-section'
 import { MilestoneProgressSection } from '@/components/deensteps/milestone-progress-section'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -68,20 +63,44 @@ export default async function DashboardPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> নতুন চ্যালেঞ্জ</Link>
+              <Link href="/tasks"><Plus className="mr-1.5 h-4 w-4" /> নতুন কাজ</Link>
             </Button>
-            {data.stats.pendingApprovals > 0 && (
-              <Button asChild size="sm">
-                <Link href="#review">
-                  <ShieldCheck className="mr-1.5 h-4 w-4" /> রিভিউ ({data.stats.pendingApprovals})
-                </Link>
-              </Button>
-            )}
           </div>
         </div>
 
         {/* Setup progress bar — সেটআপ সম্পূর্ণ হলে আপনাআপনি গায়েব */}
         <SetupProgressBar progress={setupProgress} />
+
+        {/* ════════════════════════════════════════════════════════════════
+            Phase C (C1): "What to do now" hero
+            Surfaces the 3 actionable items at the top: review, incidents, sadaqah.
+            Only shows non-zero items. If everything is zero, shows a "all done" message.
+            This replaces the old inline review section + makes incidents/sadaqah
+            discoverable without scrolling through 17 sections.
+            ════════════════════════════════════════════════════════════════ */}
+        <WhatToDoNowHero
+          pendingReviewCount={data.stats.pendingApprovals}
+          openIncidentsCount={data.openIncidents.length}
+          pendingSadaqahCount={data.pendingSadaqah.length}
+        />
+
+        {/* ════════════════════════════════════════════════════════════════
+            Phase C (C2): Quick Actions — moved UP from the bottom of the page.
+            Was buried after 15 sections; now right after the hero so parents
+            can jump to common tasks immediately.
+            ════════════════════════════════════════════════════════════════ */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-display text-lg">দ্রুত কাজ</CardTitle>
+            <CardDescription>প্রয়োজনীয় পৃষ্ঠাগুলোতে দ্রুত যান।</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <QuickAction icon={Plus} label="নতুন কাজ" href="/tasks" />
+            <QuickAction icon={Gift} label="পুরস্কার যোগ" href="/rewards" />
+            <QuickAction icon={TrendingUp} label="রিপোর্ট দেখুন" href="/reports" />
+            <QuickAction icon={Users} label="সন্তান ম্যানেজ" href="/children" />
+          </CardContent>
+        </Card>
 
         {/* Summary cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
@@ -122,62 +141,11 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Inline Review section — ড্যাশবোর্ডেই রিভিউ করুন */}
-        {data.pendingReviewSubmissions.length > 0 && (
-          <Card id="review" className="scroll-mt-20 border-amber-200 bg-amber-50/30 dark:border-amber-900 dark:bg-amber-950/10">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="font-display text-lg flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 text-amber-500" />
-                    রিভিউ বাকি ({data.pendingReviewSubmissions.length})
-                  </CardTitle>
-                  <CardDescription>সন্তানের সাবমিশন এখানেই অনুমোদন বা ফেরত দিন।</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {data.pendingReviewSubmissions.map((s) => (
-                  <li key={s.id} className="rounded-xl border border-border bg-card p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="flex items-start gap-3">
-                        <Avatar color={s.child.avatarColor} name={s.child.displayName} size="md" />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-semibold text-foreground">{s.child.displayName}</p>
-                            <span className="text-xs text-muted-foreground">·</span>
-                            <span className="text-xs text-muted-foreground">{formatDistanceToNow(s.submittedAt, { addSuffix: true })}</span>
-                          </div>
-                          <div className="mt-1 flex items-center gap-2">
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
-                              <DynamicIcon iconKey={s.occurrence.task.iconKey} className="h-3.5 w-3.5" />
-                            </span>
-                            <p className="font-medium text-foreground">{s.occurrence.task.title}</p>
-                          </div>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                            <Badge variant="outline" className="text-xs">{s.occurrence.task.category}</Badge>
-                            <Badge variant="secondary" className="text-xs">
-                              +{s.occurrence.task.pointsValue} {s.occurrence.task.approvalPolicy === 'AUTO' ? '(অটো)' : 'তারা'}
-                            </Badge>
-                          </div>
-                          {s.note && (
-                            <div className="mt-2 rounded-lg bg-secondary/60 p-2.5 text-xs text-foreground">
-                              <span className="font-medium">সন্তানের নোট: </span>{s.note}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-shrink-0">
-                        <ReviewActions submissionId={s.id} pointsValue={s.occurrence.task.pointsValue} taskTitle={s.occurrence.task.title} />
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        )}
+        {/* Phase C (C2): Inline review section removed.
+            The "What to do now" hero above now surfaces pending reviews with
+            a one-click link to /review. The full /review page has filters +
+            batch approve (Phase C5). No need to duplicate the review queue on
+            the dashboard. */}
 
         {/* Missed tasks section — Phase 1 (S1.3) */}
         <MissedTasksSection missedTasks={data.missedTasks} />
@@ -271,95 +239,108 @@ export default async function DashboardPage() {
         {/* Monthly milestone progress — Phase 5 (S5.2) */}
         <MilestoneProgressSection progress={data.milestoneProgress} />
 
-        {/* Two-column: activity + quick actions */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Recent submissions */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="font-display text-lg">সাম্প্রতিক কার্যকলাপ</CardTitle>
-              <CardDescription>আপনার পরিবারের সর্বশেষ কাজের সাবমিশন।</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {data.recentSubmissions.length === 0 ? (
-                <EmptyState
-                  icon={Clock}
-                  title="এখনো কোনো সাবমিশন নেই"
-                  description="সন্তান কাজ জমা দিলে এখানে দেখা যাবে।"
-                />
-              ) : (
-                <ul className="space-y-3">
-                  {data.recentSubmissions.map((s) => (
-                    <li key={s.id} className="flex items-start gap-3 rounded-lg border border-border bg-card/50 p-3">
-                      <Avatar color={s.child.avatarColor} name={s.child.displayName} size="sm" />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="truncate text-sm font-medium text-foreground">
-                            {s.child.displayName} জমা দিয়েছে{' '}
-                            <span className="text-primary">{s.occurrence.task.title}</span>
-                          </p>
-                          <span className="flex-shrink-0 text-xs text-muted-foreground">
-                            {formatDistanceToNow(s.submittedAt, { addSuffix: true })}
-                          </span>
-                        </div>
-                        <div className="mt-1 flex items-center gap-2">
-                          <Badge variant="outline" className={TASK_STATUS_META[s.decision ?? (s.occurrence.status as string)]?.tone ?? ''}>
-                            {TASK_STATUS_META[s.decision ?? (s.occurrence.status as string)]?.label ?? s.occurrence.status}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{s.occurrence.task.category}</span>
-                          {s.pointsAwarded > 0 && (
-                            <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-amber-600">
-                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" /> +{s.pointsAwarded}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Quick actions + recent points */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg">দ্রুত কাজ</CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-2">
-                <QuickAction icon={Plus} label="নতুন চ্যালেঞ্জ" href="/tasks" />
-                <QuickAction icon={Gift} label="পুরস্কার যোগ" href="/rewards" />
-                <QuickAction icon={TrendingUp} label="রিপোর্ট দেখুন" href="/reports" />
-                <QuickAction icon={Users} label="সন্তান ম্যানেজ" href="/children" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg">সাম্প্রতিক তারা</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {data.recentTxns.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">এখনো কোনো তারা অর্জিত হয়নি।</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {data.recentTxns.map((t) => (
-                      <li key={t.id} className="flex items-center gap-2 text-sm">
-                        <Avatar color={t.child.avatarColor} name={t.child.displayName} size="sm" />
-                        <span className="min-w-0 flex-1 truncate text-muted-foreground">{t.description}</span>
-                        <span className={t.amount >= 0 ? 'font-semibold text-emerald-600' : 'font-semibold text-rose-600'}>
-                          {t.amount >= 0 ? '+' : ''}{t.amount}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        {/* Phase C (C2): Removed the old "recent activity + quick actions + recent stars"
+            two-column section at the bottom. Quick Actions moved up to right after
+            the hero. Recent submissions are now surfaced via the "what to do now"
+            hero + the /review page. Recent stars are on /reports. The dashboard
+            is now shorter and more focused. */}
       </div>
     </AppShell>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Phase C (C1): "What to do now" hero
+// Surfaces the 3 actionable items at the top of the dashboard.
+// Only shows non-zero items. If everything is zero, shows a calm "all done" message.
+// ────────────────────────────────────────────────────────────────────────────
+
+function WhatToDoNowHero({
+  pendingReviewCount,
+  openIncidentsCount,
+  pendingSadaqahCount,
+}: {
+  pendingReviewCount: number
+  openIncidentsCount: number
+  pendingSadaqahCount: number
+}) {
+  const hasAnything = pendingReviewCount > 0 || openIncidentsCount > 0 || pendingSadaqahCount > 0
+
+  if (!hasAnything) {
+    return (
+      <Card className="border-emerald-200 bg-emerald-50/40 dark:border-emerald-900/40 dark:bg-emerald-950/20">
+        <CardContent className="flex items-center gap-3 p-5">
+          <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">
+            <CheckCircle2 className="h-6 w-6" />
+          </span>
+          <div>
+            <p className="font-display text-base font-bold text-foreground">সব কাজ শেষ! ✨</p>
+            <p className="text-sm text-muted-foreground">এখন কোনো অপেক্ষমান কাজ নেই। পরিবারের সাথে সময় কাটান। 🌿</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <div>
+      <p className="mb-2 text-sm font-semibold text-muted-foreground">আজকে যা করতে হবে:</p>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Review */}
+        {pendingReviewCount > 0 && (
+          <Link href="/review" className="group">
+            <Card className="h-full border-amber-200 bg-amber-50/40 transition-all hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-sm dark:border-amber-900/40 dark:bg-amber-950/20">
+              <CardContent className="flex items-center gap-3 p-4">
+                <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300">
+                  <ShieldCheck className="h-5 w-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-foreground">{pendingReviewCount} টি রিভিউ বাকি</p>
+                  <p className="text-xs text-muted-foreground">সন্তানের সাবমিশন অনুমোদন করুন</p>
+                </div>
+                <ArrowRight className="h-4 w-4 flex-shrink-0 text-amber-500 transition-transform group-hover:translate-x-0.5" />
+              </CardContent>
+            </Card>
+          </Link>
+        )}
+
+        {/* Incidents */}
+        {openIncidentsCount > 0 && (
+          <Link href="#incidents" className="group">
+            <Card className="h-full border-rose-200 bg-rose-50/40 transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-sm dark:border-rose-900/40 dark:bg-rose-950/20">
+              <CardContent className="flex items-center gap-3 p-4">
+                <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300">
+                  <AlertCircle className="h-5 w-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-foreground">{openIncidentsCount} টি ইনসিডেন্ট</p>
+                  <p className="text-xs text-muted-foreground">সন্তানের সমস্যা দেখুন</p>
+                </div>
+                <ArrowRight className="h-4 w-4 flex-shrink-0 text-rose-500 transition-transform group-hover:translate-x-0.5" />
+              </CardContent>
+            </Card>
+          </Link>
+        )}
+
+        {/* Sadaqah */}
+        {pendingSadaqahCount > 0 && (
+          <Link href="#sadaqah" className="group">
+            <Card className="h-full border-emerald-200 bg-emerald-50/40 transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/20">
+              <CardContent className="flex items-center gap-3 p-4">
+                <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">
+                  <Heart className="h-5 w-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-foreground">{pendingSadaqahCount} টি সাদাকাহ</p>
+                  <p className="text-xs text-muted-foreground">সন্তানের দান নিশ্চিত করুন</p>
+                </div>
+                <ArrowRight className="h-4 w-4 flex-shrink-0 text-emerald-500 transition-transform group-hover:translate-x-0.5" />
+              </CardContent>
+            </Card>
+          </Link>
+        )}
+      </div>
+    </div>
   )
 }
 
