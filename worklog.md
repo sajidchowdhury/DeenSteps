@@ -101,4 +101,40 @@ Stage Summary:
 - 3/20 sessions complete (15%)
 - Next: S1.2 — Tier & age UI (badges, filters, grouping in import dialog)
 
+---
+Task ID: S1.2
+Agent: main (Super Z)
+Task: Tier & age UI — badges, filters, grouping in import dialog
+
+Work Log:
+- Re-read worklog S1.1 and SCHEMA_PLAN.md Phase 1 for context
+- Created TierBadge component (src/components/deensteps/tier-badge.tsx):
+  - Color-coded badges per tier (1=emerald, 2=amber, 3=sky, 4=violet, 5=rose)
+  - Bengali numerals (Tier ১-৫)
+  - AgeIndicator sub-component (shows minAge-maxAge in Bengali)
+- Rewrote ImportTasksDialog in task-dialogs.tsx:
+  - Added age filter bar (সব বয়স / ৩-৫ / ৬-৮ / ৯-১২ / ১৩+)
+  - Tasks filtered by age-appropriateness (checks minAge/maxAge)
+  - Tasks sorted by tier within each category (Tier 1 first)
+  - TierBadge on each task item
+  - AgeIndicator on each task item (where applicable)
+  - Empty state when no tasks match age filter
+  - All text in Bengali (button labels, helper text)
+- Updated TaskFormDialog:
+  - Added tier field to form schema (z.coerce.number, default 3)
+  - Added tier selector dropdown with TierBadge + TASK_TIERS labels
+  - Helper text: "শিক্ষাগত অগ্রাধিকার — ধর্মীয় মূল্য নয়।"
+  - All form labels/buttons translated to Bengali
+- Updated form defaults: category now 'Islamic Practices' (was 'Personal Responsibility')
+- Lint clean, routes compile
+
+Stage Summary:
+- TierBadge + AgeIndicator reusable components created
+- Import dialog has age filter, tier badges, tier sorting
+- Task form has tier selector
+- All form text in Bengali
+- 4/20 sessions complete (20%)
+- Next: S1.3 — Missed task policy (mark missed, encouraging messages, parent follow-up)
+
+
 

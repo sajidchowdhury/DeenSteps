@@ -40,9 +40,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { Avatar } from '@/components/deensteps/app-shell'
+import { TierBadge, AgeIndicator } from '@/components/deensteps/tier-badge'
 import {
   TASK_CATEGORIES,
   TASK_LIBRARY,
+  TASK_TIERS,
   APPROVAL_POLICIES,
   FREQUENCIES,
   ICON_KEY_TO_LUCIDE,
@@ -70,6 +72,7 @@ const Schema = z.object({
   frequency: z.enum(['ONCE', 'DAILY', 'WEEKDAYS', 'WEEKLY', 'CUSTOM']),
   dueTime: z.string().optional(),
   assignedChildIds: z.array(z.string()).default([]),
+  tier: z.coerce.number().int().min(1).max(5).default(3),
 })
 
 type FormValues = z.infer<typeof Schema>
@@ -104,13 +107,14 @@ export function TaskFormDialog({
     defaultValues: {
       title: '',
       description: '',
-      category: 'Personal Responsibility',
+      category: 'Islamic Practices',
       iconKey: 'check',
       pointsValue: 1,
       approvalPolicy: 'MANUAL',
       frequency: 'DAILY',
       dueTime: '',
       assignedChildIds: [],
+      tier: 3,
       ...initial,
     },
   })
@@ -120,13 +124,14 @@ export function TaskFormDialog({
       form.reset({
         title: '',
         description: '',
-        category: 'Personal Responsibility',
+        category: 'Islamic Practices',
         iconKey: 'check',
         pointsValue: 1,
         approvalPolicy: 'MANUAL',
         frequency: 'DAILY',
         dueTime: '',
         assignedChildIds: [],
+        tier: 3,
         ...initial,
       })
     }
@@ -141,7 +146,7 @@ export function TaskFormDialog({
           toast.error(res.error)
           return
         }
-        toast.success('Task updated.')
+        toast.success('চ্যালেঞ্জ আপডেট হয়েছে।')
       } else {
         const res = await createTask(values)
         if (!res.ok) {
@@ -153,7 +158,7 @@ export function TaskFormDialog({
           }
           return
         }
-        toast.success('Task created.')
+        toast.success('চ্যালেঞ্জ তৈরি হয়েছে।')
       }
       setOpen(false)
       router.refresh()
@@ -172,25 +177,25 @@ export function TaskFormDialog({
       <DialogTrigger asChild>
         {children ?? (
           <Button>
-            <Plus className="h-4 w-4" /> New task
+            <Plus className="h-4 w-4" /> নতুন চ্যালেঞ্জ
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{mode === 'edit' ? 'Edit task' : 'Create a task'}</DialogTitle>
+          <DialogTitle>{mode === 'edit' ? 'চ্যালেঞ্জ সম্পাদনা' : 'নতুন চ্যালেঞ্জ তৈরি'}</DialogTitle>
           <DialogDescription>
-            Configure a recurring or one-time task. You can assign it to one or more children.
+            বারবার ঘটা বা একবারি কাজ কনফিগার করুন। এক বা একাধিক সন্তানকে নির্ধারণ করতে পারবেন।
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5 sm:col-span-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">শিরোনাম</Label>
               <Input
                 id="title"
-                placeholder="e.g. Make my bed"
+                placeholder="যেমন: সকালের নামাজ"
                 {...form.register('title')}
                 aria-invalid={!!titleErr}
               />
@@ -198,24 +203,24 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">বিবরণ</Label>
               <Textarea
                 id="description"
                 rows={2}
-                placeholder="Short instructions shown to the child (optional)."
+                placeholder="সন্তানের জন্য সংক্ষিপ্ত নির্দেশনা (ঐচ্ছিক)।"
                 {...form.register('description')}
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label>Category</Label>
+              <Label>ক্যাটাগরি</Label>
               <Controller
                 control={form.control}
                 name="category"
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Pick a category" />
+                      <SelectValue placeholder="ক্যাটাগরি বাছাই করুন" />
                     </SelectTrigger>
                     <SelectContent>
                       {TASK_CATEGORIES.map((c) => (
@@ -234,7 +239,7 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="pointsValue">Points</Label>
+              <Label htmlFor="pointsValue">তারা</Label>
               <Input
                 id="pointsValue"
                 type="number"
@@ -245,7 +250,33 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5">
-              <Label>Frequency</Label>
+              <Label>অগ্রাধিকার (Tier)</Label>
+              <Controller
+                control={form.control}
+                name="tier"
+                render={({ field }) => (
+                  <Select value={String(field.value)} onValueChange={(v) => field.onChange(Number(v))}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TASK_TIERS.map((t) => (
+                        <SelectItem key={t.tier} value={String(t.tier)}>
+                          <span className="inline-flex items-center gap-2">
+                            <TierBadge tier={t.tier} />
+                            {t.label}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <p className="text-xs text-muted-foreground">শিক্ষাগত অগ্রাধিকার — ধর্মীয় মূল্য নয়।</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>ফ্রিকোয়েন্সি</Label>
               <Controller
                 control={form.control}
                 name="frequency"
@@ -267,17 +298,17 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="dueTime">Due time</Label>
+              <Label htmlFor="dueTime">নির্ধারিত সময়</Label>
               <Input
                 id="dueTime"
                 type="time"
                 {...form.register('dueTime')}
               />
-              <p className="text-xs text-muted-foreground">Optional — when the task should be done.</p>
+              <p className="text-xs text-muted-foreground">ঐচ্ছিক — কখন কাজটি সম্পন্ন করা উচিত।</p>
             </div>
 
             <div className="space-y-1.5">
-              <Label>Approval policy</Label>
+              <Label>অনুমোদন নীতি</Label>
               <Controller
                 control={form.control}
                 name="approvalPolicy"
@@ -299,7 +330,7 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <Label>Icon</Label>
+              <Label>আইকন</Label>
               <div className="flex flex-wrap gap-1.5">
                 {ICON_KEYS.map((k) => (
                   <button
@@ -321,10 +352,10 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <Label>Assigned children</Label>
+              <Label>নির্ধারিত সন্তান</Label>
               {childrenList.length === 0 ? (
                 <p className="rounded-md border border-dashed border-border bg-card/30 p-3 text-xs text-muted-foreground">
-                  Add a child profile first to assign tasks.
+                  প্রথমে একটি সন্তান প্রোফাইল যোগ করুন।
                 </p>
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2">
@@ -359,10 +390,10 @@ export function TaskFormDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={pending}>
-              Cancel
+              বাতিল
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Create task'}
+              {pending ? 'সংরক্ষণ…' : mode === 'edit' ? 'পরিবর্তন সংরক্ষণ' : 'চ্যালেঞ্জ তৈরি'}
             </Button>
           </DialogFooter>
         </form>
@@ -386,12 +417,14 @@ export function ImportTasksDialog({
   const [selected, setSelected] = React.useState<Set<number>>(new Set())
   const [assignedChildIds, setAssignedChildIds] = React.useState<string[]>([])
   const [pending, setPending] = React.useState(false)
+  const [ageFilter, setAgeFilter] = React.useState<string>('ALL')
   const router = useRouter()
 
   React.useEffect(() => {
     if (open) {
       setSelected(new Set())
       setAssignedChildIds([])
+      setAgeFilter('ALL')
     }
   }, [open])
 
@@ -415,6 +448,15 @@ export function ImportTasksDialog({
       }
       return next
     })
+  }
+
+  // Filter tasks by age — show only age-appropriate tasks
+  const isAgeAppropriate = (task: typeof TASK_LIBRARY[number]) => {
+    if (ageFilter === 'ALL') return true
+    const age = parseInt(ageFilter, 10)
+    if (task.minAge !== null && task.minAge !== undefined && age < task.minAge) return false
+    if (task.maxAge !== null && task.maxAge !== undefined && task.maxAge < 99 && age > task.maxAge) return false
+    return true
   }
 
   const onImport = async () => {
@@ -443,10 +485,15 @@ export function ImportTasksDialog({
     }
   }
 
+  // Group by category, filter by age, sort by tier within each category
   const grouped = TASK_CATEGORIES.map((cat) => ({
     cat,
-    items: TASK_LIBRARY.map((t, i) => ({ t, i })).filter(({ t }) => t.category === cat.key),
-  }))
+    items: TASK_LIBRARY
+      .map((t, i) => ({ t, i }))
+      .filter(({ t }) => t.category === cat.key)
+      .filter(({ t }) => isAgeAppropriate(t))
+      .sort((a, b) => a.t.tier - b.t.tier),
+  })).filter((g) => g.items.length > 0)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -465,10 +512,45 @@ export function ImportTasksDialog({
           </DialogDescription>
         </DialogHeader>
 
+        {/* Age filter */}
+        <div className="flex items-center gap-2">
+          <Label className="text-xs text-muted-foreground">বয়স অনুযায়ী ফিল্টার:</Label>
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setAgeFilter('ALL')}
+              className={cn(
+                'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                ageFilter === 'ALL' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-accent/40',
+              )}
+            >
+              সব বয়স
+            </button>
+            {[
+              { value: '4', label: '৩-৫' },
+              { value: '7', label: '৬-৮' },
+              { value: '11', label: '৯-১২' },
+              { value: '15', label: '১৩+' },
+            ].map((a) => (
+              <button
+                key={a.value}
+                type="button"
+                onClick={() => setAgeFilter(a.value)}
+                className={cn(
+                  'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                  ageFilter === a.value ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-accent/40',
+                )}
+              >
+                {a.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Assign-to-children picker */}
         {childrenList.length > 0 && (
           <div className="space-y-1.5">
-            <Label>Assign imported tasks to</Label>
+            <Label className="text-xs">কাকে নির্ধারণ করা হবে (ঐচ্ছিক)</Label>
             <div className="flex flex-wrap gap-2">
               {childrenList.map((c) => {
                 const checked = assignedChildIds.includes(c.id)
@@ -492,11 +574,11 @@ export function ImportTasksDialog({
                 )
               })}
             </div>
-            <p className="text-xs text-muted-foreground">Optional — you can assign tasks later.</p>
+            <p className="text-xs text-muted-foreground">নির্বাচন না করলে সব সক্রিয় সন্তানের জন্য যোগ হবে।</p>
           </div>
         )}
 
-        <ScrollArea className="max-h-[50vh] pr-3">
+        <ScrollArea className="max-h-[45vh] pr-3">
           <div className="space-y-4">
             {grouped.map(({ cat, items }) => (
               <div key={cat.key}>
@@ -509,7 +591,7 @@ export function ImportTasksDialog({
                     onClick={() => toggleAllInCategory(items.map((i) => i.i))}
                     className="text-xs font-medium text-primary hover:underline"
                   >
-                    {items.every((i) => selected.has(i.i)) ? 'Clear' : 'Select all'}
+                    {items.every((i) => selected.has(i.i)) ? 'বাছাই মুছুন' : 'সব বাছাই'}
                   </button>
                 </div>
                 <div className="grid gap-1.5">
@@ -526,16 +608,19 @@ export function ImportTasksDialog({
                         <Checkbox checked={checked} onCheckedChange={() => toggle(i)} />
                         <DynamicIcon iconKey={t.iconKey} size={16} className="mt-0.5 text-primary" />
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-foreground">{t.title}</p>
-                          <p className="line-clamp-1 text-xs text-muted-foreground">{t.description}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-foreground">{t.title}</p>
+                            <TierBadge tier={t.tier} />
+                          </div>
+                          <div className="mt-0.5 flex items-center gap-2">
+                            <p className="line-clamp-1 text-xs text-muted-foreground">{t.description}</p>
+                            <AgeIndicator minAge={t.minAge} maxAge={t.maxAge} />
+                          </div>
                         </div>
                         <div className="flex flex-shrink-0 items-center gap-1">
                           <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
                             <Plus className="h-3 w-3" />
                             {t.pointsValue}
-                          </Badge>
-                          <Badge variant="secondary" className="text-[10px]">
-                            {t.frequency}
                           </Badge>
                         </div>
                       </label>
@@ -544,20 +629,25 @@ export function ImportTasksDialog({
                 </div>
               </div>
             ))}
+            {grouped.length === 0 && (
+              <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                এই বয়সের জন্য কোনো চ্যালেঞ্জ নেই। অন্য বয়স বাছাই করে দেখুন।
+              </div>
+            )}
           </div>
         </ScrollArea>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={pending}>
-            Cancel
+            বাতিল
           </Button>
           <Button type="button" onClick={onImport} disabled={pending || selected.size === 0}>
             {pending ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Importing…
+                <Loader2 className="h-4 w-4 animate-spin" /> যোগ হচ্ছে…
               </>
             ) : (
-              <>Import {selected.size > 0 ? `(${selected.size})` : ''}</>
+              <>যোগ করুন {selected.size > 0 ? `(${selected.size})` : ''}</>
             )}
           </Button>
         </DialogFooter>
