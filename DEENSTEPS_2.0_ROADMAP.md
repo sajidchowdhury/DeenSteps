@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S5.1 complete
+> **Last updated:** Session S5.3 complete — Phase 5 finished, all 20 sessions delivered
 
 ### Phase 0 — Audit & Foundation
 
@@ -64,13 +64,13 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | **S4.2** | Child sadaqah flow — dedicate stars, parent review | ✅ **DONE** |
 | **S4.3** | Parent pledge & real donation confirmation | ✅ **DONE** |
 
-### Phase 5 — Family Growth (3 sessions)
+### Phase 5 — Family Growth (3 sessions) — COMPLETE
 
 | Session | Scope | Status |
 |---------|-------|--------|
 | **S5.1** | Weekly reflection & streak gentleness | ✅ **DONE** |
-| S5.2 | Flexible milestone & learning prompts | ✅ |
-| S5.3 | Parent weekly planner & family celebration | ✅ |
+| **S5.2** | Flexible milestone & learning prompts | ✅ **DONE** |
+| **S5.3** | Parent weekly planner & family celebration | ✅ **DONE** |
 
 ### Summary
 
@@ -81,8 +81,8 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Phase 2 | 4 | 4 | 0 |
 | Phase 3 | 3 | 3 | 0 |
 | Phase 4 | 3 | 3 | 0 |
-| Phase 5 | 3 | 1 | 2 |
-| **Total** | **20** | **18** | **2** |
+| Phase 5 | 3 | 3 | 0 |
+| **Total** | **20** | **20** | **0** ✅ |
 
 ### Key Audit Findings (from S0.1)
 
@@ -94,16 +94,23 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ✅ Idempotent submission/review (decision check)
 - ✅ Safe redemption refund (status check before refund)
 
-**Critical gaps to address:**
-- ❌ No "mark as missed" workflow (occurrences stay ASSIGNED forever)
-- ❌ No child-facing full ledger view
-- ❌ No reward frequency limits or family budget
-- ❌ No incident/sadaqah/reflection models
-- ❌ No AuditLog writes (model exists, never used)
-- ❌ No automated tests
-- ❌ Library has only 4 categories (need 6), no tiers, no age filter
+**Critical gaps to address:** (all RESOLVED in DeenSteps 2.0 — see session worklog)
+- ✅ "Mark as missed" workflow delivered in S1.3 (no point deduction, encouraging messages)
+- ✅ Child-facing full ledger view delivered in S1.4 (`/child/[id]/ledger`)
+- ✅ Reward frequency limits, cooldown, family budget delivered in S2.2 + S2.3
+- ✅ Incident + Sadaqah + Reflection models all delivered across Phases 3-5
+- ✅ AuditLog actively written from S3.3 onward (point adjustments, sadaqah confirmations, incident resolutions)
+- ✅ Library now has 6 categories, Tier 1-5, age filter (S1.1 + S1.2)
+- ⚠️ Automated tests still not added — see "Remaining / future" section below
 
-**Next session:** Project complete. All 20 sessions delivered. 🎉
+**Status:** Project complete. All 20 sessions delivered. 🎉
+
+**Remaining / future (out of original 2.0 scope):**
+- ⚠️ Automated tests (unit + e2e) — not yet added
+- 🔄 Email notifications (currently in-app only)
+- 🔄 Arabic RTL support
+- 🔄 PostgreSQL production switch (currently SQLite)
+- 🔄 Multi-caregiver support (currently single-parent workspace)
 
 ---
 

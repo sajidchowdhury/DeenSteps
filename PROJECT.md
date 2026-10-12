@@ -60,6 +60,8 @@
 
 ## ৪. মূল ফিচার
 
+> **সংস্করণ নোট:** DeenSteps ২.০ এর সম্পূর্ণ ফেজ-ভিত্তিক আপডেট (Phase 1-5, 20 সেশন) ডেলিভারি সম্পন্ন। বিস্তারিত জানতে `DEENSTEPS_2.0_ROADMAP.md` এবং `DEPLOYMENT.md` দেখুন। নিচের সেকশনগুলো ২.০ এর নতুন ফিচার সহ আপডেট করা হয়েছে।
+
 ### ৪.১ পারিবারিক ওয়ার্কস্পেস
 - একটি প্যারেন্ট অ্যাকাউন্ট থেকে একাধিক সন্তান প্রোফাইল ম্যানেজ করা।
 - সন্তানের আলাদা ইমেইল লাগে না — প্যারেন্ট ওয়ার্কস্পেস থেকে অ্যাক্সেস।
@@ -67,18 +69,16 @@
 
 ### ৪.২ চ্যালেঞ্জ (কাজ) ব্যবস্থাপনা
 - **একটি সেকশন** থেকে সন্তানকে কাজ নির্ধারণ (আলাদা চ্যালেঞ্জ পেইজ নেই)।
-- **কাজের ধরন:**
-  - দৈনিক (DAILY) — প্রতিদিন, যেমন নামাজ, কুরআন পড়া।
-  - সপ্তাহের নির্দিষ্ট দিন (CUSTOM) — যেমন শুক্রবার জুমা নামাজ।
-  - সপ্তাহের দিন (WEEKDAYS) — শনি-বৃহ, যেমন হোমওয়ার্ক।
-  - একবারি (ONCE) — একবার ঘটবে।
-- **সাজেশন থেকে বাছাই** — ইসলামি অভ্যাস লাইব্রেরি থেকে এক ক্লিকে যোগ।
-- **নিজে তৈরি** — কাস্টম কাজ তৈরি করা।
-- **মুছে ফেলা/সম্পাদনা** — প্রতিটি চ্যালেঞ্জ সম্পাদনা বা মুছে ফেলা যায়।
+- **কাজের ধরন:** দৈনিক (DAILY), সপ্তাহের নির্দিষ্ট দিন (CUSTOM), সপ্তাহের দিন (WEEKDAYS), একবারি (ONCE), সাপ্তাহিক (WEEKLY)।
+- **আমল লাইব্রেরি (২.০ আপডেট):** ৬ ক্যাটাগরি (Islamic Practices, Character & Manners, Family Responsibilities, Education & Development, Health & Self-Discipline, Generosity & Community), Tier 1-5 প্রায়োরিটি সিস্টেম, বয়স-ফিল্টার (3-5, 6-8, 9-12, 13+)।
+- **শেখার প্রশ্ন (২.০ নতুন — S5.2):** প্রতিটি লাইব্রেরি কাজে একটি ছোট ইসলামি শিক্ষা (learningPrompt) যুক্ত — কেবল নিয়ম নয়, অর্থও শিখুক। প্যারেন্ট কাস্টম কাজেও এটি যোগ করতে পারেন। সন্তানের ড্যাশবোর্ডে কলapsible "শেখার প্রশ্ন" চিপ দেখায়।
+- **সাজেশন থেকে বাছাই** — লাইব্রেরি থেকে এক ক্লিকে যোগ, টিয়ার ব্যাজ ও বয়স ফিল্টার সহ।
+- **প্যারেন্ট কাস্টমাইজেশন (২.০ — S1.5):** প্রতি সন্তানে আলাদা কাজ নির্বাচন, "ডিফল্ট লাইব্রেরি রিস্টোর" বাটন, আর্কাইভ ছাড়া হিস্ট্রি সংরক্ষণ।
 
 ### ৪.৩ পয়েন্ট ও তারা লেজার
 - প্রতিটি কাজের জন্য পয়েন্ট (তারা) নির্ধারিত।
 - **অ্যাটমিক ট্রানজেকশন** — প্রতিটি তারা অর্জন/খরচ/ফেরত একটি অডিটযোগ্য লেজারে ট্র্যাক করা।
+- **চাইল্ড লেজার (২.০ — S1.4):** "আমার তারার হিসাব" বাটন → সম্পূর্ণ লেজার ভিউ (`/child/[id]/ledger`), ফিল্টার সহ (আজ/সপ্তাহ/মাস/সব), প্রতিটি ট্রানজেকশনে ব্যালেন্স, টাইপ ব্যাজ, কারণ।
 - ব্যালেন্স, লাইফটাইম তারা, সাপ্তাহিক তারা — সব রিয়েল-টাইম।
 - ডুপ্লিকেট পয়েন্ট প্রতিরোধ করা।
 
@@ -89,37 +89,134 @@
 - অটো-অনুমোদন নীতি কনফিগার করা যায়।
 
 ### ৪.৫ পুরস্কার ব্যবস্থাপনা
-- **সহজ বাংলা পুরস্কার:**
-  - বাসায় পিৎজা, বাসায় বার্গার, বিকেলের নাস্তা রেস্টুরেন্টে
-  - আইসক্রিম, চকলেট, পুতুল, খেলনা, গেম
-  - ফ্যামিলি গেম নাইট, সিনেমা, বই, পার্ক
-- **সাজেশন থেকে বাছাই** — এক ক্লিকে যোগ।
-- **রিডিম্পশন ওয়ার্কফ্লো:**
-  - সন্তান অনুরোধ করে → বাবা-মা অনুমোদন/প্রত্যাখ্যান → পূরণ।
-  - অ্যাটমিক পয়েন্ট কর্তন, ফেরত সহ।
-  - ওভারস্পেন্ড প্রতিরোধ।
+- **পুরস্কার ক্যাটাগরি (২.০ — S2.1):** অভিজ্ঞতা (Experiences), শেখা (Learning), সুবিধা (Privileges), খাবার (Food Treats) — নন-ফুড প্রমোশন সহ।
+- **ফ্রিকোয়েন্সি লিমিট (২.০ — S2.2):** `maxPerWeek`, `maxPerMonth`, `cooldownDays` ফিল্ড; রিডিম্পশনের সময় চেক করা হয়।
+- **পারিবারিক বাজেট (২.০ — S2.3):** `FamilySettings.monthlyRewardBudget` — মাসিক লিমিট, কমিটেড/বাকি ট্র্যাকিং, বাজেট ছাড়ালে রিডিম্পশন ব্লক।
+- **রিডিম্পশন ওয়ার্কফ্লো:** সন্তান অনুরোধ → বাবা-মা অনুমোদন/প্রত্যাখ্যান → পূরণ; অ্যাটমিক পয়েন্ট কর্তন, ফেরত সহ; ওভারস্পেন্ড প্রতিরোধ।
 
-### ৪.৬ ড্যাশবোর্ড ও চার্ট
+### ৪.৬ মিসড টাস্ক পলিসি (২.০ — S1.3, নতুন)
+- **কোনো স্বয়ংক্রিয় পয়েন্ট কর্তন নয়** — মিসড ইবাদতের জন্য শুধু "পয়েন্ট অর্জিত হবে না"।
+- পুরোনো ASSIGNED অকারেন্স স্বয়ংক্রিয়ভাবে MISSED মার্ক হয় (`markMissedOccurrences`)।
+- সন্তানের ড্যাশবোর্ডে উৎসাহজনক বার্তা: "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱"
+- প্যারেন্ট মিসড কাজ ক্ষমা করতে পারেন (`excuseTaskOccurrence`) — followUpType ও followUpNote সহ (practice_wudu / learn_about_salah / plan_routine ইত্যাদি)।
+
+### ৪.৭ ইনসিডেন্ট ও রেস্টোরেটিভ ফলোআপ (২.০ — S3.1, S3.2, S3.3, নতুন)
+- **চাইল্ড-টু-প্যারেন্ট প্রাইভেট রিপোর্ট:** সন্তান "আমি একটি সমস্যায় সাহায্য চাই" বাটন চাপলে প্রাইভেট ফর্ম খোলে — কী হয়েছে, কারা জড়িত, কেমন লেগেছে, কী সাহায্য দরকার। শুধু প্যারেন্ট দেখেন।
+- **প্যারেন্ট মেডিয়েশন:** প্যারেন্ট প্রতিটি সন্তানের পারস্পেক্টিভ আলাদা দেখেন, ফলোআপ রেকর্ড করেন (apology / return / repair / helpful action / other)।
+- **রেস্টোরেটিভ, পুনিটিভ নয়:** ক্ষমা চাওয়া স্বয়ংক্রিয়ভাবে ভুল মুছে দেয় না। পয়েন্ট কর্তন ঐচ্ছিক — স্পষ্ট কারণ ও AuditLog সহ। সন্তানকে কোমল ভাষায় জানানো হয়।
+- **AuditLog (২.০ — S3.3):** সংবেদনশীল অ্যাকশনের লগ — POINT_ADJUSTMENT, INCIDENT_RESOLVED, SADAQAH_CONFIRMED — প্রতিটিতে actorId, entityId, metadata (JSON)।
+- **রিপোর্টারকে শাস্তি দেওয়া যায় না** — শুধু প্যারেন্ট দেখেন, সর্বজনীন নয়।
+
+### ৪.৮ সাদাকাহ ও চ্যারিটেবল গিভিং (২.০ — S4.1, S4.2, S4.3, নতুন)
+- **সাদাকাহ কজ ক্যাটালগ:** ৮টি প্যারেন্ট-অনুমোদিত কজ (মাদ্রাসা সহায়তা, গরিব শিশুদের শিক্ষা, অসহায় পরিবার, খাদ্য সহায্য, দুর্যোগ ত্রাণ, মসজিদ নির্মাণ, স্বাস্থ্য সেবা, অন্যান্য)। প্যারেন্ট কাস্টম কজ যোগ করতে পারেন।
+- **চাইল্ড সাদাকাহ ফ্লো:** সন্তান "আমার সাদাকাহ সঞ্চয়" বাটন → কজ নির্বাচন → তারা ডেডিকেট → অ্যাটমিক রিজার্ভ → প্যারেন্ট নোটিফিকেশন।
+- **প্যারেন্ট প্লেজ কনফিগ:** `FamilySettings` — `sadaqahPledgeEnabled`, `sadaqahStarsPerUnit`, `sadaqahCurrency`, `sadaqahAmountPerUnit`। পয়েন্ট সরাসরি নগদ নয় — প্যারেন্ট প্রকৃত দান করবেন।
+- **রিয়েল ডোনেশন কনফার্মেশন:** `confirmSadaqahDonation` — realAmount, realDate, confirmationNote সহ; AuditLog লেখা হয়। ক্যান্সেল হলে তারা ফেরত।
+- **ডোনেশন হিস্ট্রি:** প্যারেন্ট ড্যাশবোর্ডে CONFIRMED/CANCELLED ডোনেশন ইতিহাস।
+- **ভাই-বোনের দানের তুলনা নেই** — ব্যক্তিগত উদারতা উদযাপন।
+
+### ৪.৯ উইকলি রিফ্লেকশন ও স্ট্রিক কোমলতা (২.০ — S5.1, নতুন)
+- **WeeklyReflection মডেল:** familyId, childId? (null = পরিবার-লেভেল), weekStart, weekEnd, whatWentWell, whatWasHard, whatEasier, nextWeekPlan।
+- **প্যারেন্ট ড্যাশবোর্ডে রিফ্লেকশন প্যানেল:** সন্তান সিলেক্টর, ৪টি টেক্সট এরিয়া, সেভ বাটন, গত ৪ সপ্তাহের হিস্ট্রি (collapsible)।
+- **গাইডেন্স:** "অগ্রগতির উপর ফোকাস করুন, দোষের উপর নয়। সন্তানের চেষ্টা উদযাপন করুন।"
+- **স্ট্রিক ভাঙলে কোমল বার্তা:** "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱" — কোনো লজ্জা নয়, কোনো শাসন নয়।
+
+### ৪.১০ ফ্লেক্সিবল মাইলস্টোন (২.০ — S5.2, নতুন)
+- **MonthlyMilestone ক্যালকুলেশন ইঞ্জিন:** `evaluateMonthlyMilestone(childId)` — idempotent, configurable।
+- **"Qualifying week" = অন্তত একটি APPROVED কাজ** — নিখুঁত হওয়ার নয়, ধারাবাহিকতার উদযাপন।
+- `FamilySettings.monthlyQualifyingWeeks` দিয়ে কনফিগারযোগ্য (ডিফল্ট ৩)।
+- **অটো-রান:** প্রতিটি APPROVED রিভিউ (ম্যানুয়াল + অটো) পরে ইঞ্জিন চলে।
+- **নোটিফিকেশন:** প্রথমবার qualified হলে সন্তান ও সব প্যারেন্টকে জানানো হয়।
+- **UI:** প্যারেন্ট ড্যাশবোর্ডে `MilestoneProgressSection` (ভায়োলেট কার্ড, প্রতি-সন্তান প্রোগ্রেস), চাইল্ড ড্যাশবোর্ডে ভায়োলেট প্রোগ্রেস কার্ড "আর X সপ্তাহ বাকি"।
+
+### ৪.১১ প্যারেন্ট উইকলি প্ল্যানার (২.০ — S5.3, নতুন)
+- **`/planner` পেইজ:** এক পেইজে সব — কাজ, সিডিউল, রিভিউ, পুরস্কার।
+- **স্টার্ট-স্মল গাইডেন্স:** ৩-৫ টি কাজ দিয়ে শুরু করতে সুপারিশ (severity-coded কার্ড)।
+- **আজকের সিডিউল:** সব সন্তানের আজকের কাজ এক জায়গায়, assigned children per task।
+- **রিভিউ সারি:** শীর্ষ ৬ অপেক্ষমান সাবমিশন + এক-ক্লিক `/review` জাম্প।
+- **রিফ্লেকশন স্টেটাস:** এই সপ্তাহ + গত সপ্তাহ + টানা সপ্তাহ স্ট্রিক।
+- **পুরস্কার + বাজেট স্ন্যাপশট:** সক্রিয় পুরস্কার, এই মাসে খরচ, মাসিক বাজেট + প্রোগ্রেস বার।
+- **ফ্যামিলি সেলিব্রেশন:** ৮টি প্রাইভেট ফ্যামিলি অর্জন (locked/unlocked ব্যাজ)। "🔒 কোনো লিডারবোর্ড নেই, কোনো তুলনা নেই।"
+- **ফুটার গাইডেন্স:** "নিখুঁত হওয়ার চেষ্টা করবেন না — ধারাবাহিক হওয়ার চেষ্টা করুন।"
+
+### ৪.১২ ফ্যামিলি অ্যাচিভমেন্ট ইঞ্জিন (২.০ — S5.3, নতুন)
+- **FamilyAchievement মডেল:** familyId, key, name, description, iconKey, awardedAt; `@@unique([familyId, key])` — idempotent।
+- **৮টি অর্জন:** first_week, first_reflection, first_sadaqah, all_milestone_month, family_service, first_incident_resolved, three_reflections, first_challenge_completed।
+- **অটো-ইভ্যালুয়েশন:** ৬টি অ্যাকশন সাইটে ট্রিগার করা হয় — review (APPROVED), submitTaskOccurrence (AUTO-approval), saveWeeklyReflection, confirmSadaqahDonation, resolveIncident, refreshChallengeProgress।
+- **প্যারেন্ট নোটিফিকেশন:** প্রতিটি অর্জনে MILESTONE_REACHED নোটিফিকেশন সব প্যারেন্টকে।
+- **প্রাইভেসি:** শুধু পরিবারের ভেতরে — কোনো পাবলিক লিডারবোর্ড নেই।
+
+### ৪.১৩ ড্যাশবোর্ড ও চার্ট
 - **সেটআপ প্রগ্রেস বার** — ৩ ধাপ (সন্তান → পুরস্কার → চ্যালেঞ্জ), সম্পূর্ণ হলে গায়েব।
 - **ইনলাইন রিভিউ** — বাকি সাবমিশন ড্যাশবোর্ডেই অনুমোদন।
-- **চার্ট ও ইনসাইট:**
-  - ৭-দিনের তারা অর্জন লাইন চার্ট (সন্তান অনুযায়ী)।
-  - ৩০-দিনের কাজের ধরন ডোনাট চার্ট (ক্যাটাগরি ব্রেকডাউন)।
-  - আজকের সম্পন্ন হরাইজন্টাল বার চার্ট (সন্তান অনুযায়ী)।
+- **চার্ট:** ৭-দিনের তারা অর্জন লাইন চার্ট, ৩০-দিনের কাজের ধরন ডোনাট চার্ট, আজকের সম্পন্ন হরাইজন্টাল বার চার্ট।
 - **পারিবারিক সারসংক্ষেপ** — সন্তান, রিভিউ বাকি, আজকের সম্পন্ন, তারা, পুরস্কার।
+- **মাইলস্টোন প্রগ্রেস (২.০ — S5.2):** প্রতি-সন্তান ভায়োলেট কার্ড।
+- **রিফ্লেকশন প্যানেল (২.০ — S5.1):** প্যারেন্ট ড্যাশবোর্ডে।
+- **ফ্যামিলি সেলিব্রেশন সেকশন (২.০ — S5.3):** `/planner` পেইজে।
 
-### ৪.৭ সন্তানের ড্যাশবোর্ড
+### ৪.১৪ সন্তানের ড্যাশবোর্ড
 - আনন্দময়, বয়স-উপযোগী, রঙিন।
 - আজকের কাজ তালিকা — "সম্পন্ন করেছি" বাটন।
+- **শেখার প্রশ্ন চিপ (২.০ — S5.2):** প্রতিটি কাজে collapsible "শেখার প্রশ্ন" — কেন এই কাজটি গুরুত্বপূর্ণ তার ছোট শিক্ষা।
+- **মাইলস্টোন প্রগ্রেস কার্ড (২.০ — S5.2):** ভায়োলেট কার্ড, "আর X সপ্তাহ বাকি"।
 - তারা ব্যালেন্স, ধারাবাহিকতা (streak), আজকের সম্পন্ন।
 - পুরস্কার প্রগ্রেস ও রিডিম বাটন।
 - অর্জন ব্যাজ।
 - উৎসাহজনক বার্তা: "দারুণ চেষ্টা!", "তোমার চেষ্টা সত্যিই সুন্দর।"
+- **ইনসিডেন্ট রিপোর্ট বাটন (২.০ — S3.1):** "আমি একটি সমস্যায় সাহায্য চাই"।
+- **সাদাকাহ বাটন (২.০ — S4.2):** "আমার সাদাকাহ সঞ্চয়"।
+- **সাদাকাহ প্লেজ ইনফো (২.০ — S4.3):** প্লেজ চালু থাকলে ইমেরাল্ড ব্যানার।
+- **মিসড টাস্ক বার্তা (২.০ — S1.3):** "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি!"।
 
-### ৪.৮ রিপোর্ট
+### ৪.১৫ রিপোর্ট
 - দৈনিক, সাপ্তাহিক, মাসিক রিপোর্ট।
 - Recharts দিয়ে ভিজ্যুয়াল।
 - কখনো চরিত্র বা ধর্মীয় মূল্য মাপার টুল নয় — গঠনমূলক কথোপকথনে সাহায্য।
+- **মাসিক মাইলস্টোন ডিসপ্লে (২.০ — S5.2):** qualifying weeks সহ।
+
+---
+
+## ৪.১৬ কী নতুন ও কী নেই (DeenSteps 2.0 — সংস্করণ সারসংক্ষেপ)
+
+### ✅ ২.০ তে যা যোগ হয়েছে (Phase 1-5, 20 সেশন)
+
+**Phase 1 — কোর ইন্টিগ্রিটি:**
+- আমল লাইব্রেরি সম্প্রসারণ: ৪ → ৬ ক্যাটাগরি, Tier 1-5, বয়স-ফিল্টার (S1.1, S1.2)
+- মিসড টাস্ক পলিসি — কোনো পয়েন্ট কর্তন নয়, উৎসাহজনক বার্তা, প্যারেন্ট ফলোআপ রেকর্ড (S1.3)
+- চাইল্ড লেজার — `/child/[id]/ledger` সম্পূর্ণ ভিউ, ফিল্টার সহ (S1.4)
+- প্যারেন্ট কাস্টমাইজেশন — প্রতি-সন্তান নির্বাচন, ডিফল্ট রিস্টোর (S1.5)
+
+**Phase 2 — রেসপন্সিবল রিওয়ার্ডস:**
+- পুরস্কার ক্যাটাগরি: Experiences, Learning, Privileges, Food Treats (S2.1)
+- ফ্রিকোয়েন্সি লিমিট ও কুলডাউন — maxPerWeek, maxPerMonth, cooldownDays (S2.2)
+- পারিবারিক বাজেট — monthlyRewardBudget, কমিটেড/বাকি ট্র্যাকিং, বাজেট ছাড়ালে ব্লক (S2.3)
+- নন-ফুড ও লো-কস্ট অল্টারনেটিভ — ক্যাটাগরি ট্যাব, ফ্রি ব্যাজ (S2.4)
+
+**Phase 3 — ক্যারেক্টার ও রিকনসিলিয়েশন:**
+- ইনসিডেন্ট স্কিমা ও চাইল্ড রিপোর্ট — "আমি একটি সমস্যায় সাহায্য চাই" (S3.1)
+- প্যারেন্ট মেডিয়েশন ওয়ার্কফ্লো — পারস্পেক্টিভ, ফলোআপ রেকর্ড (S3.2)
+- রেস্টোরেটিভ ফলোআপ ও অডিট — অপশনাল পয়েন্ট অ্যাডজাস্টমেন্ট (reason + AuditLog সহ), AuditLog প্রথম ব্যবহার (S3.3)
+
+**Phase 4 — সাদাকাহ ও চ্যারিটেবল গিভিং:**
+- সাদাকাহ স্কিমা ও কজ ক্যাটালগ — SadaqahCause, SadaqahDonation মডেল; ৮টি লাইব্রেরি কজ (S4.1)
+- চাইল্ড সাদাকাহ ফ্লো — "আমার সাদাকাহ সঞ্চয়" বাটন, তারা ডেডিকেট, প্যারেন্ট রিভিউ (S4.2)
+- প্যারেন্ট প্লেজ ও রিয়েল ডোনেশন — stars → cash কনফিগ, রিয়েল ডোনেশন কনফার্মেশন, হিস্ট্রি, রিফান্ড (S4.3)
+
+**Phase 5 — ফ্যামিলি গ্রোথ:**
+- উইকলি রিফ্লেকশন ও স্ট্রিক কোমলতা — WeeklyReflection মডেল, প্যারেন্ট ড্যাশবোর্ড প্যানেল (S5.1)
+- ফ্লেক্সিবল মাইলস্টোন ও লার্নিং প্রম্পট — MonthlyMilestone ক্যালকুলেশন ইঞ্জিন, ৪১টি TASK_LIBRARY এ বাংলা learningPrompt, MilestoneProgressSection (S5.2)
+- প্যারেন্ট উইকলি প্ল্যানার ও ফ্যামিলি সেলিব্রেশন — `/planner` পেইজ, FamilyAchievement ইঞ্জিন (৮টি অর্জন), ৬টি অ্যাকশন সাইটে অটো-ইভ্যালুয়েশন (S5.3)
+
+### ⚠️ এখনও যা নেই (ভবিষ্যৎ রোডম্যাপ)
+
+- **অটোমেটেড টেস্ট** — কোনো unit/e2e টেস্ট নেই (মূল অডিট থেকেই এই গ্যাপ ছিল, ২.০ স্কোপে ছিল না)
+- **ইমেইল নোটিফিকেশন** — সব নোটিফিকেশন ইন-অ্যাপ, ইমেইল সার্ভিস কনফিগার করা নেই
+- **আরবি RTL সাপোর্ট** — শুধু বাংলা LTR
+- **PostgreSQL প্রোডাকশন** — SQLite-ই ডিফল্ট (Prisma ORM পোর্টেবল, সুইচ করা সহজ)
+- **মাল্টি-কেয়ারগিভার** — বর্তমানে সিঙ্গে-প্যারেন্ট ওয়ার্কস্পেস (FamilyMembership.role=CAREGIVER স্কিমায় আছে, UI নেই)
+- **পাবলিক ফ্যামিলি লিডারবোর্ড** — জেনেশিয়েলভাবে নয় (গার্ডরেইলস §2.2 অনুযায়ী কখনো আসবে না)
+- **সাবস্ক্রিপশন/পেমেন্ট** — কখনো নয় (চিরকাল ফ্রি, গার্ডরেইলস §2.5)
 
 ---
 
@@ -156,14 +253,18 @@
 /onboarding                 — সরাসরি /dashboard এ রিডাইরেক্ট (অনবোর্ডিং নেই)
 
 /app (প্রটেক্টেড প্যারেন্ট এরিয়া):
-  /dashboard                — প্যারেন্ট কন্ট্রোল সেন্টার + ইনলাইন রিভিউ + চার্ট
+  /dashboard                — প্যারেন্ট কন্ট্রোল সেন্টার + ইনলাইন রিভিউ + চার্ট + রিফ্লেকশন + মাইলস্টোন
+  /planner                  — (২.০ নতুন) প্যারেন্ট উইকলি প্ল্যানার — এক পেইজে সব
   /children                 — সন্তান প্রোফাইল ম্যানেজ
   /tasks                    — চ্যালেঞ্জ (কাজ) ম্যানেজ
   /rewards                  — পুরস্কার ক্যাটালগ + রিডিম্পশন
-  /reports                  — দৈনিক/সাপ্তাহিক/মাসিক রিপোর্ট
-  /settings                 — পারিবারিক সেটিংস
+  /reports                  — দৈনিক/সাপ্তাহিক/মাসিক রিপোর্ট + মাসিক মাইলস্টোন
+  /review                   — সাবমিশন রিভিউ পেইজ
+  /challenges               — সাপ্তাহিক চ্যালেঞ্জ ম্যানেজ
+  /settings                 — পারিবারিক সেটিংস (পয়েন্ট, পুরস্কার, সাদাকাহ, নোটিফিকেশন, প্রাইভেসি)
 
-/child/[id]                 — সন্তানের ড্যাশবোর্ড
+/child/[id]                 — সন্তানের ড্যাশবোর্ড (মাইলস্টোন কার্ড, শেখার প্রশ্ন, সাদাকাহ বাটন সহ)
+/child/[id]/ledger          — (২.০ নতুন) সন্তানের সম্পূর্ণ তারার হিসাব
 /api/auth/[...nextauth]     — NextAuth হ্যান্ডলার
 ```
 
@@ -173,12 +274,19 @@
 src/server/actions/
 ├── auth-actions.ts           — registerFamily (রেজিস্টার + পরিবার তৈরি)
 ├── child-actions.ts          — createChildProfile, updateChildProfile, archiveChild
-├── task-actions.ts           — createTask, updateTask, archiveTask, importLibraryTask
-├── review-actions.ts         — submitTaskOccurrence, reviewSubmission (অ্যাটমিক পয়েন্ট)
-├── reward-actions.ts         — createReward, requestRedemption, approveRedemption
-├── dashboard-actions.ts      — getDashboardData (চার্ট ডেটা সহ)
+├── task-actions.ts           — createTask, updateTask, archiveTask, importLibraryTask, restoreDefaultLibrary, markMissedOccurrences, excuseTaskOccurrence
+├── review-actions.ts         — submitTaskOccurrence, reviewSubmission (অ্যাটমিক পয়েন্ট + মাইলস্টোন ও ফ্যামিলি অ্যাচিভমেন্ট ইঞ্জিন কল)
+├── reward-actions.ts         — createReward, requestRedemption, approveRedemption (বাজেট চেক সহ)
+├── dashboard-actions.ts      — getDashboardData (চার্ট + রিফ্লেকশন + মাইলস্টোন + সাদাকাহ + ইনসিডেন্ট)
 ├── setup-progress-actions.ts — getSetupProgress (৩-ধাপ প্রগ্রেস)
-└── settings-actions.ts       — updateFamilySettings, exportFamilyData, deleteFamilyData
+├── settings-actions.ts       — updateFamilySettings (পয়েন্ট, পুরস্কার বাজেট, সাদাকাহ প্লেজ সহ), exportFamilyData, deleteFamilyData
+├── incident-actions.ts       — (২.০ নতুন) submitIncident, resolveIncident (AuditLog সহ)
+├── sadaqah-actions.ts        — (২.০ নতুন) getSadaqahCauses, createSadaqahCause, requestSadaqah, confirmSadaqahDonation, cancelSadaqahDonation
+├── reflection-actions.ts     — (২.০ নতুন) saveWeeklyReflection, getThisWeekReflection, getRecentReflections
+├── milestone-actions.ts      — (২.০ নতুন) evaluateMonthlyMilestone, getMilestoneProgressForFamily, getMilestoneProgressForChild
+├── planner-actions.ts        — (২.০ নতুন) getPlannerData, awardFamilyAchievement, evaluateFamilyAchievements, getFamilyAchievementStatus
+├── challenge-actions.ts      — createChallenge, refreshChallengeProgress (অটো-কমপ্লিশন + ফ্যামিলি অ্যাচিভমেন্ট ট্রিগার সহ)
+└── setup-progress-actions.ts — getSetupProgress
 ```
 
 ### ৬.৩ কম্পোনেন্ট স্ট্রাকচার
@@ -207,7 +315,7 @@ src/components/
 
 ## ৭. ডাটাবেস স্কিমা
 
-### মূল মডেল (২২টি)
+### মূল মডেল (~৩০টি — ২.০ এ ৮টি নতুন যোগ)
 
 ```
 Authentication:
@@ -219,37 +327,56 @@ Authentication:
 Family:
 - Family            — পরিবার (name, timezone, locale)
 - FamilyMembership  — ইউজার-পরিবার সম্পর্ক (PARENT/CAREGIVER)
-- FamilySettings    — পরিবারিক সেটিংস (pointsName, approval policy)
+- FamilySettings    — পরিবারিক সেটিংস (pointsName, approval policy, monthlyRewardBudget, sadaqahPledge*, monthlyQualifyingWeeks)
 - ChildProfile      — সন্তান প্রোফাইল (displayName, avatarColor, ageRange)
 
 Tasks:
-- TaskTemplate      — কাজের টেমপ্লেট (title, category, pointsValue, frequency)
+- TaskTemplate      — কাজের টেমপ্লেট (title, category, pointsValue, frequency, tier, minAge, maxAge, learningPrompt)
 - TaskAssignment    — কাজ-সন্তান সম্পর্ক
-- TaskOccurrence    — নির্দিষ্ট তারিখের কাজ (status: ASSIGNED/SUBMITTED/APPROVED)
+- TaskOccurrence    — নির্দিষ্ট তারিখের কাজ (status: ASSIGNED/SUBMITTED/APPROVED/MISSED/EXCUSED, missedAt)
 - TaskSubmission    — সন্তানের সাবমিশন (note, decision, pointsAwarded)
 - TaskReview        — প্যারেন্ট রিভিউ রেকর্ড
+- TaskExcusal       — (২.০ নতুন) মিসড কাজ ক্ষমা — reason, excusedById, followUpType, followUpNote
 
 Points:
-- PointsTransaction — অডিটযোগ্য লেজার (amount, type, balanceAfter)
+- PointsTransaction — অডিটযোগ্য লেজার (amount, type, balanceAfter, reason, adjustedById)
 
 Rewards:
-- Reward            — পুরস্কার (title, requiredPoints, type)
+- Reward            — পুরস্কার (title, requiredPoints, type, category, maxPerWeek, maxPerMonth, cooldownDays, estimatedCost)
 - RewardRedemption  — রিডিম্পশন রেকর্ড (status, pointsCost)
+
+Incidents (২.০ নতুন — Phase 3):
+- Incident              — ইনসিডেন্ট (familyId, status, createdAt, resolvedAt)
+- IncidentReport        — সন্তানের রিপোর্ট (whatHappened, whoInvolved, howFelt, helpNeeded)
+- IncidentResolution    — মেডিয়েশন রেকর্ড (outcomeType, description, pointsAdjusted, reason, resolvedById)
+
+Sadaqah (২.০ নতুন — Phase 4):
+- SadaqahCause      — প্যারেন্ট-অনুমোদিত কজ (title, description, iconKey, active)
+- SadaqahDonation   — ডোনেশন রেকর্ড (starsDedicated, status, parentConfirmedAt, realAmount, realDate, confirmationNote)
+
+Family Growth (২.০ নতুন — Phase 5):
+- WeeklyReflection  — সাপ্তাহিক রিফ্লেকশন (whatWentWell, whatWasHard, whatEasier, nextWeekPlan)
+- FamilyAchievement — পরিবারিক অর্জন (key, name, description, iconKey, awardedAt; @@unique([familyId, key]))
+
+Weekly Challenges & Monthly Milestones:
+- WeeklyChallenge       — সাপ্তাহিক চ্যালেঞ্জ (targetPercent, eligibleCategories, status)
+- ChallengeParticipant  — চ্যালেঞ্জ-সন্তান সম্পর্ক (qualified, completionPercent)
+- MonthlyMilestone      — মাসিক মাইলস্টোন (qualifyingWeeks, requiredWeeks, qualified, qualifiedAt)
 
 Achievements:
 - Achievement       — অর্জন সংজ্ঞা (key, name, iconKey)
 - ChildAchievement  — সন্তানের অর্জন
 
 Notifications & Audit:
-- Notification      — ইন-অ্যাপ নোটিফিকেশন
-- AuditLog          — সংবেদনশীল অ্যাকশনের লগ
+- Notification      — ইন-অ্যাপ নোটিফিকেশন (TASK_SUBMITTED, TASK_APPROVED, MILESTONE_REACHED, INCIDENT_RESOLVED, SADAQAH_CONFIRMED, ইত্যাদি)
+- AuditLog          — (২.০ সক্রিয় ব্যবহার) সংবেদনশীল অ্যাকশনের লগ (POINT_ADJUSTMENT, INCIDENT_RESOLVED, SADAQAH_CONFIRMED)
 ```
 
 ### গুরুত্বপূর্ণ ডিজাইন নীতি
 - **পরিবার আইসোলেশন** — প্রতিটি কুয়েরি `familyId` দিয়ে ফিল্টার করা।
 - **IDOR প্রতিরোধ** — `assertFamilyAccess`, `assertChildAccess` হেল্পার।
 - **অ্যাটমিক ট্রানজেকশন** — পয়েন্ট প্রদান/কর্তন একটি ট্রানজেকশনে।
-- **ইডেম্পোটেন্ট** — `[taskId, scheduledDate]` ইউনিক কনস্ট্রেইন্ট ডুপ্লিকেট প্রতিরোধ।
+- **ইডেম্পোটেন্ট** — `[taskId, scheduledDate]`, `[familyId, key]` (FamilyAchievement), `[familyId, childId, periodStart]` (MonthlyMilestone) ইউনিক কনস্ট্রেইন্ট ডুপ্লিকেট প্রতিরোধ।
 
 ---
 
@@ -378,7 +505,13 @@ Password: Password123!
 
 ## ১৩. বর্তমান অবস্থা
 
-### সম্পন্ন ✅
+### DeenSteps 2.0 — সম্পূর্ণ ডেলিভারি সম্পন্ন ✅
+
+**২০টি সেশনের পুরো রোডম্যাপ ডেলিভারি সম্পন্ন** (Phase 0 → Phase 5)। বিস্তারিত জানতে `DEENSTEPS_2.0_ROADMAP.md` এবং `worklog.md` দেখুন।
+
+### সম্পন্ন ✅ (১.x ভিত্তি + ২.০ সম্প্রসারণ)
+
+**১.x ভিত্তি (আগে থেকেই ছিল):**
 - সম্পূর্ণ বাংলা লোকালাইজেশন।
 - মার্কেটিং ল্যান্ডিং পেইজ (৬টি সেকশন, ভিজ্যুয়াল-ফার্স্ট)।
 - রেজিস্টার/লগইন (এক-পেইজ, সরাসরি ড্যাশবোর্ড)।
@@ -392,13 +525,22 @@ Password: Password123!
 - সেটআপ প্রগ্রেস বার।
 - Docker ডিপ্লয়।
 
+**২.০ নতুন যোগ (Phase 1-5):**
+- **Phase 1 (কোর ইন্টিগ্রিটি):** ৬-ক্যাটাগরি আমল লাইব্রেরি, Tier 1-5, বয়স-ফিল্টার, মিসড টাস্ক পলিসি (পয়েন্ট কর্তন নয়), চাইল্ড লেজার (`/child/[id]/ledger`), প্যারেন্ট কাস্টমাইজেশন + ডিফল্ট রিস্টোর।
+- **Phase 2 (রেসপন্সিবল রিওয়ার্ডস):** ৪ ক্যাটাগরি (Experiences/Learning/Privileges/Food), ফ্রিকোয়েন্সি লিমিট + কুলডাউন, পারিবারিক মাসিক বাজেট (enforce সহ), নন-ফুড প্রমোশন।
+- **Phase 3 (ক্যারেক্টার ও রিকনসিলিয়েশন):** চাইল্ড-টু-প্যারেন্ট ইনসিডেন্ট রিপোর্ট ("আমি একটি সমস্যায় সাহায্য চাই"), প্যারেন্ট মেডিয়েশন, রেস্টোরেটিভ ফলোআপ, AuditLog সক্রিয় ব্যবহার।
+- **Phase 4 (সাদাকাহ):** সাদাকাহ কজ ক্যাটালগ (৮টি), চাইল্ড সাদাকাহ ফ্লো (তারা ডেডিকেট), প্যারেন্ট প্লেজ কনফিগ (stars → cash), রিয়েল ডোনেশন কনফার্মেশন, ডোনেশন হিস্ট্রি, রিফান্ড।
+- **Phase 5 (ফ্যামিলি গ্রোথ):** উইকলি রিফ্লেকশন, স্ট্রিক কোমলতা, ফ্লেক্সিবল মাইলস্টোন ক্যালকুলেশন ইঞ্জিন, ৪১টি কাজে বাংলা শেখার প্রশ্ন (learningPrompt), `/planner` পেইজ, ফ্যামিলি সেলিব্রেশন (৮টি প্রাইভেট অর্জন)।
+
 ### ভবিষ্যৎ রোডম্যাপ 🔄
-- মাসিক মাইলস্টোন ক্যালকুলেশন ইঞ্জিন।
-- অর্জন অটো-অ্যাওয়ার্ডিং লজিক।
-- ইমেইল নোটিফিকেশন (optional)।
-- আরবি RTL সাপোর্ট।
-- PostgreSQL প্রোডাকশন সুইচ।
-- একাধিক অভিভাবক (caregiver) সাপোর্ট।
+
+- **অটোমেটেড টেস্ট** — unit + e2e (Vitest / Playwright); মূল অডিট থেকেই এই গ্যাপ, ২.০ স্কোপে ছিল না।
+- **ইমেইল নোটিফিকেশন** — বর্তমানে সব ইন-অ্যাপ; `FamilySettings.emailNotifications` ফিল্ড আছে কিন্তু সার্ভিস কনফিগার নেই।
+- **আরবি RTL সাপোর্ট** — শুধু বাংলা LTR।
+- **PostgreSQL প্রোডাকশন** — SQLite-ই ডিফল্ট; Prisma পোর্টেবল, সুইচ সহজ।
+- **মাল্টি-কেয়ারগিভার** — `FamilyMembership.role=CAREGIVER` স্কিমায় আছে, UI নেই।
+- **পাবলিক ফ্যামিলি লিডারবোর্ড** — গার্ডরেইলস §2.2 অনুযায়ী কখনো আসবে না।
+- **সাবস্ক্রিপশন/পেমেন্ট** — গার্ডরেইলস §2.5 অনুযায়ী কখনো আসবে না (চিরকাল ফ্রি)।
 
 ---
 
