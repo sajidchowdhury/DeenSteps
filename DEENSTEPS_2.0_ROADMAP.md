@@ -18,6 +18,95 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ---
 
+## 📊 Progress Tracker
+
+> **Last updated:** Session S0.1 complete
+
+### Phase 0 — Audit & Foundation
+
+| Session | Scope | Status | Deliverable |
+|---------|-------|--------|-------------|
+| **S0.1** | Codebase audit — ledger, task lifecycle, auth, rewards | ✅ **DONE** | `AUDIT.md` |
+| S0.2 | Schema migration plan — new models/fields, migration order | ⬜ TODO | `SCHEMA_PLAN.md` |
+
+### Phase 1 — Core Integrity (5 sessions)
+
+| Session | Scope | Status |
+|---------|-------|--------|
+| S1.1 | Amal Library expansion — 6 categories, Tier 1-5, age filter, spec points | ⬜ |
+| S1.2 | Tier & age UI — badges, filters, grouping in import dialog | ⬜ |
+| S1.3 | Missed task policy — mark missed, encouraging messages, parent follow-up | ⬜ |
+| S1.4 | Child ledger — "আমার তারার হিসাব" full view with filters | ⬜ |
+| S1.5 | Parent customization — per-child selection, restore defaults | ⬜ |
+
+### Phase 2 — Responsible Rewards (4 sessions)
+
+| Session | Scope | Status |
+|---------|-------|--------|
+| S2.1 | Reward categories — Experiences, Learning, Privileges, Food | ⬜ |
+| S2.2 | Frequency limits & cooldown — maxPerWeek, maxPerMonth, cooldownDays | ⬜ |
+| S2.3 | Family budget — monthly limit, committed/remaining tracking | ⬜ |
+| S2.4 | Non-food & low-cost alternatives — category tabs, promotion | ⬜ |
+
+### Phase 3 — Character & Reconciliation (3 sessions)
+
+| Session | Scope | Status |
+|---------|-------|--------|
+| S3.1 | Incident schema & child report — "আমি একটি সমস্যায় সাহায্য চাই" | ⬜ |
+| S3.2 | Parent mediation workflow — perspectives, follow-up records | ⬜ |
+| S3.3 | Restorative follow-up & audit — optional adjustment with reason | ⬜ |
+
+### Phase 4 — Sadaqah & Charitable Giving (3 sessions)
+
+| Session | Scope | Status |
+|---------|-------|--------|
+| S4.1 | Sadaqah schema & cause catalog | ⬜ |
+| S4.2 | Child sadaqah flow — dedicate stars, parent review | ⬜ |
+| S4.3 | Parent pledge & real donation confirmation | ⬜ |
+
+### Phase 5 — Family Growth (3 sessions)
+
+| Session | Scope | Status |
+|---------|-------|--------|
+| S5.1 | Weekly reflection & streak gentleness | ⬜ |
+| S5.2 | Flexible milestone & learning prompts | ⬜ |
+| S5.3 | Parent weekly planner & family celebration | ⬜ |
+
+### Summary
+
+| Phase | Sessions | Completed | Remaining |
+|-------|----------|-----------|-----------|
+| Phase 0 | 2 | 1 | 1 |
+| Phase 1 | 5 | 0 | 5 |
+| Phase 2 | 4 | 0 | 4 |
+| Phase 3 | 3 | 0 | 3 |
+| Phase 4 | 3 | 0 | 3 |
+| Phase 5 | 3 | 0 | 3 |
+| **Total** | **20** | **1** | **19** |
+
+### Key Audit Findings (from S0.1)
+
+**Solid foundation (don't break):**
+- ✅ Points ledger with `balanceAfter` on every transaction
+- ✅ Atomic transactions for all balance changes
+- ✅ Family isolation on every query (no IDOR)
+- ✅ Idempotent occurrence generation (unique constraints)
+- ✅ Idempotent submission/review (decision check)
+- ✅ Safe redemption refund (status check before refund)
+
+**Critical gaps to address:**
+- ❌ No "mark as missed" workflow (occurrences stay ASSIGNED forever)
+- ❌ No child-facing full ledger view
+- ❌ No reward frequency limits or family budget
+- ❌ No incident/sadaqah/reflection models
+- ❌ No AuditLog writes (model exists, never used)
+- ❌ No automated tests
+- ❌ Library has only 4 categories (need 6), no tiers, no age filter
+
+**Next session:** S0.2 — Schema migration plan
+
+---
+
 ## ১. বর্তমান অবস্থা অডিট (কী ইতিমধ্যে আছে)
 
 ### ✅ সম্পূর্ণ করা হয়েছে
