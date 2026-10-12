@@ -134,6 +134,12 @@ export async function getDashboardData() {
     where: { familyId: family.id, status: 'ACTIVE' },
   })
 
+  // Phase A (UI audit): active tasks count — for the dashboard summary card.
+  // Was previously showing just a checkmark placeholder.
+  const activeTasks = await db.taskTemplate.count({
+    where: { familyId: family.id, status: 'ACTIVE' },
+  })
+
   const upcomingRewards = await db.reward.findMany({
     where: { familyId: family.id, status: 'ACTIVE', rewardType: 'POINTS' },
     orderBy: { requiredPoints: 'asc' },
@@ -349,6 +355,7 @@ export async function getDashboardData() {
       todayFamilyCompletion,
       weekFamilyPoints: weekFamilyPoints._sum.amount || 0,
       activeChallenges,
+      activeTasks,
       upcomingRewards,
     },
     children: childStats,

@@ -89,7 +89,7 @@ export default async function DashboardPage() {
           <SummaryCard icon={ShieldCheck} label="রিভিউ বাকি" value={data.stats.pendingApprovals} accent="amber" href="/review" />
           <SummaryCard icon={CheckCircle2} label="আজকের সম্পন্ন" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
           <SummaryCard icon={Star} label="এই সপ্তাহের তারা" value={data.stats.weekFamilyPoints} accent="gold" />
-          <SummaryCard icon={ListChecks} label="চ্যালেঞ্জ" value={data.stats.totalChildren > 0 ? '✓' : '—'} accent="violet" href="/tasks" />
+          <SummaryCard icon={ListChecks} label="কাজ" value={data.stats.activeTasks ?? 0} accent="violet" href="/tasks" />
           <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
 
@@ -417,10 +417,10 @@ function ChildCard({ data }: { data: Awaited<ReturnType<typeof getDashboardData>
             <div className="min-w-0 flex-1">
               <p className="font-display text-lg font-bold text-foreground">{child.displayName}</p>
               <p className="text-xs text-muted-foreground">
-                {child.ageRange ? `${child.ageRange} years` : 'Age not set'}
+                {child.ageRange ? `${child.ageRange} বছর` : 'বয়স সেট করা নেই'}
                 {pendingSubmissions > 0 && (
                   <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                    {pendingSubmissions} pending
+                    {pendingSubmissions} অপেক্ষমাণ
                   </span>
                 )}
               </p>
@@ -429,22 +429,22 @@ function ChildCard({ data }: { data: Awaited<ReturnType<typeof getDashboardData>
 
           <div className="mt-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Today</span>
-              <span className="font-semibold text-foreground">{todayApproved}/{todayTotal} tasks · {todayCompletion}%</span>
+              <span className="text-muted-foreground">আজ</span>
+              <span className="font-semibold text-foreground">{todayApproved}/{todayTotal} কাজ · {todayCompletion}%</span>
             </div>
             <Progress value={todayCompletion} className="mt-1.5 h-1.5" />
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-lg bg-secondary/50 p-3">
-              <p className="text-xs text-muted-foreground">Balance</p>
+              <p className="text-xs text-muted-foreground">ব্যালেন্স</p>
               <p className="mt-0.5 inline-flex items-center gap-1 text-lg font-bold text-foreground">
                 <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                 {balance}
               </p>
             </div>
             <div className="rounded-lg bg-secondary/50 p-3">
-              <p className="text-xs text-muted-foreground">This week</p>
+              <p className="text-xs text-muted-foreground">এই সপ্তাহ</p>
               <p className="mt-0.5 inline-flex items-center gap-1 text-lg font-bold text-foreground">
                 <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
                 +{weekPoints}
@@ -455,8 +455,8 @@ function ChildCard({ data }: { data: Awaited<ReturnType<typeof getDashboardData>
           {nextReward && (
             <div className="mt-3 rounded-lg border border-border p-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-foreground">Next: {nextReward.title}</span>
-                <span className="text-muted-foreground">{rewardRemaining} to go</span>
+                <span className="font-medium text-foreground">পরবর্তী: {nextReward.title}</span>
+                <span className="text-muted-foreground">আর {rewardRemaining} বাকি</span>
               </div>
               <Progress value={rewardProgress} className="mt-1.5 h-1" />
             </div>

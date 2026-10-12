@@ -22,18 +22,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const dynamic = 'force-dynamic'
 
-type Reward = {
-  id: string
-  title: string
-  description: string | null
-  iconKey: string
-  requiredPoints: number
-  rewardType: string
-  requiresApproval: boolean
-  status: string
-  createdAt: Date
-}
-
 type Redemption = {
   id: string
   status: string
@@ -233,67 +221,6 @@ export default async function RewardsPage() {
   )
 }
 
-function RewardCard({
-  reward,
-  archived = false,
-  redemptionCount = 0,
-}: {
-  reward: Reward & { _count: { redemptions: number } }
-  archived?: boolean
-  redemptionCount?: number
-}) {
-  return (
-    <Card className={archived ? 'opacity-70' : 'transition-shadow hover:shadow-premium'}>
-      <CardContent className="p-5">
-        <div className="flex items-start gap-3">
-          <div className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <DynamicIcon iconKey={reward.iconKey} size={22} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-display font-semibold text-foreground">{reward.title}</p>
-            {reward.description && (
-              <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{reward.description}</p>
-            )}
-          </div>
-          <RewardRowActions
-            reward={{
-              id: reward.id,
-              title: reward.title,
-              description: reward.description,
-              iconKey: reward.iconKey,
-              requiredPoints: reward.requiredPoints,
-              rewardType: reward.rewardType,
-              requiresApproval: reward.requiresApproval,
-              status: reward.status,
-            }}
-            archived={archived}
-          />
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
-            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            {reward.requiredPoints} pts
-          </Badge>
-          <Badge variant="secondary" className="text-[10px]">
-            {reward.rewardType === 'POINTS' ? 'Points-based' : 'Achievement'}
-          </Badge>
-          {reward.requiresApproval ? (
-            <Badge variant="outline" className="text-[10px]">Needs approval</Badge>
-          ) : (
-            <Badge variant="outline" className="text-[10px] text-emerald-700 dark:text-emerald-300">Auto-approve</Badge>
-          )}
-          {redemptionCount > 0 && (
-            <span className="ml-auto text-xs text-muted-foreground">
-              {redemptionCount} redemption{redemptionCount === 1 ? '' : 's'}
-            </span>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 function PendingRedemptionRow({ redemption }: { redemption: Redemption }) {
   return (
     <Card>
@@ -303,7 +230,7 @@ function PendingRedemptionRow({ redemption }: { redemption: Redemption }) {
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">
               <span className="text-foreground">{redemption.child.displayName}</span>{' '}
-              <span className="text-muted-foreground">requested</span>{' '}
+              <span className="text-muted-foreground">অনুরোধ করেছে</span>{' '}
               <span className="text-foreground">{redemption.reward.title}</span>
             </p>
             <p className="text-xs text-muted-foreground">
@@ -332,10 +259,10 @@ function PendingRedemptionRow({ redemption }: { redemption: Redemption }) {
 
 function HistoryRedemptionRow({ redemption }: { redemption: Redemption }) {
   const statusMeta: Record<string, { label: string; tone: string; icon: typeof Check }> = {
-    APPROVED: { label: 'Approved', tone: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200', icon: Check },
-    DECLINED: { label: 'Declined', tone: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200', icon: X },
-    FULFILLED: { label: 'Fulfilled', tone: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200', icon: PackageCheck },
-    CANCELLED: { label: 'Cancelled', tone: 'bg-muted text-muted-foreground', icon: X },
+    APPROVED: { label: 'অনুমোদিত', tone: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200', icon: Check },
+    DECLINED: { label: 'প্রত্যাখ্যাত', tone: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200', icon: X },
+    FULFILLED: { label: 'পূরণ হয়েছে', tone: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200', icon: PackageCheck },
+    CANCELLED: { label: 'বাতিল', tone: 'bg-muted text-muted-foreground', icon: X },
   }
   const meta = statusMeta[redemption.status] ?? statusMeta.APPROVED
   const StatusIcon = meta.icon
@@ -352,8 +279,8 @@ function HistoryRedemptionRow({ redemption }: { redemption: Redemption }) {
             {redemption.reward.title}
           </p>
           <p className="text-xs text-muted-foreground">
-            Requested {format(redemption.requestedAt, 'MMM d')}
-            {redemption.fulfilledAt && ` · Fulfilled ${format(redemption.fulfilledAt, 'MMM d')}`}
+            অনুরোধ করেছে {format(redemption.requestedAt, 'MMM d')}
+            {redemption.fulfilledAt && ` · পূরণ হয়েছে ${format(redemption.fulfilledAt, 'MMM d')}`}
             {redemption.note && ` · "${redemption.note}"`}
           </p>
         </div>

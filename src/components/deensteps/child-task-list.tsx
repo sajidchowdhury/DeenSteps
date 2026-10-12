@@ -89,12 +89,12 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
     startTransition(async () => {
       const res = await submitTaskOccurrence(task.id, task.childId, note.trim() || undefined)
       if (res.ok) {
-        toast.success('Submitted! Your parent will review it soon.')
+        toast.success('জমা হয়েছে! বাবা-মা শীঘ্রই রিভিউ করবেন।')
         setSubmitOpen(false)
         setNote('')
         router.refresh()
       } else {
-        toast.error(res.error ?? 'Could not submit task.')
+        toast.error(res.error ?? 'কাজ জমা দেওয়া যায়নি।')
       }
     })
   }

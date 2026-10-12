@@ -48,7 +48,21 @@ export function SadaqahButton({
   const [pending, setPending] = React.useState(false)
   const router = useRouter()
 
-  if (causes.length === 0) return null
+  // Phase A (UI audit): previously this component returned `null` when no
+  // causes were configured, silently hiding the sadaqah feature entirely.
+  // Now we show an empty-state pill that informs the child the feature
+  // exists but needs parent setup. See UI_UX_IMPROVEMENT_PLAN.md §4 Phase A A9.
+  if (causes.length === 0) {
+    return (
+      <span
+        className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-emerald-300 bg-emerald-50/40 px-3 py-1.5 text-xs text-emerald-600 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:text-emerald-400"
+        title="বাবা-মা এখনো কোনো সাদাকাহ কারণ যোগ করেননি।"
+      >
+        <Heart className="h-3.5 w-3.5" />
+        সাদাকাহ (শীঘ্রই আসছে)
+      </span>
+    )
+  }
 
   const handleSubmit = async () => {
     if (!causeId) {

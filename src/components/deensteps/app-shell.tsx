@@ -19,6 +19,8 @@ import {
   Moon,
   ExternalLink,
   CalendarRange,
+  ClipboardCheck,
+  Trophy,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Logo } from '@/components/deensteps/brand'
@@ -27,9 +29,11 @@ import { cn } from '@/lib/utils'
 
 const NAV = [
   { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
+  { href: '/review', label: 'রিভিউ', icon: ClipboardCheck },
   { href: '/planner', label: 'প্ল্যানার', icon: CalendarRange },
   { href: '/children', label: 'সন্তান', icon: Users },
-  { href: '/tasks', label: 'চ্যালেঞ্জ', icon: ListChecks },
+  { href: '/tasks', label: 'কাজ', icon: ListChecks },
+  { href: '/challenges', label: 'সাপ্তাহিক চ্যালেঞ্জ', icon: Trophy },
   { href: '/rewards', label: 'পুরস্কার', icon: Gift },
   { href: '/reports', label: 'রিপোর্ট', icon: BarChart3 },
   { href: '/settings', label: 'সেটিংস', icon: Settings },
@@ -118,7 +122,13 @@ export function AppShell({
               {mounted && theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
             <Button variant="ghost" size="icon" aria-label="নোটিফিকেশন" asChild>
-              <Link href="/dashboard">
+              {/* Phase A (UI audit): bell previously linked to /dashboard which
+                  was misleading — a bell should show actionable items. We now
+                  link to /review (the pending-approvals queue) which is the
+                  most common actionable item the badge count represents.
+                  A real notification center popover is planned for Phase C.
+                  See UI_UX_IMPROVEMENT_PLAN.md §4 Phase C. */}
+              <Link href="/review">
                 <Bell className="h-4 w-4" />
                 {pendingCount > 0 && (
                   <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">

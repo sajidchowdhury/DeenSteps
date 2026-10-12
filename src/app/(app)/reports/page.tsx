@@ -227,10 +227,10 @@ export default async function ReportsPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Reports
+              রিপোর্ট
             </h1>
             <p className="text-sm text-muted-foreground">
-              An overview of how your family is engaging with tasks and rewards.
+              আপনার পরিবার কাজ ও পুরস্কারে কীভাবে অংশ নিচ্ছে তার সারসংক্ষেপ।
             </p>
           </div>
           <p className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
@@ -244,8 +244,8 @@ export default async function ReportsPage() {
           <CardContent className="flex items-start gap-3 p-4">
             <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600" />
             <p className="text-xs text-amber-900 dark:text-amber-100">
-              These reports describe patterns in <span className="font-semibold">task engagement</span> — what was completed and when.
-              They are not a measure of character, religiosity, or a child&apos;s worth. Use them to start conversations, not to compare siblings.
+              এই রিপোর্টগুলো শুধু <span className="font-semibold">কাজে অংশগ্রহণের ধরন</span> বর্ণনা করে — কী সম্পন্ন হয়েছে ও কখন।
+              এগুলো চরিত্র, ধর্মপরায়ণতা, বা সন্তানের মূল্যর পরিমাপ নয়। ভাই-বোনের তুলনা না করে কথোপকথন শুরু করতে এগুলো ব্যবহার করুন।
             </p>
           </CardContent>
         </Card>
@@ -256,9 +256,9 @@ export default async function ReportsPage() {
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <BarChart3 className="h-7 w-7" />
               </div>
-              <p className="mt-4 font-display text-lg font-semibold text-foreground">No data yet</p>
+              <p className="mt-4 font-display text-lg font-semibold text-foreground">এখনো কোনো ডেটা নেই</p>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Once your children start submitting tasks and earning points, you&apos;ll see daily, weekly, and monthly summaries here.
+                সন্তানরা কাজ জমা দিয়ে তারা অর্জন করা শুরু করলে এখানে দৈনিক, সাপ্তাহিক ও মাসিক সারসংক্ষেপ দেখা যাবে।
               </p>
             </CardContent>
           </Card>
@@ -266,13 +266,13 @@ export default async function ReportsPage() {
           <Tabs defaultValue="daily" className="w-full">
             <TabsList>
               <TabsTrigger value="daily" className="gap-1.5">
-                <CalendarDays className="h-3.5 w-3.5" /> Daily
+                <CalendarDays className="h-3.5 w-3.5" /> দৈনিক
               </TabsTrigger>
               <TabsTrigger value="weekly" className="gap-1.5">
-                <TrendingUp className="h-3.5 w-3.5" /> Weekly
+                <TrendingUp className="h-3.5 w-3.5" /> সাপ্তাহিক
               </TabsTrigger>
               <TabsTrigger value="monthly" className="gap-1.5">
-                <BarChart3 className="h-3.5 w-3.5" /> Monthly
+                <BarChart3 className="h-3.5 w-3.5" /> মাসিক
               </TabsTrigger>
             </TabsList>
 
@@ -280,15 +280,15 @@ export default async function ReportsPage() {
             <TabsContent value="daily" className="mt-4 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display">Today&apos;s completion by child</CardTitle>
+                  <CardTitle className="font-display">আজকের সম্পন্ন — সন্তান অনুযায়ী</CardTitle>
                   <CardDescription>
-                    Percentage of assigned tasks approved today, {format(now, 'EEEE, MMM d')}.
+                    আজ নির্ধারিত কাজের মধ্যে কতটি অনুমোদিত হয়েছে, {format(now, 'EEEE, MMM d')}।
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {dailyData.every((d) => d.total === 0) ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                      No tasks scheduled for today yet.
+                      আজকে এখনো কোনো কাজ নির্ধারিত নেই।
                     </p>
                   ) : (
                     <DailyCompletionChart data={dailyChartData} />
@@ -298,18 +298,18 @@ export default async function ReportsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display text-lg">Per-child breakdown</CardTitle>
-                  <CardDescription>Approved, submitted, and pending tasks for today.</CardDescription>
+                  <CardTitle className="font-display text-lg">সন্তান অনুযায়ী বিবরণ</CardTitle>
+                  <CardDescription>আজকের অনুমোদিত, জমা দেওয়া ও বাকি কাজ।</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="pl-6">Child</TableHead>
-                        <TableHead className="text-center">Approved</TableHead>
-                        <TableHead className="text-center">Submitted</TableHead>
-                        <TableHead className="text-center">Pending</TableHead>
-                        <TableHead className="pr-6 text-right">Completion</TableHead>
+                        <TableHead className="pl-6">সন্তান</TableHead>
+                        <TableHead className="text-center">অনুমোদিত</TableHead>
+                        <TableHead className="text-center">জমা হয়েছে</TableHead>
+                        <TableHead className="text-center">বাকি</TableHead>
+                        <TableHead className="pr-6 text-right">সম্পন্ন</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -343,16 +343,16 @@ export default async function ReportsPage() {
               <SummaryCard>
                 {dailyData.every((d) => d.total === 0) ? (
                   <>
-                    No tasks have been scheduled for today yet. Try assigning tasks to your children, or generate occurrences from the Tasks page.
+                    আজকে এখনো কোনো কাজ নির্ধারিত হয়নি। কাজ পৃষ্ঠা থেকে সন্তানদের জন্য কাজ যোগ করুন।
                   </>
                 ) : (
                   <>
-                    Today, <span className="font-semibold">{dailyData.filter((d) => d.completion > 0).length}</span> of{' '}
-                    <span className="font-semibold">{dailyData.length}</span> children completed at least one task.
+                    আজ, <span className="font-semibold">{dailyData.filter((d) => d.completion > 0).length}</span> /{' '}
+                    <span className="font-semibold">{dailyData.length}</span> জন সন্তান অন্তত একটি কাজ সম্পন্ন করেছে।
                     {dailyData.filter((d) => d.completion === 100).length > 0 && (
-                      <> A special shout-out to {dailyData.filter((d) => d.completion === 100).map((d) => d.child.displayName).join(' and ')} for finishing everything.</>
+                      <> {dailyData.filter((d) => d.completion === 100).map((d) => d.child.displayName).join(' ও ')} সব কাজ শেষ করেছে — দারুণ!</>
                     )}{' '}
-                    Remember that completion rates reflect what was scheduled — they don&apos;t measure effort or character.
+                    মনে রাখুন, সম্পন্নের হার শুধু নির্ধারিত কাজ প্রতিফলিত করে — চেষ্টা বা চরিত্রের মাপক নয়।
                   </>
                 )}
               </SummaryCard>
@@ -362,15 +362,15 @@ export default async function ReportsPage() {
             <TabsContent value="weekly" className="mt-4 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display">Points earned — last 7 days</CardTitle>
+                  <CardTitle className="font-display">অর্জিত তারা — গত ৭ দিন</CardTitle>
                   <CardDescription>
-                    Family-wide points awarded per day. Total this week: <span className="font-semibold text-foreground">{weeklyTotal} pts</span>.
+                    পরিবারে প্রতিদিন প্রদত্ত তারা। এই সপ্তাহে মোট: <span className="font-semibold text-foreground">{weeklyTotal} তারা</span>।
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {weeklyTotal === 0 ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                      No points earned yet this week.
+                      এই সপ্তাহে এখনো কোনো তারা অর্জিত হয়নি।
                     </p>
                   ) : (
                     <WeeklyPointsChart data={weeklyChartData} />
@@ -380,17 +380,17 @@ export default async function ReportsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display text-lg">Per-child weekly points</CardTitle>
-                  <CardDescription>Points earned this week and current balance.</CardDescription>
+                  <CardTitle className="font-display text-lg">সন্তান অনুযায়ী সাপ্তাহিক তারা</CardTitle>
+                  <CardDescription>এই সপ্তাহে অর্জিত তারা ও বর্তমান ব্যালেন্স।</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="pl-6">Child</TableHead>
-                        <TableHead className="text-right">This week</TableHead>
-                        <TableHead className="text-right">Total balance</TableHead>
-                        <TableHead className="pr-6 text-right">Share of week</TableHead>
+                        <TableHead className="pl-6">সন্তান</TableHead>
+                        <TableHead className="text-right">এই সপ্তাহ</TableHead>
+                        <TableHead className="text-right">মোট ব্যালেন্স</TableHead>
+                        <TableHead className="pr-6 text-right">সপ্তাহের অংশ</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -427,18 +427,18 @@ export default async function ReportsPage() {
 
               <SummaryCard>
                 {weeklyTotal === 0 ? (
-                  <>No points were awarded yet this week. As your children complete and you approve tasks, you&apos;ll see the trend update here.</>
+                  <>এই সপ্তাহে এখনো কোনো তারা প্রদান করা হয়নি। সন্তানরা কাজ সম্পন্ন করে ও আপনি অনুমোদন দিলে এই ট্রেন্ড আপডেট হবে।</>
                 ) : (
                   <>
-                    Your family earned <span className="font-semibold">{weeklyTotal}</span> points across the last 7 days.
+                    আপনার পরিবার গত ৭ দিনে <span className="font-semibold">{weeklyTotal}</span> তারা অর্জন করেছে।
                     {' '}
                     {weeklyChartData.filter((d) => d.points > 0).length === 7
-                      ? 'Points came in steadily every day — a nice rhythm.'
+                      ? 'প্রতিদিন নিয়মিত তারা এসেছে — দারুণ ছন্দ!'
                       : weeklyChartData.filter((d) => d.points > 0).length >= 4
-                        ? 'Activity was spread across most days, with a few quieter days.'
-                        : 'Activity clustered on a few days — there may be room to smooth out the rhythm.'}
+                        ? 'বেশিরভাগ দিনেই কাজ হয়েছে, কয়েকদিন একটু কম ছিল।'
+                        : 'কাজ কয়েকদিনে কেন্দ্রীভূত হয়েছে — ছন্দ একটু সমান করা যেতে পারে।'}
                     {' '}
-                    This is descriptive, not a judgment — every family&apos;s pace is different.
+                    এটি বর্ণনামূলক, বিচার নয় — প্রতিটি পরিবারের গতি আলাদা।
                   </>
                 )}
               </SummaryCard>
@@ -448,15 +448,15 @@ export default async function ReportsPage() {
             <TabsContent value="monthly" className="mt-4 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display">Points by category — {format(now, 'MMMM')}</CardTitle>
+                  <CardTitle className="font-display">ক্যাটাগরি অনুযায়ী তারা — {format(now, 'MMMM')}</CardTitle>
                   <CardDescription>
-                    Where points are coming from this month. Helpful for noticing which areas are active.
+                    এই মাসে তারা কোন ক্যাটাগরি থেকে এসেছে। কোন ক্ষেত্রগুলো সক্রিয় তা বুঝতে সাহায্য করে।
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {monthlyByCategory.every((c) => c.points === 0) ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                      No points earned yet this month.
+                      এই মাসে এখনো কোনো তারা অর্জিত হয়নি।
                     </p>
                   ) : (
                     <MonthlyCategoryChart data={monthlyByCategory} />
@@ -475,14 +475,14 @@ export default async function ReportsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display text-lg">Monthly milestones</CardTitle>
+                  <CardTitle className="font-display text-lg">মাসিক মাইলস্টোন</CardTitle>
                   <CardDescription>
-                    Consistency is celebrated. Qualifying weeks are weeks where the child stayed engaged.
+                    ধারাবাহিকতা উদযাপিত হয়। কোয়ালিফাইং সপ্তাহ হলো সেই সপ্তাহ যেখানে সন্তান নিয়মিত ছিল।
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {monthlyPerChild.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No active children.</p>
+                    <p className="text-sm text-muted-foreground">কোনো সক্রিয় সন্তান নেই।</p>
                   ) : (
                     monthlyPerChild.map((d) => {
                       const pct = Math.min(100, Math.round((d.qualifyingWeeks / d.requiredWeeks) * 100))
@@ -494,12 +494,12 @@ export default async function ReportsPage() {
                               <p className="text-sm font-medium text-foreground">{d.child.displayName}</p>
                               {d.qualified && (
                                 <Badge variant="outline" className="gap-1 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
-                                  <Award className="h-3 w-3" /> Milestone reached
+                                  <Award className="h-3 w-3" /> মাইলস্টোন অর্জিত
                                 </Badge>
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                              {d.qualifyingWeeks}/{d.requiredWeeks} qualifying weeks · {d.monthPoints} pts
+                              {d.qualifyingWeeks}/{d.requiredWeeks} কোয়ালিফাইং সপ্তাহ · {d.monthPoints} তারা
                             </p>
                           </div>
                           <Progress value={pct} className="mt-2 h-1.5" />
@@ -512,20 +512,20 @@ export default async function ReportsPage() {
 
               <SummaryCard>
                 {monthlyByCategory.every((c) => c.points === 0) ? (
-                  <>No points have been awarded yet this month. As approvals come in, you&apos;ll see which task categories are most active.</>
+                  <>এই মাসে এখনো কোনো তারা প্রদান করা হয়নি। অনুমোদন আসলে কোন ক্যাটাগরিগুলো সবচেয়ে সক্রিয় তা দেখা যাবে।</>
                 ) : (
                   <>
-                    This month, points came mostly from{' '}
+                    এই মাসে, তারা মূলত এসেছে{' '}
                     <span className="font-semibold">
                       {monthlyByCategory.slice().sort((a, b) => b.points - a.points)[0].categoryFull}
                     </span>
-                    .
+                    থেকে।
                     {' '}
                     {monthlyPerChild.filter((c) => c.qualifyingWeeks >= c.requiredWeeks).length > 0
-                      ? `${monthlyPerChild.filter((c) => c.qualifyingWeeks >= c.requiredWeeks).map((c) => c.child.displayName).join(' and ')} ${monthlyPerChild.filter((c) => c.qualifyingWeeks >= c.requiredWeeks).length === 1 ? 'has' : 'have'} reached the monthly milestone.`
-                      : 'No monthly milestone reached yet — there is still time.'}
+                      ? `${monthlyPerChild.filter((c) => c.qualifyingWeeks >= c.requiredWeeks).map((c) => c.child.displayName).join(' ও ')} মাসিক মাইলস্টোন অর্জন করেছে।`
+                      : 'এখনো কেউ মাসিক মাইলস্টোন অর্জন করেনি — সময় এখনো আছে।'}
                     {' '}
-                    Categories simply describe where activity happened — they are not a ranking of importance.
+                    ক্যাটাগরি শুধু কোথায় কাজ হয়েছে তা বর্ণনা করে — গুরুত্বের কোনো তালিকা নয়।
                   </>
                 )}
               </SummaryCard>

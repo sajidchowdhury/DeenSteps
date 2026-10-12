@@ -987,3 +987,64 @@ Stage Summary:
 - Phase 5 COMPLETE (3/3 sessions)
 - 20/20 sessions complete (100%) 🎉
 - DeenSteps 2.0 roadmap fully delivered.
+
+---
+Task ID: Phase A (UI/UX Improvement Plan)
+Agent: main (Super Z)
+Task: UI/UX audit + Phase A quick wins — kill dead UI, fix language, fix navigation
+
+Work Log:
+- Did a full senior-designer-level UX/UI audit of the codebase (10 critical problems identified with file:line evidence). Wrote UI_UX_IMPROVEMENT_PLAN.md (1,084 lines) with 5-phase plan, per-screen specs, design system updates, and 9 open questions for Sajid.
+- Phase A "quick wins" executed:
+
+A1. Hid dead "অর্জন" card on child dashboard (child/[id]/page.tsx).
+    - The ChildAchievement table is never written to by any code in the codebase, so the card always shows the empty state ("প্রথম ব্যাজ অর্জন করতে কাজ সম্পন্ন করো!") no matter how many tasks a child completes.
+    - Removed the dead card + the dead db.childAchievement.findMany query + the unused Award import.
+    - Will be restored in Phase D when the real child-level achievement engine is wired up.
+
+A2. Translated the entire /reports page to Bengali (was the most dramatic language gap in the codebase — every other page was Bengali, this one was fully English).
+    - Header, description, interpretation note (critical safety messaging), empty state, tab labels (Daily/Weekly/Monthly → দৈনিক/সাপ্তাহিক/মাসিক), card titles, table headers, all SummaryCard text.
+    - Fixed two Bengali/English mixups caught in self-review ("জন of" → "জন /", "রanking" → "তালিকা").
+
+A3. Fixed ChildCard English leaks on /dashboard (dashboard/page.tsx ChildCard function).
+    - "Today" → "আজ", "X/Y tasks" → "X/Y কাজ", "Balance" → "ব্যালেন্স", "This week" → "এই সপ্তাহ", "Next:" → "পরবর্তী:", "X to go" → "আর X বাকি", "X years" → "X বছর", "Age not set" → "বয়স সেট করা নেই", "X pending" → "X অপেক্ষমান".
+    - Also fixed the "চ্যালেঞ্জ" summary card that displayed just a checkmark placeholder. Renamed label to "কাজ" (tasks) and wired it to a new data.stats.activeTasks count (added to dashboard-actions.ts) so the card now shows the real number of active task templates.
+
+A4. Fixed English leaks on /review page.
+    - "(auto)" → "(স্বয়ংক্রিয়)", "points" → "তারা", "Child's note:" → "সন্তানের নোট:".
+    - Removed redundant count-in-description ("{N}টি সাবমিশন আপনার রিভিউর অপেক্ষায়।") since a count badge is shown right next to it.
+
+A5. Fixed status labels on /rewards page + removed dead code.
+    - Status labels: "Approved" → "অনুমোদিত", "Declined" → "প্রত্যাখ্যাত", "Fulfilled" → "পূরণ হয়েছে", "Cancelled" → "বাতিল".
+    - "requested" → "অনুরোধ করেছে", "Requested {date}" → "অনুরোধ করেছে {date}", "Fulfilled {date}" → "পূরণ হয়েছে {date}".
+    - Removed the dead RewardCard function (was defined but never called — catalog uses <RewardsCatalog> instead). Also removed the now-orphaned `Reward` type definition.
+
+A6. Fixed English toasts on child-task-list.tsx.
+    - "Submitted! Your parent will review it soon." → "জমা হয়েছে! বাবা-মা শীঘ্রই রিভিউ করবেন।"
+    - "Could not submit task." → "কাজ জমা দেওয়া যায়নি।"
+
+A7 + A8. Restructured the sidebar navigation (app-shell.tsx).
+    - Added /review to the sidebar (was missing — primary parent workflow only reachable via dashboard button or URL).
+    - Added /challenges to the sidebar (was orphaned — page existed but no nav entry).
+    - Renamed /tasks nav label from "চ্যালেঞ্জ" to "কাজ" (tasks) to disambiguate from the separate /challenges feature (weekly challenges) which was also labeled "চ্যালেঞ্জ". Two features, same Bengali label was confusing.
+    - New sidebar order: ড্যাশবোর্ড, রিভিউ, প্ল্যানার, সন্তান, কাজ, সাপ্তাহিক চ্যালেঞ্জ, পুরস্কার, রিপোর্ট, সেটিংস (9 items, up from 7).
+    - Added ClipboardCheck + Trophy icons to imports.
+
+A9. Fixed sadaqah-button silent-vanish (sadaqah-button.tsx).
+    - Previously returned `null` when no causes were configured, silently hiding the sadaqah feature entirely.
+    - Now shows an empty-state pill: "সাদাকাহ (শীঘ্রই আসছে)" with a dashed emerald border + Heart icon + tooltip explaining parent setup needed.
+    - The feature is now visible even when unconfigured, so the child (and parent) knows it exists.
+
+A10. Fixed the notification bell (app-shell.tsx).
+    - Previously linked to /dashboard which was misleading — a bell should show actionable items, not the dashboard home.
+    - Now links to /review (the pending-approvals queue) which is the most common actionable item the badge count represents.
+    - A real notification-center popover is planned for Phase C; this is the interim fix.
+
+- Lint clean. Production build ✓ (all 18 routes compile).
+- Commit + push to GitHub.
+
+Stage Summary:
+- Phase A "quick wins" delivered. No new components, no schema changes, no new deps. Pure deletions + translations + nav fixes.
+- The app now: (1) no longer lies to children with a dead achievement card, (2) has zero English leaks in Bengali pages, (3) has /review and /challenges in the sidebar, (4) shows the sadaqah feature even when unconfigured, (5) has a notification bell that goes to the right place, (6) shows real task counts instead of placeholder checkmarks.
+- Estimated felt-quality improvement: ~30% per the plan.
+- Next: Phase B (child dashboard redesign — mascot, "today's mission" hero, done-pile, celebrations) pending Sajid's approval + answers to the 9 open questions in UI_UX_IMPROVEMENT_PLAN.md §9.

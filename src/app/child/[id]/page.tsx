@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History, Trophy } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History, Trophy } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -114,13 +114,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     orderBy: { requiredPoints: 'asc' },
   })
 
-  // Recent achievements
-  const achievements = await db.childAchievement.findMany({
-    where: { childId: child.id },
-    include: { achievement: true },
-    orderBy: { awardedAt: 'desc' },
-    take: 6,
-  })
+  // Phase A (UI audit): achievements query removed — the ChildAchievement table
+  // is never written to by any code in the codebase, so querying it always
+  // returns []. The dead অর্জন card that consumed this data is also hidden.
+  // Both will be restored together in Phase D when the real child-level
+  // achievement engine is wired up. See UI_UX_IMPROVEMENT_PLAN.md §4 Phase D.
 
   // Recent point transactions
   const recentTxns = await db.pointsTransaction.findMany({
@@ -416,30 +414,14 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </CardContent>
             </Card>
 
-            {/* Achievements */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <Award className="h-5 w-5 text-amber-500" /> অর্জন
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {achievements.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">প্রথম ব্যাজ অর্জন করতে কাজ সম্পন্ন করো!</p>
-                ) : (
-                  <div className="grid grid-cols-3 gap-2">
-                    {achievements.map((a) => (
-                      <div key={a.id} className="flex flex-col items-center rounded-lg border border-border bg-card p-2 text-center">
-                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
-                          <DynamicIcon iconKey={a.achievement.iconKey} className="h-4 w-4" />
-                        </span>
-                        <p className="mt-1 text-[10px] font-medium text-foreground">{a.achievement.name}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* Achievements — Phase A (UI audit): temporarily hidden.
+                The ChildAchievement table is never written to by any code in the
+                codebase, so this card always shows the empty state ("প্রথম ব্যাজ
+                অর্জন করতে কাজ সম্পন্ন করো!") no matter how many tasks a child
+                completes. Showing a perpetually-empty achievement card teaches
+                the child that the app lies. We will restore this in Phase D
+                when the real child-level achievement engine is wired up.
+                See UI_UX_IMPROVEMENT_PLAN.md §4 Phase D. */}
 
             {/* Recent activity */}
             <Card>

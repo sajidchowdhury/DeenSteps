@@ -75,7 +75,7 @@ export default async function ReviewPage() {
                   <Clock className="h-5 w-5 text-amber-500" />
                   রিভিউ বাকি
                 </CardTitle>
-                <CardDescription>{pending.length}টি সাবমিশন আপনার রিভিউর অপেক্ষায়।</CardDescription>
+                <CardDescription>এখানে সব অপেক্ষমান সাবমিশন দেখা যাচ্ছে।</CardDescription>
               </div>
               <Badge variant="secondary" className="text-sm">{pending.length}</Badge>
             </div>
@@ -112,12 +112,12 @@ export default async function ReviewPage() {
                               {format(s.occurrence.scheduledDate, 'MMM d')}
                             </Badge>
                             <Badge variant="secondary" className="text-xs">
-                              {s.occurrence.task.pointsValue} {s.occurrence.task.approvalPolicy === 'AUTO' ? '(auto)' : 'points'}
+                              {s.occurrence.task.pointsValue} {s.occurrence.task.approvalPolicy === 'AUTO' ? '(স্বয়ংক্রিয়)' : 'তারা'}
                             </Badge>
                           </div>
                           {s.note && (
                             <div className="mt-2 rounded-lg bg-secondary/60 p-2.5 text-xs text-foreground">
-                              <span className="font-medium">Child's note: </span>{s.note}
+                              <span className="font-medium">সন্তানের নোট: </span>{s.note}
                             </div>
                           )}
                         </div>
