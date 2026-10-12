@@ -189,6 +189,51 @@ Stage Summary:
 - 5/20 sessions complete (25%)
 - Next: S1.4 — Child ledger ("আমার তারার হিসাব" full view with filters)
 
+---
+Task ID: S1.4
+Agent: main (Super Z)
+Task: Child ledger — "আমার তারার হিসাব" full view with filters
+
+Work Log:
+- Re-read worklog S1.3 and spec §3.4 for ledger requirements
+- Created getChildLedger server action (ledger-actions.ts):
+  - Loads all PointsTransaction for a child (up to 200)
+  - Returns entries with: date, description, amount, type, balanceAfter,
+    previousBalance (computed), reason, status
+  - Family isolation verified (child must belong to family)
+  - Returns currentBalance from latest transaction
+- Created /child/[id]/ledger route:
+  - Server component loads ledger data via getChildLedger
+  - Renders LedgerClient component
+- Created LedgerClient component (ledger-client.tsx):
+  - Filter tabs: আজ / এই সপ্তাহ / এই মাস / সব
+  - Balance summary card (current balance + earned in filtered range)
+  - Table layout: date | description (with type badge + reason) | change | balance
+  - Color-coded: green=earned, red=spent, sky=refund, amber=adjustment
+  - Type badges: অর্জিত/খরচ/সমন্বয়/ফেরত
+  - Empty state when no transactions in range
+  - Info note: "দৈনিক কাজ রিসেট হয়, অর্জিত তারা হয় না।"
+  - Responsive: stacked on mobile, table on desktop
+  - All text in Bengali
+- Added "আমার তারার হিসাব" button to child dashboard:
+  - History icon + Bengali label
+  - Placed after stat cards, before task list
+  - Links to /child/[id]/ledger
+- Lint clean
+
+Stage Summary:
+- Per spec §3.4: all requirements met
+  - ✅ Date and activity
+  - ✅ Points earned / spent / adjustment with reason
+  - ✅ Previous balance (computed as balanceAfter - amount)
+  - ✅ New balance
+  - ✅ Transaction status (type badge)
+  - ✅ Filters: today, week, month, all history
+- Ledger is the source of truth — "Daily tasks reset; earned points do not."
+- 6/20 sessions complete (30%)
+- Next: S1.5 — Parent customization (per-child selection, restore defaults)
+
+
 
 
 
