@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { requireFamily } from '@/lib/auth/session'
 import { markMissedOccurrences } from '@/server/actions/task-actions'
 import { getOpenIncidents } from '@/server/actions/incident-actions'
+import { getPendingSadaqahDonations, getSadaqahHistory } from '@/server/actions/sadaqah-actions'
 
 /**
  * Load the parent dashboard summary: children, today's activity, points, etc.
@@ -327,6 +328,10 @@ export async function getDashboardData() {
     },
   })
 
+  // ── Phase 4 (S4.2): Pending sadaqah donations ──────────────────────────
+  const pendingSadaqah = await getPendingSadaqahDonations()
+  const sadaqahHistory = await getSadaqahHistory()
+
   return {
     family,
     user,
@@ -348,5 +353,7 @@ export async function getDashboardData() {
     budgetInfo,
     openIncidents,
     resolvedIncidents,
+    pendingSadaqah,
+    sadaqahHistory,
   }
 }

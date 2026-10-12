@@ -651,6 +651,54 @@ Stage Summary:
 - 15/20 sessions complete (75%)
 - Next: S4.2 — Child sadaqah flow (UI for dedicate stars, parent review)
 
+---
+Task ID: S4.2
+Agent: main (Super Z)
+Task: Child sadaqah flow — dedicate stars UI, parent review section
+
+Work Log:
+- Re-read sadaqah-actions.ts from S4.1 for context
+- Created SadaqahButton component (sadaqah-button.tsx):
+  - "আমার সাদাকাহ সঞ্চয়" button (emerald-colored, non-threatening)
+  - Dialog with: current balance display, cause selector, stars input
+  - Balance check (cannot dedicate more than available)
+  - Balance after preview: "দেওয়ার পর তোমার ব্যালেন্স থাকবে: X তারা"
+  - Calls requestSadaqah (atomic deduct + create PENDING + notify parents)
+  - Success: "X তারা সাদাকাহর জন্য নিবেদিত! বাবা-মা নিশ্চিত করবেন। 🤲"
+  - All text in Bengali
+- Added sadaqah causes loading to child dashboard:
+  - Queries active SadaqahCause for the family
+  - Passes to SadaqahButton
+- Added SadaqahButton to child dashboard (next to IncidentReportButton)
+- Created SadaqahReviewSection component (sadaqah-review-section.tsx):
+  - Shows on parent dashboard when there are PENDING sadaqah donations
+  - Emerald-tinted card: "সাদাকাহ অনুরোধ"
+  - Each donation shows: child avatar, cause icon+title, stars dedicated, time
+  - "নিশ্চিত" button (green) → confirmSadaqahDonation
+    - Success: "সাদাকাহ নিশ্চিত হয়েছে! আল্লাহ সন্তানকে উত্তম প্রতিদান দিন। 🤲"
+  - "বাতিল" button (outline) → cancelSadaqahDonation (refunds stars)
+    - Success: "সাদাকাহ বাতিল হয়েছে। তারা ফেরত দেওয়া হয়েছে।"
+  - All text in Bengali
+- Added pendingSadaqah + sadaqahHistory to getDashboardData return
+- Added SadaqahReviewSection to parent dashboard (after resolved incidents)
+- Lint clean
+
+Stage Summary:
+- Per spec §6.1 + §6.2: child sadaqah flow implemented
+  - ✅ Child selects a cause
+  - ✅ Child chooses how many stars to dedicate
+  - ✅ Parent receives notification
+  - ✅ Stars reserved/deducted atomically
+  - ✅ Parent reviews and confirms or cancels
+  - ✅ Refund on cancellation (transparent)
+- Per spec §6.3: generosity without competition
+  - ✅ No sibling ranking by donations
+  - ✅ No pressure to donate all points
+  - ✅ Encouraging message on confirmation
+- 16/20 sessions complete (80%)
+- Next: S4.3 — Parent pledge & real donation confirmation (Phase 4 finale)
+
+
 
 
 

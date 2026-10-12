@@ -31,6 +31,7 @@ import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/compo
 import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
 import { IncidentsSection } from '@/components/deensteps/incidents-section'
 import { ResolvedIncidentsSection } from '@/components/deensteps/resolved-incidents-section'
+import { SadaqahReviewSection } from '@/components/deensteps/sadaqah-review-section'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -254,6 +255,9 @@ export default async function DashboardPage() {
 
         {/* Resolved incidents history — Phase 3 (S3.3) */}
         <ResolvedIncidentsSection incidents={data.resolvedIncidents} />
+
+        {/* Sadaqah review section — Phase 4 (S4.2) */}
+        <SadaqahReviewSection donations={data.pendingSadaqah} />
 
         {/* Two-column: activity + quick actions */}
         <div className="grid gap-6 lg:grid-cols-3">

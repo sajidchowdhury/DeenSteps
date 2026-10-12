@@ -13,6 +13,7 @@ import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
+import { SadaqahButton } from '@/components/deensteps/sadaqah-button'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 
@@ -154,6 +155,13 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     include: { task: { select: { title: true, iconKey: true } } },
   })
 
+  // Phase 4 (S4.2): Sadaqah causes for child
+  const sadaqahCauses = await db.sadaqahCause.findMany({
+    where: { familyId: family.id, active: true },
+    select: { id: true, title: true, description: true, iconKey: true },
+    orderBy: { createdAt: 'asc' },
+  })
+
   return (
     <div className="min-h-screen bg-secondary/20">
       {/* Child dashboard header — separate from parent app shell */}
@@ -215,8 +223,10 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
         )}
 
         {/* Phase 3 (S3.1): Incident report button */}
-        <div className="mb-4">
+        {/* Phase 4 (S4.2): Sadaqah button */}
+        <div className="mb-4 flex flex-wrap gap-2">
           <IncidentReportButton childId={child.id} />
+          <SadaqahButton childId={child.id} causes={sadaqahCauses} currentBalance={currentBalance} />
         </div>
 
         {/* Stat cards */}
