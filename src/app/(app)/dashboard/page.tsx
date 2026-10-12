@@ -34,6 +34,7 @@ import { ResolvedIncidentsSection } from '@/components/deensteps/resolved-incide
 import { SadaqahReviewSection } from '@/components/deensteps/sadaqah-review-section'
 import { SadaqahHistorySection } from '@/components/deensteps/sadaqah-history-section'
 import { WeeklyReflectionSection } from '@/components/deensteps/weekly-reflection-section'
+import { MilestoneProgressSection } from '@/components/deensteps/milestone-progress-section'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -266,6 +267,9 @@ export default async function DashboardPage() {
 
         {/* Weekly reflection — Phase 5 (S5.1) */}
         <WeeklyReflectionSection childrenList={childrenList} recentReflections={data.recentReflections} />
+
+        {/* Monthly milestone progress — Phase 5 (S5.2) */}
+        <MilestoneProgressSection progress={data.milestoneProgress} />
 
         {/* Two-column: activity + quick actions */}
         <div className="grid gap-6 lg:grid-cols-3">

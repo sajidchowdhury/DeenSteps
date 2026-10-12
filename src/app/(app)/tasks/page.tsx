@@ -33,6 +33,7 @@ type TaskWithAssignments = {
   status: string
   isFromLibrary: boolean
   tier: number
+  learningPrompt: string | null
   assignments: { child: { id: string; displayName: string; avatarColor: string } }[]
 }
 
@@ -226,6 +227,8 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
               status: task.status,
               isFromLibrary: task.isFromLibrary,
               assignedChildIds: assigned.map((c) => c.id),
+              tier: task.tier,
+              learningPrompt: task.learningPrompt,
             }}
             childOptions={childOptions}
           />

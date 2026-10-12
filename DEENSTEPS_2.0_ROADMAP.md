@@ -69,7 +69,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Session | Scope | Status |
 |---------|-------|--------|
 | **S5.1** | Weekly reflection & streak gentleness | ✅ **DONE** |
-| S5.2 | Flexible milestone & learning prompts | ⬜ |
+| S5.2 | Flexible milestone & learning prompts | ✅ |
 | S5.3 | Parent weekly planner & family celebration | ⬜ |
 
 ### Summary
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S5.2 — Flexible milestone & learning prompts
+**Next session:** S5.3 — Parent weekly planner & family celebration (Phase 5 finale)
 
 ---
 

@@ -7,6 +7,7 @@ import { markMissedOccurrences } from '@/server/actions/task-actions'
 import { getOpenIncidents } from '@/server/actions/incident-actions'
 import { getPendingSadaqahDonations, getSadaqahHistory } from '@/server/actions/sadaqah-actions'
 import { getRecentReflections } from '@/server/actions/reflection-actions'
+import { getMilestoneProgressForFamily } from '@/server/actions/milestone-actions'
 
 /**
  * Load the parent dashboard summary: children, today's activity, points, etc.
@@ -336,6 +337,9 @@ export async function getDashboardData() {
   // ── Phase 5 (S5.1): Recent weekly reflections ──────────────────────────
   const recentReflections = await getRecentReflections()
 
+  // ── Phase 5 (S5.2): Monthly milestone progress per child ──────────────
+  const milestoneProgress = await getMilestoneProgressForFamily()
+
   return {
     family,
     user,
@@ -360,5 +364,6 @@ export async function getDashboardData() {
     pendingSadaqah,
     sadaqahHistory,
     recentReflections,
+    milestoneProgress,
   }
 }

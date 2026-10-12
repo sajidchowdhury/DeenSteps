@@ -13,6 +13,7 @@ import {
   ChevronUp,
   MessageSquare,
   Info,
+  BookOpenCheck,
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -46,6 +47,8 @@ export type ChildTask = {
   submissionNote: string | null
   reviewerNote: string | null
   childId: string
+  // Phase 5 (S5.2): optional Islamic learning prompt — the "why" behind the task
+  learningPrompt: string | null
 }
 
 export function ChildTaskList({ occurrences }: { occurrences: ChildTask[] }) {
@@ -72,6 +75,7 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
   const [pending, startTransition] = useTransition()
   const [submitOpen, setSubmitOpen] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [promptOpen, setPromptOpen] = useState(false)
   const [note, setNote] = useState('')
   const router = useRouter()
 
@@ -142,6 +146,26 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
 
           {task.taskDescription && (
             <p className="mt-1 text-sm text-muted-foreground">{task.taskDescription}</p>
+          )}
+
+          {/* Phase 5 (S5.2): Optional learning prompt — the "why" behind the task */}
+          {task.learningPrompt && (
+            <div className="mt-2">
+              <button
+                type="button"
+                onClick={() => setPromptOpen((v) => !v)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/60 px-2.5 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-50 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300"
+              >
+                <BookOpenCheck className="h-3 w-3" />
+                {promptOpen ? 'লুকান' : 'শেখার প্রশ্ন'}
+                {promptOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              </button>
+              {promptOpen && (
+                <div className="mt-1.5 rounded-lg border border-emerald-200 bg-emerald-50/40 p-2.5 text-xs text-foreground dark:border-emerald-900/60 dark:bg-emerald-950/20">
+                  <p className="leading-relaxed">{task.learningPrompt}</p>
+                </div>
+              )}
+            </div>
           )}
 
           {task.submissionNote && (

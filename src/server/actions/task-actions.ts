@@ -395,6 +395,8 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
     tier: lib.tier,
     minAge: lib.minAge,
     maxAge: lib.maxAge,
+    // Phase 5 (S5.2): pass through learning prompt from library
+    learningPrompt: 'learningPrompt' in lib ? lib.learningPrompt : undefined,
   })
 
   revalidatePath('/tasks')
@@ -457,6 +459,8 @@ export async function restoreDefaultLibrary(): Promise<{ ok: boolean; imported: 
       tier: lib.tier,
       minAge: lib.minAge,
       maxAge: lib.maxAge,
+      // Phase 5 (S5.2): pass through learning prompt from library
+      learningPrompt: 'learningPrompt' in lib ? lib.learningPrompt : undefined,
     })
 
     if (result.ok) imported++

@@ -813,3 +813,94 @@ Stage Summary:
 
 
 
+
+---
+Task ID: S5.2
+Agent: main (Super Z)
+Task: Flexible milestone & learning prompts — MonthlyMilestone calculation engine, TaskTemplate.learningPrompt content + UI
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 5 + roadmap S5.2 spec for context
+- Audited existing MonthlyMilestone model (already in schema from earlier phases; has qualifyingWeeks, requiredWeeks, qualified, qualifiedAt, periodStart, periodEnd)
+- Audited existing reports/page.tsx milestone display — found a weak "any points earned = 1 qualifying week" proxy that never persists the milestone record. The S5.2 spec calls for a proper calculation engine.
+- Audited TaskTemplate.learningPrompt field — already added in Phase 1.1 (S1.1) schema, already in TaskSchema (task-actions.ts), but TASK_LIBRARY had no prompts and the create/edit TaskFormDialog didn't expose the field.
+- Populated TASK_LIBRARY with Bengali learningPrompt values for all 41 tasks:
+  - Each prompt is a short, age-appropriate "why" behind the task — not rules, but meaning
+  - Examples: ফজর → "দিনের শুরুটা আল্লাহর সাথে করলে পুরো দিন বরকতময় হয় — তুমি কি এটি অনুভব করো?"
+  - সত্য কথা বলা → "সত্য কথা বললে আল্লাহ ও মানুষ উভয়ের কাছে সম্মান বাড়ে — নবীজি সবসময় সত্য বলতেন।"
+  - ক্ষমা করা → "ক্ষমা করলে মন হালকা হয় এবং সম্পর্ক মজবুত হয় — আল্লাহ ক্ষমাশীলদের ভালোবাসেন।"
+  - Used MultiEdit (41 atomic edits) to keep the diff reviewable
+- Wired learningPrompt through the import/restore flows in task-actions.ts:
+  - importLibraryTask: now passes learningPrompt from library entry
+  - restoreDefaultLibrary: now passes learningPrompt from library entry
+- Added learningPrompt field to TaskFormDialog UI:
+  - New "শেখার প্রশ্ন (ঐচ্ছিক)" Textarea with BookOpenCheck icon label
+  - Helper text: "সন্তানের কাজের সাথে একটি ছোট শিক্ষা যুক্ত করুন — কেবল নিয়ম নয়, অর্থও শিখুক।"
+  - Added to form Schema (z.string().max(500).optional()), default values, and reset on open
+  - Updated TaskRowActionTask type to include tier + learningPrompt (was missing tier — pre-existing bug also fixed)
+  - Updated tasks/page.tsx to pass tier + learningPrompt into TaskRowActions edit initial values
+  - Prevented wipe-on-edit bug (without explicit initial, form would reset learningPrompt to empty string)
+- Created milestone-actions.ts server action (NEW):
+  - evaluateMonthlyMilestone(childId): the flexible milestone engine
+    - Reads FamilySettings (monthlyPlanType, monthlyQualifyingWeeks, weeklyStartDay, notifyOnMilestone)
+    - Computes current period (FOUR_WEEK = 28 days from month start, CALENDAR_MONTH = full month)
+    - Counts qualifying weeks: distinct week starts where child has ≥1 APPROVED task occurrence in period
+    - "Qualifying" = the child showed up that week — gentle, not perfect
+    - Upserts MonthlyMilestone record with qualifyingWeeks, requiredWeeks, qualified, qualifiedAt
+    - When qualified transitions false→true (first time only): fires notifications
+      - Child notification (MILESTONE_REACHED, childId set, Bengali message)
+      - Parent notification (MILESTONE_REACHED, userId set, per parent membership)
+    - Idempotent: re-running doesn't re-fire notifications
+    - Best-effort notifications: try/catch wraps notification creation so failures don't roll back milestone
+  - getMilestoneProgressForFamily(): returns fresh progress for all children
+    - Always recomputes qualifying weeks (in-memory) for accurate dashboard display
+    - Does NOT persist (so this read-only function stays side-effect-free)
+    - Returns displayQualifyingWeeks = max(persisted, fresh) so the dashboard never goes backwards
+  - getMilestoneProgressForChild(childId): single-child convenience wrapper
+- Wired evaluateMonthlyMilestone into review-actions.ts:
+  - After reviewSubmission commits (when decision === 'APPROVED'): re-fetch submission.childId, call evaluateMonthlyMilestone
+  - After submitTaskOccurrence (when approvalPolicy === 'AUTO'): the child just earned an APPROVED — call evaluateMonthlyMilestone
+  - Both wrapped in try/catch (best-effort) — engine failure never fails the review/submit
+  - Used dynamic import to avoid circular dependency concerns
+- Added milestoneProgress to getDashboardData return value (parent dashboard):
+  - Calls getMilestoneProgressForFamily() and returns the array
+- Created MilestoneProgressSection component (milestone-progress-section.tsx):
+  - Violet-tinted card on parent dashboard
+  - Per-child rows: avatar, name, qualifying weeks chip, progress bar
+  - States: "আর X সপ্তাহ বাকি" (not qualified) / "মাইলস্টোন অর্জিত! 🎉" (qualified)
+  - Closing message: "💜 মাইলস্টোন হলো ধারাবাহিকতার উদযাপন — নিখুঁত হওয়ার নয়। সন্তানের চেষ্টা উদযাপন করুন।"
+  - Returns null if no children
+- Added MilestoneProgressSection to parent dashboard (after weekly reflection)
+- Added milestone progress card to child dashboard:
+  - Loads getMilestoneProgressForChild(child.id) server-side
+  - Violet-tinted card between sadaqah pledge info and stat cards
+  - Trophy icon, progress bar, weeks-remaining message
+  - Closing: "💜 ধারাবাহিকতাই আসল জয় — নিখুঁত হওয়ার নয়।"
+- Updated ChildTaskList component to display learningPrompt:
+  - Added BookOpenCheck to lucide imports
+  - Added learningPrompt to ChildTask type
+  - New collapsible "শেখার প্রশ্ন" chip (emerald-tinted) below the task description
+  - Click to expand → shows prompt text in a soft emerald-bordered box
+  - Click again to collapse
+  - Only renders if task.learningPrompt is non-empty
+- Updated child/[id]/page.tsx to pass learningPrompt from o.task.learningPrompt into ChildTaskList occurrences
+- Verified all 41 TASK_LIBRARY entries now have learningPrompt
+- Type-check: only pre-existing errors remain (Resolver inference quirks on zodResolver + z.coerce, MissedTask type on dashboard/page.tsx). No new errors introduced.
+- Production build: ✓ all 17 routes compile cleanly
+- Lint: clean
+
+Stage Summary:
+- Per spec §7B + §7C: flexible milestone + learning prompts implemented
+  - ✅ MonthlyMilestone calculation engine (idempotent, configurable, with notifications)
+  - ✅ 3/4 qualifying weeks → milestone (configurable via monthlyQualifyingWeeks setting, default 3)
+  - ✅ "Qualifying week" = at least one APPROVED task (gentle, not perfect)
+  - ✅ Engine auto-runs after every APPROVED review (manual + auto-approval paths)
+  - ✅ Parent dashboard: per-child progress card with weeks-remaining and trophy badge
+  - ✅ Child dashboard: gentle violet progress card with weeks-remaining message
+  - ✅ Parent + child both notified when milestone reached (MILESTONE_REACHED notification)
+  - ✅ All 41 TASK_LIBRARY entries have Bengali learning prompts (the "why" behind each task)
+  - ✅ Parent can edit/customize learning prompt in TaskFormDialog
+  - ✅ Child sees learning prompt as collapsible "শেখার প্রশ্ন" chip on each task
+  - ✅ Library import + restore flows now pass learningPrompt through
+- 19/20 sessions complete (95%)
+- Next: S5.3 — Parent weekly planner & family celebration (Phase 5 finale)

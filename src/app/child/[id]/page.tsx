@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History, Trophy } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -14,6 +14,7 @@ import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
 import { SadaqahButton } from '@/components/deensteps/sadaqah-button'
+import { getMilestoneProgressForChild } from '@/server/actions/milestone-actions'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 
@@ -168,6 +169,9 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     select: { sadaqahPledgeEnabled: true, sadaqahStarsPerUnit: true, sadaqahCurrency: true, sadaqahAmountPerUnit: true },
   })
 
+  // Phase 5 (S5.2): Monthly milestone progress for this child (gentle card)
+  const milestoneProgress = await getMilestoneProgressForChild(child.id)
+
   return (
     <div className="min-h-screen bg-secondary/20">
       {/* Child dashboard header — separate from parent app shell */}
@@ -258,6 +262,43 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
         )}
 
+        {/* Phase 5 (S5.2): Monthly milestone progress — gentle card */}
+        {milestoneProgress && (
+          <div className="mb-6 rounded-2xl border border-violet-200 bg-violet-50/50 p-4 dark:border-violet-900 dark:bg-violet-950/20">
+            <div className="flex items-start gap-3">
+              <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/40">
+                <Trophy className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-base font-bold text-foreground">
+                  {milestoneProgress.qualified
+                    ? 'এই মাসের মাইলস্টোন অর্জিত! 🎉'
+                    : 'এই মাসের অগ্রগতি'}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {milestoneProgress.qualified
+                    ? `তুমি ${milestoneProgress.qualifyingWeeks}/${milestoneProgress.requiredWeeks} সপ্তাহ কোয়ালিফাই করেছ! আল্লাহ তোমার চেষ্টা কবুল করুন।`
+                    : milestoneProgress.requiredWeeks - milestoneProgress.qualifyingWeeks === 1
+                      ? `আর মাত্র ১ সপ্তাহ! প্রতি সপ্তাহে অন্তত একটি কাজ সম্পন্ন করলে গণ্য হবে।`
+                      : `তুমি ${milestoneProgress.qualifyingWeeks}/${milestoneProgress.requiredWeeks} সপ্তাহ কোয়ালিফাই করেছ। আর ${milestoneProgress.requiredWeeks - milestoneProgress.qualifyingWeeks} সপ্তাহ বাকি!`}
+                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <Progress
+                    value={Math.min(100, Math.round((milestoneProgress.qualifyingWeeks / milestoneProgress.requiredWeeks) * 100))}
+                    className="h-2 flex-1"
+                  />
+                  <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">
+                    {milestoneProgress.qualifyingWeeks}/{milestoneProgress.requiredWeeks}
+                  </span>
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground">
+                  💜 ধারাবাহিকতাই আসল জয় — নিখুঁত হওয়ার নয়।
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stat cards */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatCard icon={Star} label="আমার তারা" value={currentBalance} accent="amber" />
@@ -308,6 +349,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   taskTitle: o.task.title,
                   taskDescription: o.task.description,
                   taskInstructions: o.task.instructions,
+                  learningPrompt: o.task.learningPrompt,
                   category: o.task.category,
                   iconKey: o.task.iconKey,
                   pointsValue: o.task.pointsValue,

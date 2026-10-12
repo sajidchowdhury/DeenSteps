@@ -75,6 +75,17 @@ export async function submitTaskOccurrence(occurrenceId: string, childId: string
     return { ok: false, error: 'Could not submit task. Please try again.' }
   }
 
+  // Phase 5 (S5.2): If the task auto-approved, the child just earned an APPROVED
+  // occurrence — re-evaluate the monthly milestone so progress is fresh.
+  if (occ.task.approvalPolicy === 'AUTO') {
+    try {
+      const { evaluateMonthlyMilestone } = await import('@/server/actions/milestone-actions')
+      await evaluateMonthlyMilestone(childId)
+    } catch {
+      // Best-effort — do not fail the submission
+    }
+  }
+
   revalidatePath(`/child/${childId}`)
   revalidatePath('/review')
   revalidatePath('/dashboard')
@@ -170,6 +181,26 @@ export async function reviewSubmission(
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Could not review submission.'
     return { ok: false, error: msg === 'FORBIDDEN' ? 'You do not have access to this submission.' : msg }
+  }
+
+  // Phase 5 (S5.2): Re-evaluate the monthly milestone for this child.
+  // This is best-effort and non-blocking for the review itself — wrap in try/catch
+  // so a milestone engine failure does not surface as a review failure.
+  if (decision === 'APPROVED') {
+    try {
+      // The submission record was updated inside the transaction above. Fetch it
+      // outside to get the childId, then evaluate the milestone.
+      const submission = await db.taskSubmission.findUnique({
+        where: { id: submissionId },
+        select: { childId: true },
+      })
+      if (submission?.childId) {
+        const { evaluateMonthlyMilestone } = await import('@/server/actions/milestone-actions')
+        await evaluateMonthlyMilestone(submission.childId)
+      }
+    } catch {
+      // Best-effort — do not fail the review
+    }
   }
 
   revalidatePath('/review')

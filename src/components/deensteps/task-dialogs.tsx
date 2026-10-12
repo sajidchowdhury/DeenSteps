@@ -73,6 +73,8 @@ const Schema = z.object({
   dueTime: z.string().optional(),
   assignedChildIds: z.array(z.string()).default([]),
   tier: z.coerce.number().int().min(1).max(5).default(3),
+  // Phase 5 (S5.2): optional Islamic learning prompt (the "why" behind the task)
+  learningPrompt: z.string().max(500).optional(),
 })
 
 type FormValues = z.infer<typeof Schema>
@@ -115,6 +117,7 @@ export function TaskFormDialog({
       dueTime: '',
       assignedChildIds: [],
       tier: 3,
+      learningPrompt: '',
       ...initial,
     },
   })
@@ -132,6 +135,7 @@ export function TaskFormDialog({
         dueTime: '',
         assignedChildIds: [],
         tier: 3,
+        learningPrompt: '',
         ...initial,
       })
     }
@@ -210,6 +214,23 @@ export function TaskFormDialog({
                 placeholder="সন্তানের জন্য সংক্ষিপ্ত নির্দেশনা (ঐচ্ছিক)।"
                 {...form.register('description')}
               />
+            </div>
+
+            {/* Phase 5 (S5.2): Optional learning prompt — the "why" behind the task */}
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="learningPrompt" className="flex items-center gap-1.5">
+                <BookOpenCheck className="h-3.5 w-3.5 text-emerald-600" />
+                শেখার প্রশ্ন (ঐচ্ছিক)
+              </Label>
+              <Textarea
+                id="learningPrompt"
+                rows={2}
+                placeholder="কেন এই কাজটি গুরুত্বপূর্ণ? সন্তান যখন কাজটি সম্পন্ন করবে তখন একটি সংক্ষিপ্ত ইসলামি শিক্ষা দেখানো হবে। যেমন: 'সত্য কথা বললে আল্লাহ ও মানুষ উভয়ের কাছে সম্মান বাড়ে।'"
+                {...form.register('learningPrompt')}
+              />
+              <p className="text-xs text-muted-foreground">
+                সন্তানের কাজের সাথে একটি ছোট শিক্ষা যুক্ত করুন — কেবল নিয়ম নয়, অর্থও শিখুক।
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -773,6 +794,9 @@ type TaskRowActionTask = {
   status: string
   isFromLibrary: boolean
   assignedChildIds: string[]
+  // Phase 5 (S5.2): carry learningPrompt + tier into edit dialog
+  tier: number
+  learningPrompt: string | null
 }
 
 export function TaskRowActions({
@@ -805,6 +829,8 @@ export function TaskRowActions({
             frequency: task.frequency as 'ONCE' | 'DAILY' | 'WEEKDAYS' | 'WEEKLY' | 'CUSTOM',
             dueTime: task.dueTime ?? '',
             assignedChildIds: task.assignedChildIds,
+            tier: task.tier,
+            learningPrompt: task.learningPrompt ?? '',
           }}
         >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
