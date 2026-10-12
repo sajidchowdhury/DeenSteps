@@ -287,5 +287,15 @@ export async function resolveIncident(
   }
 
   revalidatePath('/dashboard')
+  revalidatePath('/planner')
+
+  // Phase 5 (S5.3): Evaluate first_incident_resolved family achievement.
+  try {
+    const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+    await evaluateFamilyAchievements('first_incident_resolved')
+  } catch {
+    // Best-effort
+  }
+
   return { ok: true }
 }

@@ -104,6 +104,18 @@ export async function saveWeeklyReflection(
   }
 
   revalidatePath('/dashboard')
+  revalidatePath('/planner')
+
+  // Phase 5 (S5.3): Evaluate family achievements triggered by reflection saves.
+  // Best-effort — never fails the save.
+  try {
+    const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+    await evaluateFamilyAchievements('first_reflection')
+    await evaluateFamilyAchievements('three_consecutive_reflections')
+  } catch {
+    // Best-effort
+  }
+
   return { ok: true }
 }
 

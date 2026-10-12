@@ -81,6 +81,14 @@ export async function submitTaskOccurrence(occurrenceId: string, childId: string
     try {
       const { evaluateMonthlyMilestone } = await import('@/server/actions/milestone-actions')
       await evaluateMonthlyMilestone(childId)
+
+      // Phase 5 (S5.3): Family achievement evaluation on auto-approval too
+      const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+      await evaluateFamilyAchievements('first_approved_task')
+      if (occ.task.category === 'Generosity & Community') {
+        await evaluateFamilyAchievements('family_service_task')
+      }
+      await evaluateFamilyAchievements('all_children_milestone')
     } catch {
       // Best-effort — do not fail the submission
     }
@@ -89,6 +97,7 @@ export async function submitTaskOccurrence(occurrenceId: string, childId: string
   revalidatePath(`/child/${childId}`)
   revalidatePath('/review')
   revalidatePath('/dashboard')
+  revalidatePath('/planner')
   return { ok: true }
 }
 
@@ -192,11 +201,22 @@ export async function reviewSubmission(
       // outside to get the childId, then evaluate the milestone.
       const submission = await db.taskSubmission.findUnique({
         where: { id: submissionId },
-        select: { childId: true },
+        select: { childId: true, occurrence: { include: { task: { select: { category: true } } } } },
       })
       if (submission?.childId) {
         const { evaluateMonthlyMilestone } = await import('@/server/actions/milestone-actions')
         await evaluateMonthlyMilestone(submission.childId)
+
+        // Phase 5 (S5.3): Evaluate family achievements.
+        // - first_week: any APPROVED task in the family
+        // - family_service: APPROVED Generosity & Community task
+        // - all_children_milestone: every active child qualified this period
+        const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+        await evaluateFamilyAchievements('first_approved_task')
+        if (submission.occurrence?.task?.category === 'Generosity & Community') {
+          await evaluateFamilyAchievements('family_service_task')
+        }
+        await evaluateFamilyAchievements('all_children_milestone')
       }
     } catch {
       // Best-effort — do not fail the review
@@ -205,6 +225,7 @@ export async function reviewSubmission(
 
   revalidatePath('/review')
   revalidatePath('/dashboard')
+  revalidatePath('/planner')
   return { ok: true }
 }
 

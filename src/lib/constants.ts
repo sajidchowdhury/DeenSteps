@@ -282,6 +282,78 @@ export const SADAQAH_CAUSES = [
   { title: 'অন্যান্য (পরিবার-অনুমোদিত)', description: 'পরিবার কর্তৃক অনুমোদিত অন্য যেকোনো কারণ।', iconKey: 'star' },
 ] as const
 
+/**
+ * Phase 5 (S5.3): Family Achievement Library
+ *
+ * Family-wide achievements — private to each family, not a leaderboard.
+ * Awarded automatically when the family crosses a meaningful threshold.
+ *
+ * Per spec §7C: celebrate progress privately. No public scoreboard, no
+ * comparison with other families. Each badge is a memory of a moment
+ * the family grew together.
+ *
+ * `key` is the unique identifier stored in FamilyAchievement.key.
+ * `trigger` describes the auto-award condition (evaluated in planner-actions).
+ */
+export const FAMILY_ACHIEVEMENT_LIBRARY = [
+  {
+    key: 'first_week',
+    name: 'প্রথম সপ্তাহ',
+    description: 'পরিবার হিসেবে প্রথম সপ্তাহ আমল চর্চা করেছেন। শুরুটাই সবচেয়ে কঠিন — আল্লাহ আপনাদের বরকত দিন।',
+    iconKey: 'sparkles',
+    trigger: 'first_approved_task' as const,
+  },
+  {
+    key: 'first_reflection',
+    name: 'প্রথম রিফ্লেকশন',
+    description: 'প্রথম সাপ্তাহিক রিফ্লেকশন সম্পন্ন করেছেন — একসাথে থেমে চিন্তা করার সুন্দর অভ্যাস।',
+    iconKey: 'book-open',
+    trigger: 'first_reflection' as const,
+  },
+  {
+    key: 'first_sadaqah',
+    name: 'প্রথম সাদাকাহ',
+    description: 'পরিবার হিসেবে প্রথম সাদাকাহ নিশ্চিত করেছেন। আল্লাহ আপনাদের নিয়ামত বাড়িয়ে দিন।',
+    iconKey: 'heart',
+    trigger: 'first_sadaqah_confirmed' as const,
+  },
+  {
+    key: 'all_milestone_month',
+    name: 'একসাথে মাইলস্টোন',
+    description: 'এই মাসে পরিবারের সব সন্তান মাইলস্টোন অর্জন করেছে। এটি দলগত ধারাবাহিকতার প্রমাণ।',
+    iconKey: 'trophy',
+    trigger: 'all_children_milestone' as const,
+  },
+  {
+    key: 'family_service',
+    name: 'পরিবারিক সেবা',
+    description: 'একসাথে কোনো দানমূলক কাজে অংশ নিয়েছেন — এটি সন্তানদের জন্য জীবনের শিক্ষা।',
+    iconKey: 'hand-heart',
+    trigger: 'family_service_task' as const,
+  },
+  {
+    key: 'first_incident_resolved',
+    name: 'মীমাংসার পথ',
+    description: 'প্রথম সমস্যা মীমাংসা করেছেন — ভুল থেকে শেখা এবং একে অপরকে ক্ষমা করার সাহস দেখিয়েছেন।',
+    iconKey: 'handshake',
+    trigger: 'first_incident_resolved' as const,
+  },
+  {
+    key: 'three_reflections',
+    name: 'তিন সপ্তাহ রিফ্লেকশন',
+    description: 'টানা তিন সপ্তাহ রিফ্লেকশন সম্পন্ন করেছেন — অভ্যাসে পরিণত হচ্ছে।',
+    iconKey: 'book',
+    trigger: 'three_consecutive_reflections' as const,
+  },
+  {
+    key: 'first_challenge_completed',
+    name: 'প্রথম চ্যালেঞ্জ',
+    description: 'পরিবারের প্রথম সাপ্তাহিক চ্যালেঞ্জ সম্পন্ন হয়েছে — একসাথে লক্ষ্য পূরণের আনন্দ।',
+    iconKey: 'target',
+    trigger: 'first_challenge_completed' as const,
+  },
+] as const
+
 export const APPROVAL_POLICIES = [
   { value: 'MANUAL', label: 'ম্যানুয়াল রিভিউ', description: 'পয়েন্ট দেওয়ার আগে আপনি প্রতিটি সাবমিশন অনুমোদন করেন।' },
   { value: 'AUTO', label: 'অটোমেটিক অনুমোদন', description: 'সন্তান সাবমিট করলেই পয়েন্ট যোগ হয়ে যায়।' },

@@ -244,6 +244,16 @@ export async function confirmSadaqahDonation(
   }
 
   revalidatePath('/dashboard')
+  revalidatePath('/planner')
+
+  // Phase 5 (S5.3): Evaluate first_sadaqah family achievement.
+  try {
+    const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+    await evaluateFamilyAchievements('first_sadaqah_confirmed')
+  } catch {
+    // Best-effort
+  }
+
   return { ok: true }
 }
 

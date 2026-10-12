@@ -128,7 +128,32 @@ export async function refreshChallengeProgress(challengeId: string) {
       },
     })
   }
+
+  // Phase 5 (S5.3): If all participants qualified and the challenge is still
+  // ACTIVE, auto-mark it COMPLETED and evaluate the first_challenge_completed
+  // family achievement.
+  const refreshed = await db.weeklyChallenge.findUnique({
+    where: { id: challengeId },
+    include: { participants: true },
+  })
+  if (refreshed && refreshed.status === 'ACTIVE' && refreshed.participants.length > 0) {
+    const allQualified = refreshed.participants.every((p) => p.qualified)
+    if (allQualified) {
+      await db.weeklyChallenge.update({
+        where: { id: challengeId },
+        data: { status: 'COMPLETED' },
+      })
+      try {
+        const { evaluateFamilyAchievements } = await import('@/server/actions/planner-actions')
+        await evaluateFamilyAchievements('first_challenge_completed')
+      } catch {
+        // Best-effort
+      }
+    }
+  }
+
   revalidatePath('/challenges')
+  revalidatePath('/planner')
   return { ok: true }
 }
 

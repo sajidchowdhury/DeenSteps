@@ -904,3 +904,86 @@ Stage Summary:
   - ✅ Library import + restore flows now pass learningPrompt through
 - 19/20 sessions complete (95%)
 - Next: S5.3 — Parent weekly planner & family celebration (Phase 5 finale)
+
+---
+Task ID: S5.3
+Agent: main (Super Z)
+Task: Parent weekly planner & family celebration — /planner page, FamilyAchievement model usage, planner UI (Phase 5 finale)
+
+Work Log:
+- Noted push limitation: no GitHub credentials available in this env. Local commit will be saved; user pushes from their machine.
+- Re-read SCHEMA_PLAN.md §5.2 FamilyAchievement model (already applied in S5.1) — has familyId, key, name, description, iconKey, awardedAt, @@unique([familyId, key])
+- Defined FAMILY_ACHIEVEMENT_LIBRARY in constants.ts (8 family achievements):
+  - first_week (sparkles) — first APPROVED task in the family
+  - first_reflection (book-open) — first weekly reflection saved
+  - first_sadaqah (heart) — first sadaqah donation confirmed
+  - all_milestone_month (trophy) — every active child qualified this month
+  - family_service (hand-heart) — APPROVED Generosity & Community task
+  - first_incident_resolved (handshake) — first incident resolved restoratively
+  - three_reflections (book) — 3 consecutive weeks of reflection
+  - first_challenge_completed (target) — first weekly challenge marked COMPLETED
+  - Each has Bengali name + description + iconKey + trigger constant
+- Created planner-actions.ts server action (NEW):
+  - getPlannerData(): one-call loader for the planner page
+    - Returns: stats (activeTasks, todayOccurrences, todayApproved, pendingSubmissions, activeRewards, childrenCount), guidance (severity + Bengali message + withinRecommendedRange flag), todaysSchedule (with assignedChildren per occurrence), reviewQueue (top 6 pending submissions), rewards (activeCount, monthlyBudget, spentThisMonth), reflection (thisWeekCompleted, lastWeekCompleted, consecutiveWeeks), familyAchievements, quickLinks
+    - Computes start-small guidance: 3-5 tasks recommended (warn if <3, info if >5, good if 3-5)
+    - Computes monthly spent from approved/fulfilled redemptions in current month
+    - Computes consecutive weeks of reflection (this week or carrying streak from last week)
+  - awardFamilyAchievement(key): idempotent via @@unique([familyId, key])
+    - Records FamilyAchievement with name/description/iconKey from library
+    - Notifies all PARENT memberships (type=MILESTONE_REACHED)
+    - Returns {ok, alreadyAwarded?}
+  - evaluateFamilyAchievements(trigger): switch over trigger key, checks the corresponding DB condition, calls awardFamilyAchievement if satisfied
+    - Best-effort (try/catch swallows all — never fails parent operation)
+    - Triggers: first_approved_task, first_reflection, first_sadaqah_confirmed, all_children_milestone, family_service_task, first_incident_resolved, three_consecutive_reflections, first_challenge_completed
+  - getFamilyAchievements(): all awarded achievements for the family (newest first)
+  - getFamilyAchievementStatus(): returns all 8 library entries with awarded boolean + awardedAt (for showing locked vs unlocked badges)
+- Wired evaluateFamilyAchievements into action sites:
+  - review-actions.ts reviewSubmission (on APPROVED): triggers first_approved_task, family_service_task (if Generosity & Community), all_children_milestone
+  - review-actions.ts submitTaskOccurrence (on AUTO-approval): same triggers (so auto-approval paths also fire achievements)
+  - reflection-actions.ts saveWeeklyReflection: triggers first_reflection + three_consecutive_reflections
+  - sadaqah-actions.ts confirmSadaqahDonation: triggers first_sadaqah_confirmed
+  - incident-actions.ts resolveIncident: triggers first_incident_resolved
+  - challenge-actions.ts refreshChallengeProgress: auto-marks challenge COMPLETED when all participants qualified, then triggers first_challenge_completed
+  - All wrapped in try/catch + dynamic import (avoid circular deps)
+  - All paths revalidatePath('/planner')
+- Created /planner page (app/(app)/planner/page.tsx):
+  - Header: "পরিবারিক প্ল্যানার" + date + quick action buttons (কাজ পরিচালনা, পুরস্কার)
+  - Start-small guidance card (color-coded by severity: good=emerald, warn=amber, info=sky)
+    - Suggests 3-5 tasks for new families
+    - "ধারাবাহিকতা সংখ্যার চেয়ে গুরুত্বপূর্ণ"
+  - Quick stats grid (4 clickable cards): সক্রিয় কাজ, অপেক্ষমান রিভিউ, সক্রিয় পুরস্কার, আজ সম্পন্ন
+  - Today's schedule card (lg:col-span-2): all today's occurrences with assigned children per task, status badges, due times, points
+  - Review queue card (top 6 items): avatar + childName + taskTitle + relative time + "রিভিউ খুলুন" button
+  - Reflection status card: this week + last week status badges + consecutive weeks streak + "রিফ্লেকশন খুলুন" button
+  - Rewards + budget card: 3 metrics (activeCount, spentThisMonth, monthlyBudget) + progress bar + 2 quick action buttons
+  - Family celebration card (amber-tinted): 8 achievement badges in grid
+    - Awarded: amber background, dynamic icon, name, awardedAt date
+    - Locked: muted background, Lock icon
+    - "🔒 এই অর্জনগুলো শুধু আপনাদের — কোনো লিডারবোর্ড নেই, কোনো তুলনা নেই।"
+    - Empty state if earnedCount === 0: hint to do first action
+  - Footer guidance card (violet): "পরিবারিক লক্ষ্য — একসাথে গড়ে ওঠা" + "নিখুঁত হওয়ার চেষ্টা করবেন না — ধারাবাহিক হওয়ার চেষ্টা করুন।"
+- Added /planner to AppShell NAV with CalendarRange icon
+- Type-check: clean (only pre-existing errors remain — Resolver inference quirks on zodResolver, MissedTask type on dashboard/page.tsx, createdBy on review-actions.ts auto-approval path)
+- Production build: ✓ all 18 routes compile cleanly (new /planner route included)
+- Lint: clean
+
+Stage Summary:
+- Per spec §7C + §7D: parent weekly planner + family celebration implemented
+  - ✅ /planner page: one-page consolidated view (tasks/schedule/review/rewards)
+  - ✅ Start-small guidance: 3-5 tasks recommended, with severity-coded warnings
+  - ✅ Today's schedule with assigned children per task (cross-child view)
+  - ✅ Review queue (top 6 items) + one-click jump to /review
+  - ✅ Reflection status (this week + last week + consecutive streak)
+  - ✅ Rewards + monthly budget snapshot with progress bar
+  - ✅ Family Celebration section: 8 private family achievements (locked/unlocked)
+  - ✅ "No leaderboard, no comparison" — achievements are private to each family
+  - ✅ Footer guidance: "নিখুঁত হওয়ার চেষ্টা করবেন না — ধারাবাহিক হওয়ার চেষ্টা করুন।"
+- Per spec §5.3: FamilyAchievement model now actively used (was schema-only after S5.1)
+  - 8 library entries with Bengali names + descriptions
+  - Idempotent awarding via @@unique([familyId, key])
+  - Auto-evaluated at 6 action sites (review, reflection, sadaqah, incident, challenge, milestone)
+  - Parent notifications on each award
+- Phase 5 COMPLETE (3/3 sessions)
+- 20/20 sessions complete (100%) 🎉
+- DeenSteps 2.0 roadmap fully delivered.

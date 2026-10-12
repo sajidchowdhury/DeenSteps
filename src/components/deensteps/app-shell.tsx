@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
   ExternalLink,
+  CalendarRange,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Logo } from '@/components/deensteps/brand'
@@ -26,6 +27,7 @@ import { cn } from '@/lib/utils'
 
 const NAV = [
   { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
+  { href: '/planner', label: 'প্ল্যানার', icon: CalendarRange },
   { href: '/children', label: 'সন্তান', icon: Users },
   { href: '/tasks', label: 'চ্যালেঞ্জ', icon: ListChecks },
   { href: '/rewards', label: 'পুরস্কার', icon: Gift },
