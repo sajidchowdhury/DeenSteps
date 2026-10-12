@@ -575,7 +575,7 @@ Walk through every child-facing button and ensure 44×44px minimum:
 সেটিংস
 ```
 
-**New (8 items, with grouped headers):**
+**New (7 items — sadaqah stays child-side per Sajid's decision, not a parent nav item):**
 ```
 ─── আজ ───
 ড্যাশবোর্ড
@@ -589,7 +589,6 @@ Walk through every child-facing button and ensure 44×44px minimum:
 ─── পরিবার ───
 সন্তান
 পুরস্কার
-সাদাকাহ        (NEW — was hidden in settings)
 ইনসিডেন্ট       (NEW — was on dashboard)
 
 ─── ডেটা ───
@@ -601,7 +600,7 @@ Walk through every child-facing button and ensure 44×44px minimum:
 - `/review` gets its own top-level entry under "আজ" (today).
 - `/tasks` renamed from "চ্যালেঞ্জ" to "কাজ" (work) — clearer, avoids confusion with weekly challenges.
 - `/challenges` added as "সাপ্তাহিক চ্যালেঞ্জ" (weekly challenge) — no longer orphaned.
-- `/sadaqah` gets its own page (currently it's a tab in settings) — surfaces the feature.
+- `/sadaqah` is **NOT** a parent nav item — per Sajid's decision, sadaqah stays child-side. The child accesses everything from their dashboard. The parent's role (confirming pending donations) stays as a section on the parent dashboard. The sadaqah settings (pledge config, cause management) stay in `/settings`.
 - `/incidents` gets its own page (currently it's a section on the dashboard) — declutters dashboard.
 
 #### C4. Planner page becomes a real weekly planner

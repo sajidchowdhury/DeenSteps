@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History, Trophy } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Gift, Clock, History, Trophy, Heart, HeartHandshake } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { Nur } from '@/components/deensteps/mascot'
 import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
@@ -189,18 +190,69 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        {/* Greeting */}
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            {format(new Date(), 'EEEE, MMMM d')}
+        {/* ════════════════════════════════════════════════════════════════
+            Phase B (B2): "Today's Mission" hero
+            Replaces: greeting block + 4-stat grid + ledger button + tiny pill buttons
+            with a single cohesive hero featuring Nūr the mascot.
+            ════════════════════════════════════════════════════════════════ */}
+        <div className="mb-6 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-cream to-emerald-50/50 dark:border-amber-900/40 dark:from-amber-950/30 dark:via-secondary dark:to-emerald-950/20">
+          <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-7">
+            {/* Nūr mascot — mood depends on today's progress */}
+            <div className="flex-shrink-0 self-center">
+              <Nur
+                state={todayApproved > 0 ? 'proud' : 'happy'}
+                size="lg"
+                className="drop-shadow-sm"
+              />
+            </div>
+
+            {/* Mission content */}
+            <div className="min-w-0 flex-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                <Sparkles className="h-3.5 w-3.5" />
+                {format(new Date(), 'EEEE, MMMM d')}
+              </div>
+              <h1 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                আসসালামু আলাইকুম, {child.displayName}!
+              </h1>
+
+              {/* Today's progress */}
+              {todayTotal > 0 ? (
+                <div className="mt-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-foreground">
+                      আজকের মিশন: {todayApproved} / {todayTotal} সম্পন্ন
+                    </span>
+                    <span className="font-bold text-primary">{todayCompletion}%</span>
+                  </div>
+                  <Progress value={todayCompletion} className="mt-1.5 h-2.5" />
+                </div>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  আজ কোনো কাজ নির্ধারিত নেই — দিনটি উপভোগ করো! 🌿
+                </p>
+              )}
+
+              {/* Star + streak chips */}
+              <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-bold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                  <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                  {currentBalance} তারা
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1.5 text-sm font-bold text-orange-800 dark:bg-orange-900/40 dark:text-orange-200">
+                  <Flame className="h-4 w-4 text-orange-500" />
+                  {streak} দিন ধারাবাহিক
+                </span>
+                <Link
+                  href={`/child/${child.id}/ledger`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent/40"
+                >
+                  <History className="h-4 w-4" />
+                  তারার হিসাব
+                </Link>
+              </div>
+            </div>
           </div>
-          <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            আসসালামু আলাইকুম, {child.displayName}! 👋
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-            আজকের কাজগুলো এখানে। একেক পদক্ষেপে এগিয়ে যাও — প্রতিটি ভালো কাজ গণ্য হয়।
-          </p>
         </div>
 
         {/* Phase 1 (S1.3): Encouraging message for missed tasks */}
@@ -230,11 +282,44 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
         )}
 
-        {/* Phase 3 (S3.1): Incident report button */}
-        {/* Phase 4 (S4.2): Sadaqah button */}
-        <div className="mb-4 flex flex-wrap gap-2">
-          <IncidentReportButton childId={child.id} />
-          <SadaqahButton childId={child.id} causes={sadaqahCauses} currentBalance={currentBalance} />
+        {/* ════════════════════════════════════════════════════════════════
+            Phase B (B2): Two big action cards
+            Replaces: tiny text-xs pill buttons in a flex-wrap row
+            with two prominent cards: Sadaqah (emerald) + I need help (rose).
+            Both are always visible — the child always knows where to find them.
+            ════════════════════════════════════════════════════════════════ */}
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {/* Sadaqah card */}
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">
+                <Heart className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display font-bold text-foreground">সাদাকাহ</p>
+                <p className="text-xs text-muted-foreground">তোমার তারা দিয়ে ভালো কাজ করো</p>
+              </div>
+            </div>
+            <div className="mt-3">
+              <SadaqahButton childId={child.id} causes={sadaqahCauses} currentBalance={currentBalance} />
+            </div>
+          </div>
+
+          {/* I need help card */}
+          <div className="rounded-2xl border border-rose-200 bg-rose-50/50 p-4 dark:border-rose-900/40 dark:bg-rose-950/20">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300">
+                <HeartHandshake className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display font-bold text-foreground">সাহায্য চাই</p>
+                <p className="text-xs text-muted-foreground">বাবা-মাকে একটি সমস্যা জানাও</p>
+              </div>
+            </div>
+            <div className="mt-3">
+              <IncidentReportButton childId={child.id} />
+            </div>
+          </div>
         </div>
 
         {/* Phase 4 (S4.3): Sadaqah pledge info */}
@@ -297,23 +382,10 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
         )}
 
-        {/* Stat cards */}
-        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard icon={Star} label="আমার তারা" value={currentBalance} accent="amber" />
-          <StatCard icon={TrendingUp} label="এই সপ্তাহ" value={`+${weekPoints._sum.amount ?? 0}`} accent="emerald" />
-          <StatCard icon={Flame} label="ধারাবাহিক দিন" value={streak} accent="orange" />
-          <StatCard icon={CheckCircle2} label="আজ সম্পন্ন" value={`${todayApproved}/${todayTotal}`} accent="sage" />
-        </div>
-
-        {/* Phase 1 (S1.4): Ledger access button */}
-        <div className="mb-6">
-          <Button asChild variant="outline" className="w-full justify-center gap-2">
-            <Link href={`/child/${child.id}/ledger`}>
-              <History className="h-4 w-4" />
-              আমার তারার হিসাব
-            </Link>
-          </Button>
-        </div>
+        {/* Phase B (B2): Old stat cards + ledger button removed.
+            The "Today's Mission" hero above now shows: star count, streak,
+            today's progress, and a link to the ledger. No need for a
+            redundant 4-stat grid + full-width outline button. */}
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Today's tasks */}
@@ -462,35 +534,5 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
         </div>
       </main>
     </div>
-  )
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  accent,
-}: {
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  value: string | number
-  accent: 'emerald' | 'amber' | 'sage' | 'orange'
-}) {
-  const accentClass: Record<string, string> = {
-    emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200',
-    amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200',
-    sage: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-200',
-    orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-200',
-  }
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${accentClass[accent]}`}>
-          <Icon className="h-4 w-4" />
-        </div>
-        <p className="mt-2 text-2xl font-extrabold text-foreground">{value}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-      </CardContent>
-    </Card>
   )
 }
