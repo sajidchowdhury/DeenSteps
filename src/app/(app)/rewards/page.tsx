@@ -14,6 +14,7 @@ import {
   FulfillRedemptionButton,
 } from '@/components/deensteps/reward-dialogs'
 import { RewardQuickAdd } from '@/components/deensteps/reward-quick-add'
+import { RewardsCatalog } from '@/components/deensteps/rewards-catalog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -112,13 +113,13 @@ export default async function RewardsPage() {
         <Tabs defaultValue="catalog" className="w-full">
           <TabsList className="h-auto flex-wrap">
             <TabsTrigger value="catalog" className="gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" /> Catalog
+              <Sparkles className="h-3.5 w-3.5" /> ক্যাটালগ
               <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-muted px-1 text-[10px] font-bold">
                 {activeRewards.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="pending" className="gap-1.5">
-              <Inbox className="h-3.5 w-3.5" /> Pending
+              <Inbox className="h-3.5 w-3.5" /> অপেক্ষমান
               {pendingRedemptions.length > 0 && (
                 <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white">
                   {pendingRedemptions.length}
@@ -126,7 +127,7 @@ export default async function RewardsPage() {
               )}
             </TabsTrigger>
             <TabsTrigger value="history" className="gap-1.5">
-              <History className="h-3.5 w-3.5" /> History
+              <History className="h-3.5 w-3.5" /> ইতিহাস
             </TabsTrigger>
           </TabsList>
 
@@ -135,22 +136,54 @@ export default async function RewardsPage() {
             {activeRewards.length === 0 ? (
               <EmptyCatalog />
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {activeRewards.map((reward) => (
-                  <RewardCard key={reward.id} reward={reward} redemptionCount={reward._count.redemptions} />
-                ))}
-              </div>
+              <RewardsCatalog rewards={activeRewards.map((r) => ({
+                id: r.id,
+                title: r.title,
+                description: r.description,
+                iconKey: r.iconKey,
+                requiredPoints: r.requiredPoints,
+                rewardType: r.rewardType,
+                requiresApproval: r.requiresApproval,
+                status: r.status,
+                category: r.category,
+                maxPerWeek: r.maxPerWeek,
+                maxPerMonth: r.maxPerMonth,
+                cooldownDays: r.cooldownDays,
+                estimatedCost: r.estimatedCost,
+                createdAt: r.createdAt,
+                _count: { redemptions: r._count.redemptions },
+              }))} />
             )}
 
             {archivedRewards.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display text-lg">Archived rewards</CardTitle>
-                  <CardDescription>Hidden from the catalog. History is preserved.</CardDescription>
+                  <CardTitle className="font-display text-lg">আর্কাইভ করা পুরস্কার</CardTitle>
+                  <CardDescription>ক্যাটালগ থেকে লুকানো আছে। ইতিহাস সংরক্ষিত।</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {archivedRewards.map((reward) => (
-                    <RewardCard key={reward.id} reward={reward} archived redemptionCount={reward._count.redemptions} />
+                    <Card key={reward.id} className="opacity-70">
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3">
+                          <div className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <DynamicIcon iconKey={reward.iconKey} size={22} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-display font-semibold text-foreground">{reward.title}</p>
+                            {reward.description && (
+                              <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{reward.description}</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                            {reward.requiredPoints} তারা
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </CardContent>
               </Card>
@@ -161,8 +194,8 @@ export default async function RewardsPage() {
           <TabsContent value="pending" className="mt-4">
             {pendingRedemptions.length === 0 ? (
               <EmptyRedemptions
-                title="No pending redemptions"
-                description="When your children redeem a reward that needs approval, it will appear here."
+                title="কোনো অপেক্ষমান রিডিম্পশন নেই"
+                description="সন্তান যখন অনুমোদনের প্রয়োজনীয় পুরস্কার চাইবে, এখানে দেখা যাবে।"
                 icon={Inbox}
               />
             ) : (
@@ -178,8 +211,8 @@ export default async function RewardsPage() {
           <TabsContent value="history" className="mt-4">
             {historyRedemptions.length === 0 ? (
               <EmptyRedemptions
-                title="No redemption history yet"
-                description="Approved, declined, and fulfilled redemptions will show up here."
+                title="এখনো কোনো রিডিম্পশন ইতিহাস নেই"
+                description="অনুমোদিত, প্রত্যাখ্যাত ও পূরণকৃত রিডিম্পশন এখানে দেখা যাবে।"
                 icon={History}
               />
             ) : (

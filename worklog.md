@@ -405,6 +405,49 @@ Stage Summary:
 - 10/20 sessions complete (50%) — halfway!
 - Next: S2.4 — Non-food & low-cost alternatives (Phase 2 finale)
 
+---
+Task ID: S2.4
+Agent: main (Super Z)
+Task: Non-food & low-cost alternatives — category tabs, promotion, Bengali labels
+
+Work Log:
+- Re-read rewards page structure (server component with inline RewardCard)
+- Created RewardsCatalog client component (rewards-catalog.tsx):
+  - Category filter bar: সব / অভিজ্ঞতা / শেখা / সুবিধা / খাবার (with counts)
+  - Each reward card shows:
+    - Category badge (color-coded: emerald/amber/sky/rose)
+    - "ফ্রি" badge for rewards with estimatedCost=0
+    - Frequency limit badges (সপ্তাহে X×, মাসে X×)
+    - "অনুমোদন দরকার" / "অটো-অনুমোদন" badges
+    - Redemption count ("X বার রিডিম হয়েছে")
+    - "তারা" instead of "pts"
+  - Empty state when no rewards in a category
+  - All text in Bengali
+- Updated rewards page to use RewardsCatalog:
+  - Replaced inline RewardCard grid with RewardsCatalog component
+  - Archived section simplified (shows title + points only)
+  - Archived section translated to Bengali
+- Translated all tab labels to Bengali:
+  - Catalog → ক্যাটালগ
+  - Pending → অপেক্ষমান
+  - History → ইতিহাস
+- Translated empty states to Bengali
+- Lint clean
+
+Stage Summary:
+- Per spec §4.2 + §4.4: all requirements met
+  - ✅ Reward categories (EXPERIENCE, LEARNING, PRIVILEGE, FOOD)
+  - ✅ Category filter on catalog page
+  - ✅ Category badges on each reward card
+  - ✅ "ফ্রি" badge for zero-cost rewards (promotes non-food)
+  - ✅ Frequency limits shown on cards
+  - ✅ Food treats clearly marked and limited
+  - ✅ Non-food rewards (experiences, learning, privileges) promoted
+- Phase 2 COMPLETE (4/4 sessions)
+- 11/20 sessions complete (55%)
+- Next: S3.1 — Incident schema & child report (Phase 3 starts)
+
+
 
 
 
