@@ -10,6 +10,8 @@ import {
   ImportTasksDialog,
   TaskRowActions,
 } from '@/components/deensteps/task-dialogs'
+import { RestoreDefaultsButton } from '@/components/deensteps/restore-defaults-button'
+import { TierBadge } from '@/components/deensteps/tier-badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -30,6 +32,7 @@ type TaskWithAssignments = {
   dueTime: string | null
   status: string
   isFromLibrary: boolean
+  tier: number
   assignments: { child: { id: string; displayName: string; avatarColor: string } }[]
 }
 
@@ -107,6 +110,7 @@ export default async function TasksPage({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <RestoreDefaultsButton />
             <ImportTasksDialog childrenList={childOptions}>
               <Button variant="outline">সাজেশন থেকে বাছাই</Button>
             </ImportTasksDialog>
@@ -158,17 +162,18 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <p className="font-display font-semibold text-foreground">{task.title}</p>
+              <TierBadge tier={task.tier} />
               {task.isFromLibrary && (
                 <Badge variant="outline" className="gap-1 text-emerald-700 dark:text-emerald-300">
-                  Library
+                  লাইব্রেরি
                 </Badge>
               )}
               {isPaused && (
                 <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                  Paused
+                  বিরতি
                 </Badge>
               )}
-              {isArchived && <Badge variant="outline">Archived</Badge>}
+              {isArchived && <Badge variant="outline">আর্কাইভ</Badge>}
             </div>
             {task.description && (
               <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{task.description}</p>
@@ -176,11 +181,11 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
               <Badge variant="secondary" className="text-[10px]">{task.category}</Badge>
               <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
-                {task.pointsValue} pts
+                {task.pointsValue} তারা
               </Badge>
               <span className="text-muted-foreground/80">{frequencyLabel}</span>
-              {task.dueTime && <span className="text-muted-foreground/80">· due {task.dueTime}</span>}
-              <span className="text-muted-foreground/80">· {task.approvalPolicy === 'AUTO' ? 'Auto-approve' : 'Manual review'}</span>
+              {task.dueTime && <span className="text-muted-foreground/80">· {task.dueTime}</span>}
+              <span className="text-muted-foreground/80">· {task.approvalPolicy === 'AUTO' ? 'অটো-অনুমোদন' : 'ম্যানুয়াল রিভিউ'}</span>
             </div>
           </div>
         </div>
@@ -188,7 +193,7 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
         {/* Assigned children + actions */}
         <div className="flex items-center gap-2 sm:flex-shrink-0">
           {assigned.length === 0 ? (
-            <span className="text-xs text-muted-foreground">No one assigned</span>
+            <span className="text-xs text-muted-foreground">কাউকে নির্ধারণ করা হয়নি</span>
           ) : (
             <div className="flex -space-x-2">
               {assigned.slice(0, 4).map((c) => (
@@ -202,6 +207,9 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
                 </span>
               )}
             </div>
+          )}
+          {assigned.length > 0 && (
+            <span className="hidden text-xs text-muted-foreground sm:inline">নির্ধারিত</span>
           )}
 
           <TaskRowActions

@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S1.4 complete
+> **Last updated:** Session S1.5 complete — Phase 1 COMPLETE
 
 ### Phase 0 — Audit & Foundation
 
@@ -37,7 +37,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | **S1.2** | Tier & age UI — badges, filters, grouping in import dialog | ✅ **DONE** |
 | **S1.3** | Missed task policy — mark missed, encouraging messages, parent follow-up | ✅ **DONE** |
 | **S1.4** | Child ledger — "আমার তারার হিসাব" full view with filters | ✅ **DONE** |
-| S1.5 | Parent customization — per-child selection, restore defaults | ⬜ |
+| **S1.5** | Parent customization — per-child selection, restore defaults | ✅ **DONE** |
 
 ### Phase 2 — Responsible Rewards (4 sessions)
 
@@ -77,12 +77,12 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Phase | Sessions | Completed | Remaining |
 |-------|----------|-----------|-----------|
 | Phase 0 | 2 | 2 | 0 |
-| Phase 1 | 5 | 4 | 1 |
+| Phase 1 | 5 | 5 | 0 |
 | Phase 2 | 4 | 0 | 4 |
 | Phase 3 | 3 | 0 | 3 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **6** | **14** |
+| **Total** | **20** | **7** | **13** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S1.5 — Parent customization (per-child selection, restore defaults)
+**Next session:** S2.1 — Reward categories (Experiences, Learning, Privileges, Food) — Phase 2 starts
 
 ---
 

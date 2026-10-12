@@ -401,3 +401,96 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
   revalidatePath('/dashboard')
   return result
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// Phase 1 (S1.5): Restore default library + per-child customization
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Restore the recommended default library.
+ * Re-imports all TASK_LIBRARY items that don't already exist in the family
+ * (matched by title + category). Assigns to all active children.
+ *
+ * Does NOT overwrite or delete existing tasks — purely additive.
+ * Existing custom tasks are preserved.
+ */
+export async function restoreDefaultLibrary(): Promise<{ ok: boolean; imported: number; skipped: number; error?: string }> {
+  const { family } = await requireFamily()
+
+  // Get all active children for auto-assignment
+  const children = await db.childProfile.findMany({
+    where: { familyId: family.id, status: 'ACTIVE' },
+    select: { id: true },
+  })
+  const childIds = children.map((c) => c.id)
+
+  // Get existing task titles by category
+  const existing = await db.taskTemplate.findMany({
+    where: { familyId: family.id },
+    select: { title: true, category: true },
+  })
+  const existingSet = new Set(existing.map((t) => `${t.title}|${t.category}`))
+
+  let imported = 0
+  let skipped = 0
+
+  for (let i = 0; i < TASK_LIBRARY.length; i++) {
+    const lib = TASK_LIBRARY[i]
+    const key = `${lib.title}|${lib.category}`
+    if (existingSet.has(key)) {
+      skipped++
+      continue
+    }
+
+    const result = await createTask({
+      title: lib.title,
+      description: lib.description,
+      category: lib.category,
+      subcategory: lib.subcategory,
+      iconKey: lib.iconKey,
+      pointsValue: lib.pointsValue,
+      frequency: lib.frequency as 'DAILY' | 'WEEKDAYS' | 'WEEKLY' | 'CUSTOM' | 'ONCE',
+      scheduledDays: 'scheduledDays' in lib ? [...lib.scheduledDays] : undefined,
+      dueTime: 'dueTime' in lib ? lib.dueTime : undefined,
+      approvalPolicy: 'MANUAL',
+      assignedChildIds: childIds,
+      tier: lib.tier,
+      minAge: lib.minAge,
+      maxAge: lib.maxAge,
+    })
+
+    if (result.ok) imported++
+  }
+
+  revalidatePath('/tasks')
+  revalidatePath('/dashboard')
+  return { ok: true, imported, skipped }
+}
+
+/**
+ * Get per-child task assignment summary.
+ * Returns how many active tasks are assigned to each child.
+ */
+export async function getChildTaskSummary() {
+  const { family } = await requireFamily()
+
+  const children = await db.childProfile.findMany({
+    where: { familyId: family.id, status: 'ACTIVE' },
+    select: { id: true, displayName: true, avatarColor: true },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  const summaries = await Promise.all(
+    children.map(async (c) => {
+      const count = await db.taskAssignment.count({
+        where: {
+          childId: c.id,
+          task: { familyId: family.id, status: 'ACTIVE' },
+        },
+      })
+      return { ...c, taskCount: count }
+    })
+  )
+
+  return summaries
+}

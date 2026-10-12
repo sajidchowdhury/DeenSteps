@@ -233,6 +233,57 @@ Stage Summary:
 - 6/20 sessions complete (30%)
 - Next: S1.5 — Parent customization (per-child selection, restore defaults)
 
+---
+Task ID: S1.5
+Agent: main (Super Z)
+Task: Parent customization — per-child selection, restore defaults, archive safety
+
+Work Log:
+- Re-read worklog S1.4 and spec §2.5 for customization requirements
+- Verified archive safety: archiveTask only sets status='ARCHIVED', never deletes
+  - TaskOccurrence and TaskSubmission records remain intact
+  - generateOccurrencesForTask checks status !== 'ACTIVE' and returns early
+  - Historical records preserved per spec §2.5
+- Created restoreDefaultLibrary server action (task-actions.ts):
+  - Re-imports all TASK_LIBRARY items that don't already exist (matched by title+category)
+  - Purely additive — does NOT overwrite or delete existing tasks
+  - Auto-assigns to all active children
+  - Returns imported count + skipped count
+- Created getChildTaskSummary server action:
+  - Returns per-child active task count
+- Created RestoreDefaultsButton component (restore-defaults-button.tsx):
+  - Dialog with confirmation
+  - "ডিফল্ট লাইব্রেরি রিস্টোর করুন" button
+  - Shows how many new + skipped on success
+  - All text in Bengali
+- Added RestoreDefaultsButton to /tasks page header (next to ImportTasksDialog)
+- Added TierBadge to each task row on /tasks page
+- Translated task row labels to Bengali:
+  - Library → লাইব্রেরি
+  - Paused → বিরতি
+  - Archived → আর্কাইভ
+  - pts → তারা
+  - due → time only
+  - Auto-approve → অটো-অনুমোদন
+  - Manual review → ম্যানুয়াল রিভিউ
+  - No one assigned → কাউকে নির্ধারণ করা হয়নি
+  - Added "নির্ধারিত" label next to avatar stack
+- Added tier field to TaskWithAssignments type
+- Lint clean
+
+Stage Summary:
+- Per spec §2.5: all requirements met
+  - ✅ Enable/disable predefined activity (archive/pause)
+  - ✅ Adjust points and frequency (edit task)
+  - ✅ Select activities for each child separately (TaskAssignment)
+  - ✅ Add custom family activities (createTask)
+  - ✅ Edit/archive without destroying historical records (verified)
+  - ✅ Restore recommended default library (restoreDefaultLibrary action + button)
+- Phase 1 COMPLETE (5/5 sessions)
+- 7/20 sessions complete (35%)
+- Next: S2.1 — Reward categories (Phase 2 starts)
+
+
 
 
 
