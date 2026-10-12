@@ -30,6 +30,7 @@ import { ReviewActions } from '@/components/deensteps/review-actions'
 import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
 import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
 import { IncidentsSection } from '@/components/deensteps/incidents-section'
+import { ResolvedIncidentsSection } from '@/components/deensteps/resolved-incidents-section'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -250,6 +251,9 @@ export default async function DashboardPage() {
             <ChildProgressBars childStats={data.children} />
           </CardContent>
         </Card>
+
+        {/* Resolved incidents history — Phase 3 (S3.3) */}
+        <ResolvedIncidentsSection incidents={data.resolvedIncidents} />
 
         {/* Two-column: activity + quick actions */}
         <div className="grid gap-6 lg:grid-cols-3">

@@ -305,6 +305,28 @@ export async function getDashboardData() {
   // ── Phase 3 (S3.1): Open incidents ────────────────────────────────────
   const openIncidents = await getOpenIncidents()
 
+  // ── Phase 3 (S3.3): Resolved incidents (last 30 days, for history) ────
+  const thirtyDaysAgoIncidents = new Date()
+  thirtyDaysAgoIncidents.setDate(thirtyDaysAgoIncidents.getDate() - 30)
+
+  const resolvedIncidents = await db.incident.findMany({
+    where: {
+      familyId: family.id,
+      status: 'RESOLVED',
+      resolvedAt: { gte: thirtyDaysAgoIncidents },
+    },
+    orderBy: { resolvedAt: 'desc' },
+    take: 10,
+    include: {
+      reports: {
+        include: {
+          child: { select: { id: true, displayName: true, avatarColor: true } },
+        },
+      },
+      resolution: true,
+    },
+  })
+
   return {
     family,
     user,
@@ -325,5 +347,6 @@ export async function getDashboardData() {
     missedTasks: missedTasksWithChildren,
     budgetInfo,
     openIncidents,
+    resolvedIncidents,
   }
 }

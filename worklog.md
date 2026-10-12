@@ -550,6 +550,62 @@ Stage Summary:
 - 13/20 sessions complete (65%)
 - Next: S3.3 — Restorative follow-up & audit (Phase 3 finale)
 
+---
+Task ID: S3.3
+Agent: main (Super Z)
+Task: Restorative follow-up & audit — AuditLog, resolved history, child notification
+
+Work Log:
+- Re-read incident-actions.ts S3.2 code to understand existing state
+- Added AuditLog writes in resolveIncident (incident-actions.ts):
+  - POINT_ADJUSTMENT log: written when pointsAdjusted != 0
+    - Records: outcomeType, pointsAdjusted, affectedChildId, reason, description
+  - INCIDENT_RESOLVED log: always written for every resolution
+    - Records: outcomeType, description
+  - Both inside the db.$transaction (atomic)
+  - First use of AuditLog model in the entire codebase!
+- Added resolved incidents to getDashboardData (dashboard-actions.ts):
+  - Queries RESOLVED incidents from last 30 days
+  - Includes reports + resolution data
+  - Returns as resolvedIncidents array
+- Created ResolvedIncidentsSection component (resolved-incidents-section.tsx):
+  - Shows on parent dashboard when there are resolved incidents
+  - Each resolved incident shows:
+    - Child avatar + name
+    - Resolution time (relative)
+    - Outcome type badge (Bengali label, emerald-tinted)
+    - Point adjustment badge (if any, red for deduction, green for restoration)
+    - Resolution description
+    - Reason (if point adjustment was made)
+  - Card title: "সমাধান হওয়া সমস্যা"
+  - Only shows when incidents exist (returns null otherwise)
+- Added ResolvedIncidentsSection to parent dashboard (before recent activity section)
+- Verified child ledger already shows ADJUSTMENT transactions (from S1.4):
+  - LedgerClient renders all PointsTransaction types
+  - ADJUSTMENT type has badge "সমন্বয়" and amber color
+  - reason field shown in the description column
+  - No additional work needed — already works
+- Verified child notification already created in S3.2:
+  - resolveIncident creates Notification with type=INCIDENT_RESOLVED
+  - Message: "বাবা-মা তোমার সমস্যাটি নিয়ে কথা বলেছেন। [outcome label]।"
+  - Child dashboard shows notifications via existing notification system
+  - No additional work needed — already works
+- Lint clean
+
+Stage Summary:
+- Per spec §5.4 + §8 (technical):
+  - ✅ AuditLog for sensitive administrative actions (point adjustments)
+  - ✅ AuditLog for incident resolutions
+  - ✅ Record who initiated and approved each adjustment (adjustedById)
+  - ✅ Keep child informed in age-appropriate language (notification)
+  - ✅ Permanent audit entry for point adjustments (reason required)
+  - ✅ Point adjustments appear in child ledger (type=ADJUSTMENT, "সমন্বয়" badge)
+  - ✅ Resolved incidents history visible to parents (30-day window)
+- Phase 3 COMPLETE (3/3 sessions)
+- 14/20 sessions complete (70%)
+- Next: S4.1 — Sadaqah schema & cause catalog (Phase 4 starts)
+
+
 
 
 

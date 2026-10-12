@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S3.2 complete
+> **Last updated:** Session S3.3 complete — Phase 3 COMPLETE
 
 ### Phase 0 — Audit & Foundation
 
@@ -48,13 +48,13 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | **S2.3** | Family budget — monthly limit, committed/remaining tracking | ✅ **DONE** |
 | **S2.4** | Non-food & low-cost alternatives — category tabs, promotion | ✅ **DONE** |
 
-### Phase 3 — Character & Reconciliation (3 sessions)
+### Phase 3 — Character & Reconciliation (3 sessions) — COMPLETE
 
 | Session | Scope | Status |
 |---------|-------|--------|
 | **S3.1** | Incident schema & child report — "আমি একটি সমস্যায় সাহায্য চাই" | ✅ **DONE** |
 | **S3.2** | Parent mediation workflow — perspectives, follow-up records | ✅ **DONE** |
-| S3.3 | Restorative follow-up & audit — optional adjustment with reason | ⬜ |
+| **S3.3** | Restorative follow-up & audit — optional adjustment with reason | ✅ **DONE** |
 
 ### Phase 4 — Sadaqah & Charitable Giving (3 sessions)
 
@@ -79,10 +79,10 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Phase 0 | 2 | 2 | 0 |
 | Phase 1 | 5 | 5 | 0 |
 | Phase 2 | 4 | 4 | 0 |
-| Phase 3 | 3 | 2 | 1 |
+| Phase 3 | 3 | 3 | 0 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **13** | **7** |
+| **Total** | **20** | **14** | **6** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S3.3 — Restorative follow-up & audit (optional point adjustment, keep child informed)
+**Next session:** S4.1 — Sadaqah schema & cause catalog — Phase 4 starts
 
 ---
 

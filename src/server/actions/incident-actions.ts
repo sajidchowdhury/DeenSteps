@@ -245,6 +245,41 @@ export async function resolveIncident(
           },
         })
       }
+
+      // Phase 3 (S3.3): Write AuditLog for point adjustments
+      if (pointsAdjusted && pointsAdjusted !== 0) {
+        await tx.auditLog.create({
+          data: {
+            familyId: family.id,
+            actorId: user.id,
+            action: 'POINT_ADJUSTMENT',
+            entity: 'IncidentResolution',
+            entityId: incidentId,
+            metadata: JSON.stringify({
+              outcomeType,
+              pointsAdjusted,
+              affectedChildId,
+              reason,
+              description: description.trim(),
+            }),
+          },
+        })
+      }
+
+      // AuditLog for incident resolution (always)
+      await tx.auditLog.create({
+        data: {
+          familyId: family.id,
+          actorId: user.id,
+          action: 'INCIDENT_RESOLVED',
+          entity: 'Incident',
+          entityId: incidentId,
+          metadata: JSON.stringify({
+            outcomeType,
+            description: description.trim(),
+          }),
+        },
+      })
     })
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'সমাধান করা যায়নি।'
