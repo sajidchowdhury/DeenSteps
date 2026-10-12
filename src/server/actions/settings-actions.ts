@@ -28,6 +28,8 @@ const SettingsSchema = z.object({
   notifyOnMilestone: z.boolean().default(true),
   emailNotifications: z.boolean().default(false),
   theme: z.enum(['light', 'dark']).default('light'),
+  // Phase 2 (S2.3): Monthly reward budget
+  monthlyRewardBudget: z.number().min(0).nullable().optional(),
 })
 
 const ParentProfileSchema = z.object({
@@ -86,6 +88,7 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       notifyOnMilestone: d.notifyOnMilestone,
       emailNotifications: d.emailNotifications,
       theme: d.theme,
+      monthlyRewardBudget: d.monthlyRewardBudget ?? null,
     },
     create: {
       familyId: family.id,
@@ -100,6 +103,7 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       notifyOnMilestone: d.notifyOnMilestone,
       emailNotifications: d.emailNotifications,
       theme: d.theme,
+      monthlyRewardBudget: d.monthlyRewardBudget ?? null,
     },
   })
   revalidatePath('/settings')

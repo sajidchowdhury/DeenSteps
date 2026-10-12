@@ -226,6 +226,29 @@ export async function requestRedemption(rewardId: string, childId: string): Prom
         }
       }
 
+      // Phase 2 (S2.3): Check family monthly budget
+      if (r.estimatedCost && r.estimatedCost > 0) {
+        const settings = await tx.familySettings.findUnique({
+          where: { familyId: family.id },
+          select: { monthlyRewardBudget: true },
+        })
+        if (settings?.monthlyRewardBudget && settings.monthlyRewardBudget > 0) {
+          const monthStart = startOfMonth(new Date())
+          const monthRedemptions = await tx.rewardRedemption.findMany({
+            where: {
+              child: { familyId: family.id },
+              status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] },
+              requestedAt: { gte: monthStart },
+            },
+            include: { reward: { select: { estimatedCost: true } } },
+          })
+          const committed = monthRedemptions.reduce((sum, red) => sum + (red.reward.estimatedCost ?? 0), 0)
+          if (committed + r.estimatedCost > settings.monthlyRewardBudget) {
+            throw new Error(`পারিবারিক বাজেট ছাড়িয়ে যাবে। এই মাসের বাজেট: ৳${settings.monthlyRewardBudget}।`)
+          }
+        }
+      }
+
       // Deduct points atomically
       const txn = await tx.pointsTransaction.create({
         data: {

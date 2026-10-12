@@ -364,6 +364,48 @@ Stage Summary:
 - 9/20 sessions complete (45%)
 - Next: S2.3 — Family budget (monthly limit, committed/remaining tracking)
 
+---
+Task ID: S2.3
+Agent: main (Super Z)
+Task: Family budget — monthly limit, committed/remaining tracking, budget enforcement
+
+Work Log:
+- Re-read requestRedemption action and settings-actions for context
+- Added budget enforcement in requestRedemption (reward-actions.ts):
+  - If reward has estimatedCost > 0 AND family has monthlyRewardBudget > 0:
+    - Fetches all redemptions this month (REQUESTED/APPROVED/FULFILLED) with estimatedCost
+    - Sums committed costs
+    - Blocks if committed + this reward's cost > budget
+  - Bengali error: "পারিবারিক বাজেট ছাড়িয়ে যাবে। এই মাসের বাজেট: ৳X।"
+  - All inside db.$transaction (atomic, safe)
+- Added monthlyRewardBudget to SettingsSchema in settings-actions.ts:
+  - z.number().min(0).nullable().optional()
+  - Added to both update and create in upsert
+- Added budget tracking to getDashboardData (dashboard-actions.ts):
+  - Fetches FamilySettings.monthlyRewardBudget
+  - If budget set, sums all this month's redemption estimatedCosts
+  - Returns budgetInfo: { monthlyBudget, committed, remaining }
+  - Only returned when budget is configured (null otherwise)
+- Added budget widget to parent dashboard:
+  - Sky-tinted card showing: remaining/budget, committed amount
+  - Progress bar (committed / budget)
+  - Message: "আর ৳X বাকি আছে এই মাসে।" or "এই মাসের বাজেট শেষ"
+  - Only shows when budgetInfo is not null (budget configured)
+- Lint clean
+
+Stage Summary:
+- Per spec §4.4: all requirements met
+  - ✅ Monthly budget (FamilySettings.monthlyRewardBudget)
+  - ✅ Amount already committed (sum of estimatedCost this month)
+  - ✅ Estimated remaining budget
+  - ✅ Budget enforcement at redemption (blocks overspend)
+  - ✅ Upcoming approved rewards included in committed
+- Points do not create unconditional financial obligation
+- Parents retain control over actual purchases
+- 10/20 sessions complete (50%) — halfway!
+- Next: S2.4 — Non-food & low-cost alternatives (Phase 2 finale)
+
+
 
 
 

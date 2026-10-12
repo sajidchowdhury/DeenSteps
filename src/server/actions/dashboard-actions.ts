@@ -275,6 +275,32 @@ export async function getDashboardData() {
     children: (assignmentMap.get(m.taskId) || []).map((cid) => childMap.get(cid)).filter(Boolean),
   }))
 
+  // ── Phase 2 (S2.3): Family reward budget tracking ─────────────────────
+  const settings = await db.familySettings.findUnique({
+    where: { familyId: family.id },
+    select: { monthlyRewardBudget: true },
+  })
+  let budgetInfo: { monthlyBudget: number; committed: number; remaining: number } | null = null
+  if (settings?.monthlyRewardBudget && settings.monthlyRewardBudget > 0) {
+    const monthStart = new Date()
+    monthStart.setDate(1)
+    monthStart.setHours(0, 0, 0, 0)
+    const monthRedemptions = await db.rewardRedemption.findMany({
+      where: {
+        child: { familyId: family.id },
+        status: { in: ['REQUESTED', 'APPROVED', 'FULFILLED'] },
+        requestedAt: { gte: monthStart },
+      },
+      include: { reward: { select: { estimatedCost: true } } },
+    })
+    const committed = monthRedemptions.reduce((sum, r) => sum + (r.reward.estimatedCost ?? 0), 0)
+    budgetInfo = {
+      monthlyBudget: settings.monthlyRewardBudget,
+      committed,
+      remaining: Math.max(0, settings.monthlyRewardBudget - committed),
+    }
+  }
+
   return {
     family,
     user,
@@ -293,5 +319,6 @@ export async function getDashboardData() {
     trendByChild,
     categoryCounts,
     missedTasks: missedTasksWithChildren,
+    budgetInfo,
   }
 }

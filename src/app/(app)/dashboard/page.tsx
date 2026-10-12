@@ -176,6 +176,35 @@ export default async function DashboardPage() {
         {/* Missed tasks section — Phase 1 (S1.3) */}
         <MissedTasksSection missedTasks={data.missedTasks} />
 
+        {/* Family reward budget — Phase 2 (S2.3) */}
+        {data.budgetInfo && (
+          <Card className="border-sky-200 bg-sky-50/30 dark:border-sky-900 dark:bg-sky-950/10">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">এই মাসের পুরস্কার বাজেট</p>
+                  <p className="mt-1 font-display text-2xl font-extrabold text-foreground">
+                    ৳{data.budgetInfo.remaining} <span className="text-sm font-normal text-muted-foreground">/ ৳{data.budgetInfo.monthlyBudget}</span>
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">খরচ হয়েছে</p>
+                  <p className="mt-1 text-lg font-bold text-rose-600">৳{data.budgetInfo.committed}</p>
+                </div>
+              </div>
+              <Progress
+                value={Math.min(100, Math.round((data.budgetInfo.committed / data.budgetInfo.monthlyBudget) * 100))}
+                className="mt-3 h-2"
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                {data.budgetInfo.remaining > 0
+                  ? `আর ৳${data.budgetInfo.remaining} বাকি আছে এই মাসে।`
+                  : 'এই মাসের বাজেট শেষ — পরের মাসে নতুন পুরস্কার অনুরোধ করা যাবে।'}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Charts section — চার্ট ও ইনসাইট */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* 7-day trend line chart */}
