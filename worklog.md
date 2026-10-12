@@ -447,6 +447,58 @@ Stage Summary:
 - 11/20 sessions complete (55%)
 - Next: S3.1 — Incident schema & child report (Phase 3 starts)
 
+---
+Task ID: S3.1
+Agent: main (Super Z)
+Task: Incident schema & child report — "আমি একটি সমস্যায় সাহায্য চাই"
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 3 for Incident/IncidentReport/IncidentResolution models
+- Applied Phase 3 schema changes to prisma/schema.prisma:
+  - New model: Incident (familyId, status OPEN/IN_MEDIATION/RESOLVED, resolvedAt)
+  - New model: IncidentReport (incidentId, childId, whatHappened, whoInvolved, howFelt, helpNeeded)
+  - New model: IncidentResolution (incidentId @unique, outcomeType, pointsAdjusted, pointsTxnId @unique, reason, resolvedById)
+  - Added incidents relation to Family
+  - Added incidentReports relation to ChildProfile
+  - Added incidentResolution relation to PointsTransaction
+  - Ran db:push — schema applied, no data loss
+- Created incident-actions.ts server action:
+  - submitIncident: child submits private report (whatHappened, whoInvolved, howFelt, helpNeeded)
+    - Creates Incident + IncidentReport in a transaction
+    - Notifies all parents
+    - Verifies child belongs to family (authorization)
+    - Child CANNOT deduct points or punish — only requests parental attention
+  - getOpenIncidents: loads all OPEN/IN_MEDIATION incidents for family
+    - Includes reports with child info
+- Created IncidentReportButton component (incident-report-button.tsx):
+  - "আমি একটি সমস্যায় সাহায্য চাই" button (rose-colored, non-threatening)
+  - Dialog with 4 fields: কী হয়েছে, কার সাথে, কেমন লেগেছে, কী সাহায্য দরকার
+  - Privacy reassurance: "এটি শুধু বাবা-মা দেখবেন। নির্ভয়ে বলতে পারো।"
+  - Success: "বাবা-মাকে জানানো হয়েছে। তারা শীঘ্রই তোমার সাথে কথা বলবেন। 💚"
+  - All text in Bengali
+- Created IncidentsSection component (incidents-section.tsx):
+  - Shows on parent dashboard when there are open incidents
+  - Rose-tinted card: "সন্তানের সাহায্যের অনুরোধ"
+  - Each incident shows: child avatar, all report fields, time
+  - Restorative guidance: "সন্তানকে ভালোভাবে শুনুন। রেস্টোরেটিভ সমাধান বেছে নিন — ক্ষমা, মেরামত, সাহায্য। শাস্তি নয়।"
+- Added IncidentReportButton to child dashboard (before stat cards)
+- Added IncidentsSection to parent dashboard (after missed tasks, before budget)
+- Added openIncidents to getDashboardData return
+- Lint clean
+
+Stage Summary:
+- Per spec §5.2: child-reported incident workflow implemented
+  - ✅ Child can select "আমি একটি সমস্যায় সাহায্য চাই"
+  - ✅ Child privately tells parent: what happened, who involved, how felt, help needed
+  - ✅ Child CANNOT deduct another child's points or impose punishment
+  - ✅ No public accusations on sibling dashboards
+  - ✅ Parent receives private notification
+- Per spec §5.1: restorative approach, not policing
+- Per spec §5.4: sincere apology not treated as transaction
+- 12/20 sessions complete (60%)
+- Next: S3.2 — Parent mediation workflow (perspectives, follow-up records)
+
+
 
 
 

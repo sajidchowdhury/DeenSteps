@@ -29,6 +29,7 @@ import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
 import { ReviewActions } from '@/components/deensteps/review-actions'
 import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
 import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
+import { IncidentsSection } from '@/components/deensteps/incidents-section'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -175,6 +176,9 @@ export default async function DashboardPage() {
 
         {/* Missed tasks section — Phase 1 (S1.3) */}
         <MissedTasksSection missedTasks={data.missedTasks} />
+
+        {/* Incidents section — Phase 3 (S3.1) */}
+        <IncidentsSection incidents={data.openIncidents} />
 
         {/* Family reward budget — Phase 2 (S2.3) */}
         {data.budgetInfo && (

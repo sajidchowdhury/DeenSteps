@@ -4,6 +4,7 @@ import * as React from 'react'
 import { db } from '@/lib/db'
 import { requireFamily } from '@/lib/auth/session'
 import { markMissedOccurrences } from '@/server/actions/task-actions'
+import { getOpenIncidents } from '@/server/actions/incident-actions'
 
 /**
  * Load the parent dashboard summary: children, today's activity, points, etc.
@@ -301,6 +302,9 @@ export async function getDashboardData() {
     }
   }
 
+  // ── Phase 3 (S3.1): Open incidents ────────────────────────────────────
+  const openIncidents = await getOpenIncidents()
+
   return {
     family,
     user,
@@ -320,5 +324,6 @@ export async function getDashboardData() {
     categoryCounts,
     missedTasks: missedTasksWithChildren,
     budgetInfo,
+    openIncidents,
   }
 }

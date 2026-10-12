@@ -12,6 +12,7 @@ import { Progress } from '@/components/ui/progress'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
+import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 
@@ -212,6 +213,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             </div>
           </div>
         )}
+
+        {/* Phase 3 (S3.1): Incident report button */}
+        <div className="mb-4">
+          <IncidentReportButton childId={child.id} />
+        </div>
 
         {/* Stat cards */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">

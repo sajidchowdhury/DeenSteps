@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S2.4 complete — Phase 2 COMPLETE
+> **Last updated:** Session S3.1 complete
 
 ### Phase 0 — Audit & Foundation
 
@@ -52,7 +52,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 | Session | Scope | Status |
 |---------|-------|--------|
-| S3.1 | Incident schema & child report — "আমি একটি সমস্যায় সাহায্য চাই" | ⬜ |
+| **S3.1** | Incident schema & child report — "আমি একটি সমস্যায় সাহায্য চাই" | ✅ **DONE** |
 | S3.2 | Parent mediation workflow — perspectives, follow-up records | ⬜ |
 | S3.3 | Restorative follow-up & audit — optional adjustment with reason | ⬜ |
 
@@ -79,10 +79,10 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Phase 0 | 2 | 2 | 0 |
 | Phase 1 | 5 | 5 | 0 |
 | Phase 2 | 4 | 4 | 0 |
-| Phase 3 | 3 | 0 | 3 |
+| Phase 3 | 3 | 1 | 2 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **11** | **9** |
+| **Total** | **20** | **12** | **8** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S3.1 — Incident schema & child report ("আমি একটি সমস্যায় সাহায্য চাই") — Phase 3 starts
+**Next session:** S3.2 — Parent mediation workflow (perspectives, follow-up records)
 
 ---
 
