@@ -26,3 +26,32 @@ Stage Summary:
 - Gaps are additive (new fields/models), not rewrites
 - No breaking changes needed for Phase 1
 - Ready for S0.2 (Schema Plan)
+
+---
+Task ID: S0.2
+Agent: main (Super Z)
+Task: Schema migration plan — exact field additions, new models, migration order, index strategy, backfill plan
+
+Work Log:
+- Re-read AUDIT.md for gap context (schema, ledger, task lifecycle, rewards)
+- Re-read current schema: FamilySettings, TaskTemplate, TaskExcusal, PointsTransaction, Reward models
+- Designed Phase 1 schema: TaskTemplate +tier/minAge/maxAge/learningPrompt, TaskOccurrence +missedAt, TaskExcusal expanded, PointsTransaction +reason/adjustedById
+- Designed Phase 2 schema: Reward +category/maxPerWeek/maxPerMonth/cooldownDays/estimatedCost, FamilySettings +monthlyRewardBudget
+- Designed Phase 3 schema: new Incident, IncidentReport, IncidentResolution models
+- Designed Phase 4 schema: new SadaqahCause, SadaqahDonation models, FamilySettings +sadaqah pledge config
+- Designed Phase 5 schema: new WeeklyReflection, FamilyAchievement models
+- Documented migration order (5 phases, each with db:push)
+- Documented index strategy (10 new indexes)
+- Documented backfill plan (all new fields have safe defaults)
+- Documented SQLite → PostgreSQL notes
+- Documented what this plan does NOT do (no removals, no type changes)
+
+Stage Summary:
+- Produced SCHEMA_PLAN.md (comprehensive, ~400 lines)
+- All changes are additive — no breaking changes
+- All new fields have defaults — no data migration scripts needed
+- All new models have familyId for isolation
+- All new unique constraints identified
+- Phase 0 complete (2/2 sessions)
+- Ready for Phase 1 (S1.1 — Amal Library expansion)
+

@@ -20,14 +20,14 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S0.1 complete
+> **Last updated:** Session S0.2 complete
 
 ### Phase 0 — Audit & Foundation
 
 | Session | Scope | Status | Deliverable |
 |---------|-------|--------|-------------|
 | **S0.1** | Codebase audit — ledger, task lifecycle, auth, rewards | ✅ **DONE** | `AUDIT.md` |
-| S0.2 | Schema migration plan — new models/fields, migration order | ⬜ TODO | `SCHEMA_PLAN.md` |
+| **S0.2** | Schema migration plan — new models/fields, migration order | ✅ **DONE** | `SCHEMA_PLAN.md` |
 
 ### Phase 1 — Core Integrity (5 sessions)
 
@@ -76,13 +76,13 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 | Phase | Sessions | Completed | Remaining |
 |-------|----------|-----------|-----------|
-| Phase 0 | 2 | 1 | 1 |
+| Phase 0 | 2 | 2 | 0 |
 | Phase 1 | 5 | 0 | 5 |
 | Phase 2 | 4 | 0 | 4 |
 | Phase 3 | 3 | 0 | 3 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **1** | **19** |
+| **Total** | **20** | **2** | **18** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S0.2 — Schema migration plan
+**Next session:** S1.1 — Amal Library expansion (6 categories, Tier 1-5, age filter, spec-compliant points)
 
 ---
 
