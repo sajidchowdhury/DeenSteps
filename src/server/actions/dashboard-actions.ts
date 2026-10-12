@@ -6,6 +6,7 @@ import { requireFamily } from '@/lib/auth/session'
 import { markMissedOccurrences } from '@/server/actions/task-actions'
 import { getOpenIncidents } from '@/server/actions/incident-actions'
 import { getPendingSadaqahDonations, getSadaqahHistory } from '@/server/actions/sadaqah-actions'
+import { getRecentReflections } from '@/server/actions/reflection-actions'
 
 /**
  * Load the parent dashboard summary: children, today's activity, points, etc.
@@ -332,6 +333,9 @@ export async function getDashboardData() {
   const pendingSadaqah = await getPendingSadaqahDonations()
   const sadaqahHistory = await getSadaqahHistory()
 
+  // ── Phase 5 (S5.1): Recent weekly reflections ──────────────────────────
+  const recentReflections = await getRecentReflections()
+
   return {
     family,
     user,
@@ -355,5 +359,6 @@ export async function getDashboardData() {
     resolvedIncidents,
     pendingSadaqah,
     sadaqahHistory,
+    recentReflections,
   }
 }

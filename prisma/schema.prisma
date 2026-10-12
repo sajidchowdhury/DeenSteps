@@ -97,6 +97,8 @@ model Family {
   incidents      Incident[]
   sadaqahCauses  SadaqahCause[]
   sadaqahDonations SadaqahDonation[]
+  reflections       WeeklyReflection[]
+  familyAchievements FamilyAchievement[]
 
   @@index([createdBy])
 }
@@ -139,6 +141,7 @@ model ChildProfile {
   notifications  Notification[]
   incidentReports IncidentReport[]
   sadaqahDonations SadaqahDonation[]
+  reflections     WeeklyReflection[]
 
   @@index([familyId])
   @@index([status])
@@ -620,4 +623,42 @@ model SadaqahDonation {
   @@index([childId])
   @@index([causeId])
   @@index([status])
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Phase 5 (S5.1): Weekly Reflections & Family Achievements
+// ────────────────────────────────────────────────────────────────────────────
+
+model WeeklyReflection {
+  id              String   @id @default(cuid())
+  familyId        String
+  childId         String?
+  weekStart       DateTime
+  weekEnd         DateTime
+  whatWentWell    String?
+  whatWasHard     String?
+  whatEasier      String?
+  nextWeekPlan    String?
+  createdAt       DateTime @default(now())
+
+  family          Family         @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  child           ChildProfile?  @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@unique([familyId, childId, weekStart])
+  @@index([familyId, weekStart])
+}
+
+model FamilyAchievement {
+  id          String   @id @default(cuid())
+  familyId    String
+  key         String   // "week_of_practice" | "family_service" | etc.
+  name        String
+  description String
+  iconKey     String   @default("award")
+  awardedAt   DateTime @default(now())
+
+  family      Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@unique([familyId, key])
+  @@index([familyId])
 }

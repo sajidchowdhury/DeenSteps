@@ -750,6 +750,54 @@ Stage Summary:
 - 17/20 sessions complete (85%)
 - Next: S5.1 — Weekly reflection & streak gentleness (Phase 5 starts)
 
+---
+Task ID: S5.1
+Agent: main (Super Z)
+Task: Weekly reflection & streak gentleness — schema, server actions, UI
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 5 for WeeklyReflection/FamilyAchievement models
+- Applied Phase 5 schema changes to prisma/schema.prisma:
+  - New model: WeeklyReflection (familyId, childId?, weekStart, weekEnd, whatWentWell, whatWasHard, whatEasier, nextWeekPlan)
+  - New model: FamilyAchievement (familyId, key, name, description, iconKey, awardedAt)
+  - Added reflections + familyAchievements relations to Family
+  - Added reflections relation to ChildProfile
+  - Ran db:push — schema applied, no data loss
+- Created reflection-actions.ts server action:
+  - saveWeeklyReflection: save/update weekly reflection (per child or family-level)
+    - Idempotent (unique [familyId, childId, weekStart])
+    - Verifies child belongs to family
+    - 4 fields: whatWentWell, whatWasHard, whatEasier, nextWeekPlan
+  - getThisWeekReflection: load this week's reflection
+  - getRecentReflections: last 4 weeks of reflections (for history)
+- Created WeeklyReflectionSection component (weekly-reflection-section.tsx):
+  - Child selector (family-level or per-child)
+  - 4 text areas: কী ভালো হলো, কী কঠিন ছিল, কোন অভ্যাস সহজ হচ্ছে, পরের সপ্তাহে কী
+  - Save button calls saveWeeklyReflection
+  - History section (collapsible) showing last 4 weeks of reflections
+  - Color-coded fields: green=ভালো, amber=কঠিন, sky=সহজ, violet=পরের সপ্তাহ
+  - Guidance: "অগ্রগতির উপর ফোকাস করুন, দোষের উপর নয়। সন্তানের চেষ্টা উদযাপন করুন।"
+  - All text in Bengali
+- Added recentReflections to getDashboardData return
+- Added WeeklyReflectionSection to parent dashboard (after sadaqah history)
+- Verified child dashboard already has gentle streak break message from S1.3:
+  - "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱"
+  - "তারা কাটা হয়নি — শুধু আজ থেকে আবার চেষ্টা করো।"
+  - Shows which tasks were missed as chips
+  - Already complete — no additional work needed
+- Lint clean
+
+Stage Summary:
+- Per spec §7A + §7C: weekly reflection + streak gentleness implemented
+  - ✅ Weekly summary: what went well, what was hard, what's easier, next week plan
+  - ✅ Focus on progress, not blame
+  - ✅ History of past reflections (4 weeks)
+  - ✅ Streak break gentle message (from S1.3): "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি!"
+  - ✅ No punitive streak resets or shame-based notifications
+- 18/20 sessions complete (90%)
+- Next: S5.2 — Flexible milestone & learning prompts
+
+
 
 
 
