@@ -498,6 +498,59 @@ Stage Summary:
 - 12/20 sessions complete (60%)
 - Next: S3.2 — Parent mediation workflow (perspectives, follow-up records)
 
+---
+Task ID: S3.2
+Agent: main (Super Z)
+Task: Parent mediation workflow — resolve incidents with restorative outcomes
+
+Work Log:
+- Re-read incident-actions.ts and spec §5.3 for mediation workflow
+- Created resolveIncident server action (incident-actions.ts):
+  - Parent resolves incident with outcomeType + description
+  - 6 outcome types: NO_ACTION, APOLOGY, RETURN_ITEM, REPAIR, HELPFUL_ACTION, CONSEQUENCE
+  - OPTIONAL point adjustment (pointsAdjusted):
+    - If != 0, reason is REQUIRED
+    - Creates PointsTransaction with type=ADJUSTMENT, reason, adjustedById
+    - Links to IncidentResolution via pointsTxnId
+    - Atomic (inside db.$transaction)
+  - Idempotent (checks if already resolved)
+  - Verifies incident belongs to family (authorization)
+  - Marks incident as RESOLVED with resolvedAt
+  - Notifies child: "তোমার সমস্যাটি দেখা হয়েছে"
+  - All error messages in Bengali
+- Created IncidentResolutionDialog component (incident-resolution-dialog.tsx):
+  - Outcome type selector (6 restorative options in Bengali)
+  - Description textarea (what was the resolution)
+  - Optional point adjustment section:
+    - Points input (negative = deduction, positive = restoration)
+    - Child selector (whose points to adjust)
+    - Reason textarea (required if points != 0)
+    - Warning: "ঐচ্ছিক — সাবধানতার সাথে ব্যবহার করুন"
+  - All text in Bengali
+- Updated IncidentsSection component:
+  - Added "সমাধান করুন" button on each incident
+  - Opens IncidentResolutionDialog with incidentId + childrenList
+  - Receives childrenList prop from parent dashboard
+- Updated parent dashboard to pass childrenList to IncidentsSection
+- Lint clean
+
+Stage Summary:
+- Per spec §5.3: parent mediation workflow implemented
+  - ✅ Parent receives private notification
+  - ✅ Parent hears each child's perspective (report shown)
+  - ✅ Parent determines what happened
+  - ✅ Parent records the outcome (6 restorative types)
+  - ✅ Optional point adjustment with explicit reason + audit
+- Per spec §5.4: restorative, not punitive
+  - ✅ Sincere apology does NOT automatically erase wrongdoing
+  - ✅ Points NOT automatically deducted for every argument
+  - ✅ Prefer restorative outcomes (apology, return, repair, helpful action)
+  - ✅ If point adjustment, requires explicit confirmation + reason + audit entry
+  - ✅ Child informed in age-appropriate language
+- 13/20 sessions complete (65%)
+- Next: S3.3 — Restorative follow-up & audit (Phase 3 finale)
+
+
 
 
 

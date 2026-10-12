@@ -178,7 +178,7 @@ export default async function DashboardPage() {
         <MissedTasksSection missedTasks={data.missedTasks} />
 
         {/* Incidents section — Phase 3 (S3.1) */}
-        <IncidentsSection incidents={data.openIncidents} />
+        <IncidentsSection incidents={data.openIncidents} childrenList={childrenList} />
 
         {/* Family reward budget — Phase 2 (S2.3) */}
         {data.budgetInfo && (
