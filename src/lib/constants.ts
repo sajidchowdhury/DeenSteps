@@ -2,75 +2,133 @@
  * DeenSteps domain constants — task categories, library, icon mapping.
  * Centralized so the rest of the app references consistent keys.
  * সব টেক্সট বাংলায় — বাবা-মা ও সন্তানের জন্য সহজবোধ্য।
+ *
+ * Phase 1 (S1.1): Expanded to 6 categories, Tier 1-5, age-appropriate filtering,
+ * spec-compliant point values.
  */
 
 export const TASK_CATEGORIES = [
   {
     key: 'Islamic Practices',
-    label: 'ইসলামি অভ্যাস',
+    label: 'নামাজ ও ইবাদত',
     color: 'emerald',
-    description: 'নামাজ, কুরআন, দোয়া আর ধর্মীয় শিক্ষা।',
+    description: 'নামাজ, কুরআন, দোয়া ও ধর্মীয় শিক্ষা।',
     icon: 'mosque',
   },
   {
     key: 'Character & Manners',
-    label: 'চরিত্র ও আদব',
+    label: 'ইসলামি চরিত্র',
     color: 'amber',
-    description: 'সততা, দয়া, ধৈর্য, কৃতজ্ঞতা।',
+    description: 'সততা, দয়া, সম্মান, ধৈর্য ও ক্ষমা।',
     icon: 'heart',
   },
   {
-    key: 'Personal Responsibility',
-    label: 'ব্যক্তিগত দায়িত্ব',
+    key: 'Family Responsibilities',
+    label: 'পারিবারিক দায়িত্ব',
     color: 'sage',
-    description: 'দৈনিক রুটিন আর পারিবারিক অভ্যাস।',
+    description: 'পরিবারে সাহায্য, নিজের জিনিস গোছানো।',
     icon: 'check',
   },
   {
-    key: 'Learning & Development',
-    label: 'শেখা ও বিকাশ',
+    key: 'Education & Development',
+    label: 'শিক্ষা ও বিকাশ',
     color: 'gold',
-    description: 'পড়া, হোমওয়ার্ক, দক্ষতা, সৃজনশীলতা।',
+    description: 'স্কুল, হোমওয়ার্ক, বই পড়া, দক্ষতা।',
     icon: 'book',
+  },
+  {
+    key: 'Health & Self-Discipline',
+    label: 'স্বাস্থ্য ও আত্মনিয়ন্ত্রণ',
+    color: 'sky',
+    description: 'পরিচ্ছন্নতা, খাদ্যাভ্যাস, ঘুম, স্ক্রিন-টাইম।',
+    icon: 'activity',
+  },
+  {
+    key: 'Generosity & Community',
+    label: 'দান ও সমাজসেবা',
+    color: 'rose',
+    description: 'ভাগ করে নেওয়া, সাহায্য করা, সাদাকাহ।',
+    icon: 'hand-heart',
   },
 ] as const
 
 export type TaskCategoryKey = (typeof TASK_CATEGORIES)[number]['key']
 
 /**
- * ইসলামি অভ্যাস লাইব্রেরি — অপশনাল সাজেশন যা বাবা-মা ইমপোর্ট করতে পারেন।
- * কখনোই বাধ্যতামূলক নয়।
+ * Tier definitions — educational priority structure (NOT religious ranking).
+ * Used for organizing the learning experience, not for declaring Allah's rewards.
+ */
+export const TASK_TIERS = [
+  { tier: 1, label: 'মূল ইবাদত', description: 'নামাজ, কুরআন, ওযু — ইসলামি শেখার ভিত্তি।' },
+  { tier: 2, label: 'চরিত্র ও পরিবার', description: 'সততা, দয়া, সম্মান — সুন্দর মানুষ হওয়া।' },
+  { tier: 3, label: 'দৈনন্দিন দায়িত্ব', description: 'পরিচ্ছন্নতা, স্কুল, হোমওয়ার্ক।' },
+  { tier: 4, label: 'স্বাস্থ্য ও অভ্যাস', description: 'বই পড়া, ব্যায়াম, জিনিস গোছানো।' },
+  { tier: 5, label: 'অতিরিক্ত বৃদ্ধি', description: 'অতিরিক্ত শেখা, বিশেষ প্রজেক্ট।' },
+] as const
+
+/**
+ * ইসলামি আমল লাইব্রেরি — age-appropriate daily and weekly habits.
+ * Tier 1-5 priority, spec-compliant point values.
+ * Parents enable/disable, adjust points, select per child.
+ *
+ * IMPORTANT: Point values are illustrative product defaults, NOT Islamic
+ * measurements of the comparative spiritual worth of deeds.
  */
 export const TASK_LIBRARY = [
-  // ইসলামি অভ্যাস
-  { title: 'সকালের নামাজ (ফজর)', category: 'Islamic Practices', subcategory: 'দৈনিক নামাজ', iconKey: 'sunrise', pointsValue: 3, frequency: 'DAILY', dueTime: '05:30', description: 'সময়মতো ঘুম থেকে উঠে ফজর নামাজ পড়ার অভ্যাস।' },
-  { title: 'দুপুরের নামাজ (জোহর)', category: 'Islamic Practices', subcategory: 'দৈনিক নামাজ', iconKey: 'sun', pointsValue: 2, frequency: 'DAILY', dueTime: '13:00', description: 'সময়মতো জোহর নামাজ পড়া।' },
-  { title: 'সন্ধ্যার নামাজ (মাগরিব)', category: 'Islamic Practices', subcategory: 'দৈনিক নামাজ', iconKey: 'sunset', pointsValue: 2, frequency: 'DAILY', dueTime: '18:30', description: 'সময়মতো মাগরিব নামাজ পড়া।' },
-  { title: 'রাতের নামাজ (এশা)', category: 'Islamic Practices', subcategory: 'দৈনিক নামাজ', iconKey: 'moon', pointsValue: 2, frequency: 'DAILY', dueTime: '20:00', description: 'সময়মতো এশা নামাজ পড়া।' },
-  { title: 'সকালে কুরআন পড়া', category: 'Islamic Practices', subcategory: 'কুরআন পড়া', iconKey: 'book-open', pointsValue: 2, frequency: 'DAILY', dueTime: '06:30', description: 'ফজরের পর সামান্য কুরআন তিলাওয়াত।' },
-  { title: 'সন্ধ্যায় কুরআন পড়া', category: 'Islamic Practices', subcategory: 'কুরআন পড়া', iconKey: 'book-open', pointsValue: 2, frequency: 'DAILY', dueTime: '19:00', description: 'সন্ধ্যায় সামান্য কুরআন তিলাওয়াত।' },
-  { title: 'কুরআন মুখস্থ অনুশীলন', category: 'Islamic Practices', subcategory: 'কুরআন মুখস্থ', iconKey: 'brain', pointsValue: 3, frequency: 'DAILY', description: 'ছোট একটি সূরা বা আয়াত মুখস্থ করার অনুশীলন।' },
-  { title: 'দৈনিক দোয়া শেখা', category: 'Islamic Practices', subcategory: 'দোয়া', iconKey: 'sparkles', pointsValue: 1, frequency: 'DAILY', description: 'আজ একটি ছোট দোয়া শিখে পড়া।' },
-  { title: 'ইসলামি শিক্ষা', category: 'Islamic Practices', subcategory: 'ইসলামি শিক্ষা', iconKey: 'graduation-cap', pointsValue: 2, frequency: 'DAILY', description: 'একটি ইসলামি গল্প পড়া বা শোনা।' },
-  // চরিত্র ও আদব
-  { title: 'সত্য কথা বলা', category: 'Character & Manners', subcategory: 'সততা', iconKey: 'shield-check', pointsValue: 2, frequency: 'DAILY', description: 'সারাদিন সব কথায় সত্য বলা।' },
-  { title: 'দয়া দেখানো', category: 'Character & Manners', subcategory: 'দয়া', iconKey: 'heart', pointsValue: 2, frequency: 'DAILY', description: 'আজ কাউকে একটি দয়ার কাজ করা।' },
-  { title: 'ধৈর্য অনুশীলন', category: 'Character & Manners', subcategory: 'ধৈর্য', iconKey: 'hourglass', pointsValue: 2, frequency: 'DAILY', description: 'কঠিন মুহূর্তে শান্ত থাকা।' },
-  { title: 'কৃতজ্ঞতা প্রকাশ', category: 'Character & Manners', subcategory: 'কৃতজ্ঞতা', iconKey: 'smile', pointsValue: 1, frequency: 'DAILY', description: 'আজ তিনটি জিনিস বলা যার জন্য কৃতজ্ঞ।' },
-  { title: 'পরিবারকে সাহায্য করা', category: 'Character & Manners', subcategory: 'সাহায্যশীলতা', iconKey: 'hand-heart', pointsValue: 2, frequency: 'DAILY', description: 'পরিবারের কাউকে একটি উপায়ে সাহায্য করা।' },
-  { title: 'ভুল হলে ক্ষমা চাওয়া', category: 'Character & Manners', subcategory: 'আদব', iconKey: 'handshake', pointsValue: 1, frequency: 'DAILY', description: 'কাউকে কষ্ট দিলে ক্ষমা চাওয়া আর শুধরে নেওয়া।' },
-  // ব্যক্তিগত দায়িত্ব
-  { title: 'বিছানা গুছিয়ে নেওয়া', category: 'Personal Responsibility', subcategory: 'সকালের রুটিন', iconKey: 'bed', pointsValue: 1, frequency: 'DAILY', dueTime: '07:30', description: 'ঘুম থেকে উঠে বিছানা সুন্দর করে গুছিয়ে নেওয়া।' },
-  { title: 'বই গুছিয়ে রাখা', category: 'Personal Responsibility', subcategory: 'পরিচ্ছন্নতা', iconKey: 'library', pointsValue: 1, frequency: 'DAILY', description: 'বইগুলো সুন্দর করে তাকে রাখা।' },
-  { title: 'খেলনা গুছিয়ে রাখা', category: 'Personal Responsibility', subcategory: 'সন্ধ্যার রুটিন', iconKey: 'package', pointsValue: 1, frequency: 'DAILY', dueTime: '20:00', description: 'ঘুমাতে যাওয়ার আগে খেলনা গুছিয়ে রাখা।' },
-  { title: 'স্কুলের প্রস্তুতি', category: 'Personal Responsibility', subcategory: 'স্কুল', iconKey: 'backpack', pointsValue: 1, frequency: 'WEEKDAYS', dueTime: '20:30', description: 'ব্যাগ গুছিয়ে আগামীকালের প্রস্তুতি নেওয়া।' },
-  { title: 'পরিবারের কাজে সাহায্য', category: 'Personal Responsibility', subcategory: 'পারিবারিক', iconKey: 'broom', pointsValue: 2, frequency: 'DAILY', description: 'বয়স-উপযোগী একটি পারিবারিক কাজ করা।' },
-  // শেখা ও বিকাশ
-  { title: 'বই পড়ার অনুশীলন', category: 'Learning & Development', subcategory: 'পড়া', iconKey: 'book', pointsValue: 2, frequency: 'DAILY', dueTime: '18:00', description: 'অন্তত ২০ মিনিট বই পড়া।' },
-  { title: 'হোমওয়ার্কের সময়', category: 'Learning & Development', subcategory: 'হোমওয়ার্ক', iconKey: 'pencil', pointsValue: 3, frequency: 'WEEKDAYS', dueTime: '17:00', description: 'আজকের হোমওয়ার্ক সম্পন্ন করা।' },
-  { title: 'দক্ষতা বিকাশ', category: 'Learning & Development', subcategory: 'দক্ষতা', iconKey: 'wrench', pointsValue: 2, frequency: 'DAILY', description: 'যে দক্ষতা শিখছ তার অনুশীলন করা।' },
-  { title: 'সৃজনশীল কাজ', category: 'Learning & Development', subcategory: 'সৃজনশীলতা', iconKey: 'palette', pointsValue: 2, frequency: 'DAILY', description: '২০ মিনিট সৃজনশীল কাজে কাটানো।' },
-  { title: 'শারীরিক কসরত', category: 'Learning & Development', subcategory: 'স্বাস্থ্য', iconKey: 'activity', pointsValue: 2, frequency: 'DAILY', description: 'অন্তত ৩০ মিনিট শারীরিক কসরত করা।' },
+  // ─── A. নামাজ ও ইবাদত (Tier 1) ───────────────────────────────────────
+  { title: 'ফজরের নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'sunrise', pointsValue: 10, frequency: 'DAILY', dueTime: '05:30', tier: 1, minAge: null, maxAge: null, description: 'সময়মতো ঘুম থেকে উঠে ফজর নামাজ পড়ার অভ্যাস।' },
+  { title: 'জোহরের নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'sun', pointsValue: 10, frequency: 'DAILY', dueTime: '13:00', tier: 1, minAge: null, maxAge: null, description: 'সময়মতো জোহর নামাজ পড়া।' },
+  { title: 'আসরের নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'sun', pointsValue: 10, frequency: 'DAILY', dueTime: '16:30', tier: 1, minAge: null, maxAge: null, description: 'সময়মতো আসর নামাজ পড়া।' },
+  { title: 'মাগরিবের নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'sunset', pointsValue: 10, frequency: 'DAILY', dueTime: '18:30', tier: 1, minAge: null, maxAge: null, description: 'সময়মতো মাগরিব নামাজ পড়া।' },
+  { title: 'এশার নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'moon', pointsValue: 10, frequency: 'DAILY', dueTime: '20:00', tier: 1, minAge: null, maxAge: null, description: 'সময়মতো এশা নামাজ পড়া।' },
+  { title: 'জুমার নামাজ অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'mosque', pointsValue: 10, frequency: 'CUSTOM', scheduledDays: ['FRI'], dueTime: '13:00', tier: 1, minAge: 9, maxAge: 99, description: 'শুক্রবার জুমার নামাজ পড়ার অভ্যাস।' },
+  { title: 'নামাজ শেখা ও অনুশীলন', category: 'Islamic Practices', subcategory: 'নামাজ', iconKey: 'sparkles', pointsValue: 5, frequency: 'DAILY', tier: 1, minAge: 3, maxAge: 8, description: 'নামাজের নিয়ম শেখা ও অনুশীলন করা।' },
+  { title: 'ওযু শেখা ও অনুশীলন', category: 'Islamic Practices', subcategory: 'পবিত্রতা', iconKey: 'droplet', pointsValue: 3, frequency: 'DAILY', tier: 1, minAge: 3, maxAge: 8, description: 'ওযু করার সঠিক নিয়ম শেখা ও অনুশীলন।' },
+  { title: 'কুরআন তিলাওয়াত', category: 'Islamic Practices', subcategory: 'কুরআন', iconKey: 'book-open', pointsValue: 5, frequency: 'DAILY', dueTime: '06:30', tier: 1, minAge: null, maxAge: null, description: 'প্রতিদিন সামান্য কুরআন তিলাওয়াত।' },
+  { title: 'দৈনিক দোয়া শেখা', category: 'Islamic Practices', subcategory: 'দোয়া', iconKey: 'sparkles', pointsValue: 3, frequency: 'DAILY', tier: 1, minAge: null, maxAge: null, description: 'আজ একটি ছোট দোয়া শিখে পড়া।' },
+  { title: 'সকালের আজকার', category: 'Islamic Practices', subcategory: 'আজকার', iconKey: 'sunrise', pointsValue: 3, frequency: 'DAILY', dueTime: '07:00', tier: 1, minAge: 9, maxAge: 99, description: 'সকালের আজকার পড়ার অভ্যাস।' },
+  { title: 'সন্ধ্যার আজকার', category: 'Islamic Practices', subcategory: 'আজকার', iconKey: 'sunset', pointsValue: 3, frequency: 'DAILY', dueTime: '18:30', tier: 1, minAge: 9, maxAge: 99, description: 'সন্ধ্যার আজকার পড়ার অভ্যাস।' },
+  { title: 'ছোট সূরা মুখস্থ', category: 'Islamic Practices', subcategory: 'কুরআন মুখস্থ', iconKey: 'brain', pointsValue: 5, frequency: 'DAILY', tier: 1, minAge: null, maxAge: null, description: 'ছোট একটি সূরা মুখস্থ করার অনুশীলন।' },
+  { title: 'ইসলামি গল্প পড়া/শোনা', category: 'Islamic Practices', subcategory: 'ইসলামি শিক্ষা', iconKey: 'graduation-cap', pointsValue: 3, frequency: 'DAILY', tier: 1, minAge: null, maxAge: null, description: 'একটি ইসলামি গল্প বা শিক্ষা শোনা।' },
+
+  // ─── B. ইসলামি চরিত্র (Tier 2) ───────────────────────────────────────
+  { title: 'সত্য কথা বলা', category: 'Character & Manners', subcategory: 'সততা', iconKey: 'shield-check', pointsValue: 4, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'সারাদিন সব কথায় সত্য বলা।' },
+  { title: 'কোমল ভাষায় কথা বলা', category: 'Character & Manners', subcategory: 'আদব', iconKey: 'heart', pointsValue: 3, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'কঠোর বা আঘাতমূলক কথা এড়িয়ে কোমল কথা বলা।' },
+  { title: 'বাবা-মা ও বয়োজ্যেষ্ঠদের সম্মান', category: 'Character & Manners', subcategory: 'সম্মান', iconKey: 'hand-heart', pointsValue: 4, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'বাবা-মা ও বয়োজ্যেষ্ঠদের সম্মান করা।' },
+  { title: 'ভাই-বোনের সাথে দয়া', category: 'Character & Manners', subcategory: 'দয়া', iconKey: 'heart', pointsValue: 4, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'ভাই-বোনের প্রতি দয়া ও ভালোবাসা দেখানো।' },
+  { title: 'রাগ নিয়ন্ত্রণ', category: 'Character & Manners', subcategory: 'ধৈর্য', iconKey: 'hourglass', pointsValue: 3, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'কঠিন মুহূর্তে রাগ নিয়ন্ত্রণে রাখা।' },
+  { title: 'ভুল হলে ক্ষমা চাওয়া', category: 'Character & Manners', subcategory: 'ক্ষমা', iconKey: 'handshake', pointsValue: 4, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'কাউকে কষ্ট দিলে আন্তরিকভাবে ক্ষমা চাওয়া।' },
+  { title: 'ক্ষমা করা ও শান্তি স্থাপন', category: 'Character & Manners', subcategory: 'ক্ষমা', iconKey: 'handshake', pointsValue: 4, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'অন্যকে ক্ষমা করা ও শান্তি স্থাপন করা।' },
+  { title: 'ওয়াদা রাখা ও জিনিস ফেরত দেওয়া', category: 'Character & Manners', subcategory: 'আমানত', iconKey: 'shield-check', pointsValue: 3, frequency: 'DAILY', tier: 2, minAge: null, maxAge: null, description: 'ওয়াদা রাখা এবং ধার নেওয়া জিনিস ফেরত দেওয়া।' },
+
+  // ─── C. পারিবারিক দায়িত্ব (Tier 3) ──────────────────────────────────
+  { title: 'বাবা-মাকে সাহায্য করা', category: 'Family Responsibilities', subcategory: 'পারিবারিক', iconKey: 'hand-heart', pointsValue: 3, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'বয়স-উপযোগী একটি কাজে বাবা-মাকে সাহায্য করা।' },
+  { title: 'নিজের জিনিস গোছানো', category: 'Family Responsibilities', subcategory: 'পরিচ্ছন্নতা', iconKey: 'package', pointsValue: 2, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'নিজের জিনিসপত্র গুছিয়ে রাখা।' },
+  { title: 'খেলা/খাওয়ার পর পরিষ্কার করা', category: 'Family Responsibilities', subcategory: 'পরিচ্ছন্নতা', iconKey: 'broom', pointsValue: 2, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'খেলা বা খাওয়ার পর জায়গা পরিষ্কার করা।' },
+  { title: 'ছোট ভাই-বোনকে সাহায্য', category: 'Family Responsibilities', subcategory: 'পারিবারিক', iconKey: 'hand-heart', pointsValue: 3, frequency: 'DAILY', tier: 3, minAge: 6, maxAge: 99, description: 'ছোট ভাই-বোনকে কোনো কাজে সাহায্য করা।' },
+  { title: 'পারিবারিক দায়িত্ব পালন', category: 'Family Responsibilities', subcategory: 'পারিবারিক', iconKey: 'check', pointsValue: 3, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'নির্ধারিত পারিবারিক দায়িত্ব সম্পন্ন করা।' },
+
+  // ─── D. শিক্ষা ও বিকাশ (Tier 3-4) ────────────────────────────────────
+  { title: 'স্কুল/মাদ্রাসার প্রস্তুতি', category: 'Education & Development', subcategory: 'স্কুল', iconKey: 'backpack', pointsValue: 2, frequency: 'WEEKDAYS', dueTime: '20:30', tier: 3, minAge: null, maxAge: null, description: 'পরের দিনের জন্য ব্যাগ ও প্রস্তুতি নেওয়া।' },
+  { title: 'হোমওয়ার্ক সম্পন্ন করা', category: 'Education & Development', subcategory: 'হোমওয়ার্ক', iconKey: 'pencil', pointsValue: 3, frequency: 'WEEKDAYS', dueTime: '17:00', tier: 3, minAge: null, maxAge: null, description: 'আজকের হোমওয়ার্ক সম্পন্ন করা।' },
+  { title: 'উপকারী বই পড়া', category: 'Education & Development', subcategory: 'পড়া', iconKey: 'book', pointsValue: 3, frequency: 'DAILY', dueTime: '18:00', tier: 4, minAge: null, maxAge: null, description: 'অন্তত ২০ মিনিট উপকারী বই পড়া।' },
+  { title: 'নতুন কিছু শেখা', category: 'Education & Development', subcategory: 'শেখা', iconKey: 'graduation-cap', pointsValue: 3, frequency: 'DAILY', tier: 4, minAge: null, maxAge: null, description: 'আজ নতুন কিছু উপকারী শেখা।' },
+  { title: 'দক্ষতা অনুশীলন', category: 'Education & Development', subcategory: 'দক্ষতা', iconKey: 'wrench', pointsValue: 3, frequency: 'DAILY', tier: 4, minAge: null, maxAge: null, description: 'যে দক্ষতা শিখছ তার অনুশীলন করা।' },
+
+  // ─── E. স্বাস্থ্য ও আত্মনিয়ন্ত্রণ (Tier 3-4) ──────────────────────────
+  { title: 'দাঁত মাজা ও পরিচ্ছন্নতা', category: 'Health & Self-Discipline', subcategory: 'পরিচ্ছন্নতা', iconKey: 'sparkles', pointsValue: 2, frequency: 'DAILY', dueTime: '07:00', tier: 3, minAge: null, maxAge: null, description: 'দাঁত মাজা ও ব্যক্তিগত পরিচ্ছন্নতা বজায় রাখা।' },
+  { title: 'সঠিক খাবার খাওয়া', category: 'Health & Self-Discipline', subcategory: 'খাদ্যাভ্যাস', iconKey: 'utensils', pointsValue: 2, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'পরিমিত ও স্বাস্থ্যকর খাবার খাওয়া।' },
+  { title: 'পর্যাপ্ত পানি পান করা', category: 'Health & Self-Discipline', subcategory: 'স্বাস্থ্য', iconKey: 'droplet', pointsValue: 2, frequency: 'DAILY', tier: 3, minAge: null, maxAge: null, description: 'দিনে পর্যাপ্ত পানি পান করা।' },
+  { title: 'ঘুমের রুটিন মানা', category: 'Health & Self-Discipline', subcategory: 'ঘুম', iconKey: 'moon', pointsValue: 2, frequency: 'DAILY', dueTime: '21:00', tier: 3, minAge: null, maxAge: null, description: 'নির্দিষ্ট সময়ে ঘুমাতে যাওয়ার রুটিন মানা।' },
+  { title: 'স্ক্রিন-টাইম নিয়ম মানা', category: 'Health & Self-Discipline', subcategory: 'আত্মনিয়ন্ত্রণ', iconKey: 'monitor', pointsValue: 3, frequency: 'DAILY', tier: 4, minAge: null, maxAge: null, description: 'পরিবারের স্ক্রিন-টাইম নিয়ম মেনে চলা।' },
+  { title: 'বাইরে খেলা বা শারীরিক কসরত', category: 'Health & Self-Discipline', subcategory: 'ব্যায়াম', iconKey: 'activity', pointsValue: 3, frequency: 'DAILY', tier: 4, minAge: null, maxAge: null, description: 'অন্তত ৩০ মিনিট বাইরে খেলা বা শারীরিক কসরত।' },
+
+  // ─── F. দান ও সমাজসেবা (Tier 4-5) ───────────────────────────────────
+  { title: 'খেলনা/জিনিস ভাগ করা', category: 'Generosity & Community', subcategory: 'ভাগ করা', iconKey: 'gift', pointsValue: 4, frequency: 'DAILY', tier: 4, minAge: 3, maxAge: 12, description: 'স্বেচ্ছায় নিজের খেলনা বা জিনিস ভাগ করা।' },
+  { title: 'কাউকে সাহায্য করা (স্বেচ্ছায়)', category: 'Generosity & Community', subcategory: 'সাহায্য', iconKey: 'hand-heart', pointsValue: 4, frequency: 'DAILY', tier: 4, minAge: null, maxAge: null, description: 'প্রত্যাশা ছাড়া কাউকে সাহায্য করা।' },
+  { title: 'সাদাকাহর জন্য তারা সঞ্চয়', category: 'Generosity & Community', subcategory: 'সাদাকাহ', iconKey: 'star', pointsValue: 5, frequency: 'WEEKLY', tier: 5, minAge: 9, maxAge: 99, description: 'সাদাকাহর জন্য কিছু তারা সঞ্চয় করা।' },
+  { title: 'বয়োজ্যেষ্ঠ আত্মীয়কে সাহায্য', category: 'Generosity & Community', subcategory: 'সাহায্য', iconKey: 'hand-heart', pointsValue: 4, frequency: 'WEEKLY', tier: 5, minAge: 6, maxAge: 99, description: 'বয়োজ্যেষ্ঠ আত্মীয়কে সাহায্য করা।' },
+  { title: 'পারিবারিক দানমূলক কাজে অংশ', category: 'Generosity & Community', subcategory: 'সাদাকাহ', iconKey: 'heart', pointsValue: 5, frequency: 'CUSTOM', scheduledDays: ['FRI'], tier: 5, minAge: null, maxAge: null, description: 'পরিবার-অনুমোদিত দানমূলক কাজে অংশ নেওয়া।' },
 ] as const
 
 export const REWARD_LIBRARY = [
@@ -147,6 +205,7 @@ export const ICON_KEY_TO_LUCIDE: Record<string, string> = {
   sparkles: 'Sparkles',
   'graduation-cap': 'GraduationCap',
   mosque: 'Landmark',
+  droplet: 'Droplet',
   // চরিত্র
   heart: 'Heart',
   'shield-check': 'ShieldCheck',
@@ -167,6 +226,8 @@ export const ICON_KEY_TO_LUCIDE: Record<string, string> = {
   wrench: 'Wrench',
   palette: 'Palette',
   activity: 'Activity',
+  // স্বাস্থ্য
+  monitor: 'MonitorSmartphone',
   // পুরস্কার / সাধারণ
   gift: 'Gift',
   dice: 'Dices',

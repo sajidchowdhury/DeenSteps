@@ -182,6 +182,11 @@ model TaskTemplate {
   parentNotes     String?
   status          String   @default("ACTIVE") // ACTIVE | PAUSED | ARCHIVED
   isFromLibrary   Boolean  @default(false)
+  // Phase 1 (S1.1): Tier & age-appropriate configuration
+  tier            Int      @default(3)    // 1-5 priority (1 = core worship, 5 = optional growth)
+  minAge          Int?                    // 3, 6, 9, 13 (null = all ages)
+  maxAge          Int?                    // 5, 8, 12, 99
+  learningPrompt  String?                // optional short Islamic learning question (Phase 5)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -192,6 +197,8 @@ model TaskTemplate {
   @@index([familyId])
   @@index([status])
   @@index([category])
+  @@index([tier])
+  @@index([category, tier])
 }
 
 model TaskAssignment {
@@ -213,6 +220,8 @@ model TaskOccurrence {
   scheduledDate DateTime
   dueTime      String?
   status       String   @default("ASSIGNED") // ASSIGNED | SUBMITTED | NEEDS_ATTENTION | APPROVED | MISSED | EXCUSED
+  // Phase 1 (S1.3): missed task audit trail
+  missedAt     DateTime?  // when the system marked it missed (null = not missed)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -264,10 +273,14 @@ model TaskReview {
 }
 
 model TaskExcusal {
-  id           String   @id @default(cuid())
-  occurrenceId String   @unique
-  reason       String
-  createdAt    DateTime @default(now())
+  id             String   @id @default(cuid())
+  occurrenceId   String   @unique
+  reason         String
+  // Phase 1 (S1.3): parent follow-up records
+  excusedById    String?  // who excused the task
+  followUpType   String?  // practice_wudu | learn_about_salah | plan_routine | other
+  followUpNote   String?  // parent's follow-up note
+  createdAt      DateTime @default(now())
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -283,6 +296,9 @@ model PointsTransaction {
   reference   String?  // submissionId | redemptionId
   description String
   balanceAfter Int
+  // Phase 1 (S1.4): reason & actor for adjustments (used by Phase 3 incidents, Phase 4 sadaqah)
+  reason      String?  // for ADJUSTMENT type: parent's reason
+  adjustedById String? // who made the adjustment
   createdAt   DateTime @default(now())
 
   child       ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)

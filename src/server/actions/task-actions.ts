@@ -27,6 +27,11 @@ const TaskSchema = z.object({
   dueTime: z.string().optional(),
   parentNotes: z.string().max(500).optional(),
   assignedChildIds: z.array(z.string()).default([]),
+  // Phase 1 (S1.1): Tier & age-appropriate configuration
+  tier: z.number().int().min(1).max(5).default(3),
+  minAge: z.number().int().nullable().optional(),
+  maxAge: z.number().int().nullable().optional(),
+  learningPrompt: z.string().max(500).optional(),
 })
 
 export type TaskResult = { ok: true; taskId: string } | { ok: false; error: string; fieldErrors?: Record<string, string> }
@@ -72,6 +77,11 @@ export async function createTask(input: z.infer<typeof TaskSchema>): Promise<Tas
       dueTime: d.dueTime || null,
       parentNotes: d.parentNotes,
       status: 'ACTIVE',
+      // Phase 1 (S1.1): Tier & age
+      tier: d.tier,
+      minAge: d.minAge ?? null,
+      maxAge: d.maxAge ?? null,
+      learningPrompt: d.learningPrompt ?? null,
       assignments: d.assignedChildIds.length > 0 ? { create: d.assignedChildIds.map((childId) => ({ childId })) } : undefined,
     },
   })
@@ -114,6 +124,11 @@ export async function updateTask(taskId: string, input: Partial<z.infer<typeof T
       ...(d.endDate !== undefined && { endDate: d.endDate ? new Date(d.endDate) : null }),
       ...(d.dueTime !== undefined && { dueTime: d.dueTime || null }),
       ...(d.parentNotes !== undefined && { parentNotes: d.parentNotes }),
+      // Phase 1 (S1.1): Tier & age
+      ...(d.tier !== undefined && { tier: d.tier }),
+      ...(d.minAge !== undefined && { minAge: d.minAge }),
+      ...(d.maxAge !== undefined && { maxAge: d.maxAge }),
+      ...(d.learningPrompt !== undefined && { learningPrompt: d.learningPrompt }),
     },
   })
 
@@ -281,10 +296,14 @@ export async function importLibraryTask(libraryIndex: number, assignedChildIds: 
     subcategory: lib.subcategory,
     iconKey: lib.iconKey,
     pointsValue: lib.pointsValue,
-    frequency: lib.frequency as 'DAILY' | 'WEEKDAYS',
+    frequency: lib.frequency as 'DAILY' | 'WEEKDAYS' | 'WEEKLY' | 'CUSTOM' | 'ONCE',
+    scheduledDays: 'scheduledDays' in lib ? [...lib.scheduledDays] : undefined,
     dueTime: 'dueTime' in lib ? lib.dueTime : undefined,
     approvalPolicy: 'MANUAL',
     assignedChildIds: childIds,
+    tier: lib.tier,
+    minAge: lib.minAge,
+    maxAge: lib.maxAge,
   })
 
   revalidatePath('/tasks')

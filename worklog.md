@@ -55,3 +55,50 @@ Stage Summary:
 - Phase 0 complete (2/2 sessions)
 - Ready for Phase 1 (S1.1 — Amal Library expansion)
 
+---
+Task ID: S1.1
+Agent: main (Super Z)
+Task: Amal Library expansion — 6 categories, Tier 1-5, age filter, spec-compliant points
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 1 section for exact field specs
+- Applied Phase 1 schema changes to prisma/schema.prisma:
+  - TaskTemplate: +tier (Int, default 3), +minAge (Int?), +maxAge (Int?), +learningPrompt (String?)
+  - TaskTemplate: +@@index([tier]), +@@index([category, tier])
+  - TaskOccurrence: +missedAt (DateTime?)
+  - TaskExcusal: +excusedById (String?), +followUpType (String?), +followUpNote (String?)
+  - PointsTransaction: +reason (String?), +adjustedById (String?)
+- Ran db:push — schema applied successfully, no data loss
+- Expanded TASK_CATEGORIES from 4 to 6:
+  - Renamed: Islamic Practices → নামাজ ও ইবাদত, Character & Manners → ইসলামি চরিত্র
+  - Renamed: Personal Responsibility → পারিবারিক দায়িত্ব, Learning & Development → শিক্ষা ও বিকাশ
+  - NEW: Health & Self-Discipline (স্বাস্থ্য ও আত্মনিয়ন্ত্রণ)
+  - NEW: Generosity & Community (দান ও সমাজসেবা)
+- Added TASK_TIERS constant (5 tiers with Bengali labels)
+- Rewrote TASK_LIBRARY: 37 activities across 6 categories with:
+  - Tier 1-5 priority (per spec §2.2)
+  - Age-appropriate filtering (minAge/maxAge, null = all ages)
+  - Spec-compliant point values (Salah=10, Wudu=3, Quran=5, Dua=3, Truth=4, etc.)
+  - All 5 daily prayers + Jumu'ah (Friday, CUSTOM)
+  - Wudu, adhkar, short surahs (new activities)
+  - Health: hygiene, food, water, bedtime, screen-time, exercise (new)
+  - Generosity: sharing, helping, sadaqah saving, elderly help, charity (new)
+- Added new icon keys: droplet (Droplet), monitor (MonitorSmartphone)
+- Updated TaskSchema in task-actions.ts: +tier, +minAge, +maxAge, +learningPrompt
+- Updated createTask: passes new fields to db
+- Updated updateTask: passes new fields to db
+- Updated importLibraryTask: passes tier, minAge, maxAge, scheduledDays from library
+- Reset DB and re-seeded (no default tasks, only children + rewards + achievements)
+- Recompiled seed.js for Docker
+- Verified: lint clean, /tasks route compiles, /dashboard route compiles
+
+Stage Summary:
+- Phase 1 schema applied (TaskTemplate, TaskOccurrence, TaskExcusal, PointsTransaction)
+- 6 categories, 37 library activities with Tier 1-5 + age filtering
+- Spec-compliant point values
+- createTask, updateTask, importLibraryTask all handle new fields
+- DB re-seeded successfully
+- 3/20 sessions complete (15%)
+- Next: S1.2 — Tier & age UI (badges, filters, grouping in import dialog)
+
+
