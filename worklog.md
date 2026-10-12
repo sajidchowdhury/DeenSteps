@@ -698,6 +698,59 @@ Stage Summary:
 - 16/20 sessions complete (80%)
 - Next: S4.3 — Parent pledge & real donation confirmation (Phase 4 finale)
 
+---
+Task ID: S4.3
+Agent: main (Super Z)
+Task: Parent pledge & real donation confirmation — settings UI, history, pledge info
+
+Work Log:
+- Re-read settings page structure and sadaqah-actions from S4.1/S4.2
+- Created SadaqahSettings component (sadaqah-settings.tsx):
+  - Pledge configuration card:
+    - Toggle: sadaqahPledgeEnabled
+    - Stars → cash conversion rate (starsPerUnit / amountPerUnit / currency)
+    - Monthly reward budget input
+    - Note: "এটি একটি পারিবারিক অঙ্গীকার। বাবা-মা প্রকৃত দান করবেন — তারা সরাসরি নগদ নয়।"
+    - Save button calls updateFamilySettings
+  - Cause management card:
+    - List of active causes with donation counts
+    - Deactivate button (soft delete)
+    - Import from SADAQAH_CAUSES library (one-click dialog)
+    - Create custom cause dialog (title, description, icon picker)
+- Added "সাদাকাহ" tab to settings page:
+  - Heart icon tab trigger
+  - Loads sadaqahCauses via getSadaqahCauses()
+  - Renders SadaqahSettings component
+- Created SadaqahHistorySection component (sadaqah-history-section.tsx):
+  - Shows on parent dashboard when confirmed/cancelled donations exist
+  - Each item: child avatar, cause icon+title, stars, time, status badge
+  - CONFIRMED: green badge + real amount (৳X)
+  - CANCELLED: red badge
+  - Card title: "সাদাকাহ ইতিহাস"
+- Added SadaqahHistorySection to parent dashboard (after review section)
+- Added sadaqah pledge info to child dashboard:
+  - Loads FamilySettings (sadaqahPledgeEnabled, sadaqahStarsPerUnit, etc.)
+  - If pledge enabled AND causes exist, shows emerald-tinted info banner:
+    - "তোমার তারা দিয়ে ভালো কাজ করো! 🤲"
+    - "১০০ তারা = ৳১০০ সাদাকাহ। বাবা-মা প্রকৃত দান করবেন — তারা সরাসরি টাকা নয়।"
+    - Quran reference: "যে আল্লাহকে ভালো ঋণ দেবে, তিনি তার জন্য বহুগুণ বৃদ্ধি করবেন।"
+- Lint clean
+
+Stage Summary:
+- Per spec §6.2 + §6.3: parent pledge and real donation confirmation implemented
+  - ✅ Parent pledge configuration (enabled, stars→cash rate, currency)
+  - ✅ Real donation confirmation (confirmSadaqahDonation with realAmount, AuditLog)
+  - ✅ Transparent cancellation with refund
+  - ✅ Donation history visible to parents
+  - ✅ Child sees pledge info (stars → real charity connection)
+  - ✅ Quran reference for encouragement
+  - ✅ No competition — only personal generosity
+  - ✅ Points never automatically represent guaranteed cash
+- Phase 4 COMPLETE (3/3 sessions)
+- 17/20 sessions complete (85%)
+- Next: S5.1 — Weekly reflection & streak gentleness (Phase 5 starts)
+
+
 
 
 

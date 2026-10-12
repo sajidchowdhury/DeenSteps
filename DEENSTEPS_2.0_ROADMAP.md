@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S4.2 complete
+> **Last updated:** Session S4.3 complete — Phase 4 COMPLETE
 
 ### Phase 0 — Audit & Foundation
 
@@ -62,7 +62,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 |---------|-------|--------|
 | **S4.1** | Sadaqah schema & cause catalog | ✅ **DONE** |
 | **S4.2** | Child sadaqah flow — dedicate stars, parent review | ✅ **DONE** |
-| S4.3 | Parent pledge & real donation confirmation | ⬜ |
+| **S4.3** | Parent pledge & real donation confirmation | ✅ **DONE** |
 
 ### Phase 5 — Family Growth (3 sessions)
 
@@ -80,9 +80,9 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | Phase 1 | 5 | 5 | 0 |
 | Phase 2 | 4 | 4 | 0 |
 | Phase 3 | 3 | 3 | 0 |
-| Phase 4 | 3 | 2 | 1 |
+| Phase 4 | 3 | 3 | 0 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **16** | **4** |
+| **Total** | **20** | **17** | **3** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S4.3 — Parent pledge & real donation confirmation (Phase 4 finale)
+**Next session:** S5.1 — Weekly reflection & streak gentleness — Phase 5 starts
 
 ---
 

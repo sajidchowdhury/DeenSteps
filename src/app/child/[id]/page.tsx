@@ -162,6 +162,12 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     orderBy: { createdAt: 'asc' },
   })
 
+  // Phase 4 (S4.3): Sadaqah pledge info for child
+  const familySettings = await db.familySettings.findUnique({
+    where: { familyId: family.id },
+    select: { sadaqahPledgeEnabled: true, sadaqahStarsPerUnit: true, sadaqahCurrency: true, sadaqahAmountPerUnit: true },
+  })
+
   return (
     <div className="min-h-screen bg-secondary/20">
       {/* Child dashboard header — separate from parent app shell */}
@@ -228,6 +234,29 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           <IncidentReportButton childId={child.id} />
           <SadaqahButton childId={child.id} causes={sadaqahCauses} currentBalance={currentBalance} />
         </div>
+
+        {/* Phase 4 (S4.3): Sadaqah pledge info */}
+        {familySettings?.sadaqahPledgeEnabled && sadaqahCauses.length > 0 && (
+          <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900 dark:bg-emerald-950/20">
+            <div className="flex items-start gap-3">
+              <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-base font-bold text-foreground">
+                  তোমার তারা দিয়ে ভালো কাজ করো! 🤲
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {familySettings.sadaqahStarsPerUnit} তারা = {familySettings.sadaqahCurrency === 'BDT' ? '৳' : familySettings.sadaqahCurrency + ' '}{familySettings.sadaqahAmountPerUnit} সাদাকাহ।
+                  বাবা-মা প্রকৃত দান করবেন — তারা সরাসরি টাকা নয়।
+                </p>
+                <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-300">
+                  আল্লাহ বলেছেন: &ldquo;যে আল্লাহকে ভালো ঋণ দেবে, তিনি তার জন্য বহুগুণ বৃদ্ধি করবেন।&rdquo;
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stat cards */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { Users, User, Star, Bell, Palette, ShieldAlert } from 'lucide-react'
+import { Users, User, Star, Bell, Palette, ShieldAlert, Heart } from 'lucide-react'
 
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
@@ -16,6 +16,8 @@ import {
   ExportDataButton,
   DeleteFamilyButton,
 } from '@/components/deensteps/settings-forms'
+import { SadaqahSettings } from '@/components/deensteps/sadaqah-settings'
+import { getSadaqahCauses } from '@/server/actions/sadaqah-actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,6 +39,7 @@ export default async function SettingsPage() {
   ])
 
   const theme = (settings?.theme as 'light' | 'dark') ?? 'light'
+  const sadaqahCauses = await getSadaqahCauses()
   const notifInitial = {
     notifyOnSubmission: settings?.notifyOnSubmission ?? true,
     notifyOnRedemption: settings?.notifyOnRedemption ?? true,
@@ -86,6 +89,9 @@ export default async function SettingsPage() {
             </TabsTrigger>
             <TabsTrigger value="privacy" className="gap-1.5">
               <ShieldAlert className="h-3.5 w-3.5" /> Privacy &amp; data
+            </TabsTrigger>
+            <TabsTrigger value="sadaqah" className="gap-1.5">
+              <Heart className="h-3.5 w-3.5" /> সাদাকাহ
             </TabsTrigger>
           </TabsList>
 
@@ -195,6 +201,21 @@ export default async function SettingsPage() {
                 <DeleteFamilyButton />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Sadaqah */}
+          <TabsContent value="sadaqah" className="mt-4">
+            <SadaqahSettings
+              initial={{
+                sadaqahPledgeEnabled: settings?.sadaqahPledgeEnabled ?? false,
+                sadaqahStarsPerUnit: settings?.sadaqahStarsPerUnit ?? 100,
+                sadaqahCurrency: settings?.sadaqahCurrency ?? 'BDT',
+                sadaqahAmountPerUnit: settings?.sadaqahAmountPerUnit ?? 100,
+                monthlyRewardBudget: settings?.monthlyRewardBudget ?? null,
+              }}
+              causes={sadaqahCauses}
+              familyName={family.name}
+            />
           </TabsContent>
         </Tabs>
       </div>
