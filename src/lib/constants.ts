@@ -266,6 +266,22 @@ export const ICON_KEY_TO_LUCIDE: Record<string, string> = {
   footprints: 'Footprints',
 }
 
+/**
+ * Sadaqah causes — parent-approved charitable causes for children.
+ * Per spec §6.1: examples include supporting madrasa, educational materials,
+ * helping a family, food/relief initiative, or parent-approved project.
+ */
+export const SADAQAH_CAUSES = [
+  { title: 'মাদ্রাসা সহায়তা', description: 'একটি মাদ্রাসাকে সাহায্য করা।', iconKey: 'mosque' },
+  { title: 'গরিব শিশুদের শিক্ষা', description: 'অসহায় শিশুদের শিক্ষার জন্য অবদান।', iconKey: 'graduation-cap' },
+  { title: 'অসহায় পরিবার', description: 'অসহায় একটি পরিবারকে সাহায্য করা।', iconKey: 'heart' },
+  { title: 'খাদ্য সহায়তা', description: 'খাদ্য বিতরণ বা ত্রাণ কর্মসূচিতে অবদান।', iconKey: 'utensils' },
+  { title: 'প্রাকৃতিক দুর্যোগ ত্রাণ', description: 'বন্যা/ঘূর্ণিঝড় বা দুর্যোগ-আক্রান্তদের সাহায্য।', iconKey: 'gift' },
+  { title: 'মসজিদ নির্মাণ/সংস্কার', description: 'মসজিদ নির্মাণ বা সংস্কারে অবদান।', iconKey: 'mosque' },
+  { title: 'স্বাস্থ্য সেবা', description: 'অসহায় রোগীদের চিকিৎসায় সাহায্য।', iconKey: 'activity' },
+  { title: 'অন্যান্য (পরিবার-অনুমোদিত)', description: 'পরিবার কর্তৃক অনুমোদিত অন্য যেকোনো কারণ।', iconKey: 'star' },
+] as const
+
 export const APPROVAL_POLICIES = [
   { value: 'MANUAL', label: 'ম্যানুয়াল রিভিউ', description: 'পয়েন্ট দেওয়ার আগে আপনি প্রতিটি সাবমিশন অনুমোদন করেন।' },
   { value: 'AUTO', label: 'অটোমেটিক অনুমোদন', description: 'সন্তান সাবমিট করলেই পয়েন্ট যোগ হয়ে যায়।' },

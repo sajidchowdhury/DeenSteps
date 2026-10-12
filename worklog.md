@@ -605,6 +605,53 @@ Stage Summary:
 - 14/20 sessions complete (70%)
 - Next: S4.1 — Sadaqah schema & cause catalog (Phase 4 starts)
 
+---
+Task ID: S4.1
+Agent: main (Super Z)
+Task: Sadaqah schema & cause catalog — models, library, server actions, settings
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 4 for SadaqahCause/SadaqahDonation/FamilySettings specs
+- Applied Phase 4 schema changes to prisma/schema.prisma:
+  - New model: SadaqahCause (familyId, title, description, iconKey, active)
+  - New model: SadaqahDonation (familyId, childId, causeId, starsDedicated, pointsTxnId @unique,
+    status PENDING/CONFIRMED/CANCELLED, parentConfirmedAt, realAmount, realDate, confirmationNote)
+  - Added sadaqahCauses + sadaqahDonations relations to Family
+  - Added sadaqahDonations relation to ChildProfile
+  - Added sadaqahDonation relation to PointsTransaction
+  - FamilySettings: +sadaqahPledgeEnabled, +sadaqahStarsPerUnit, +sadaqahCurrency, +sadaqahAmountPerUnit
+  - Ran db:push — schema applied, no data loss
+- Added SADAQAH_CAUSES library to constants.ts:
+  - 8 causes: মাদ্রাসা সহায়তা, গরিব শিশুদের শিক্ষা, অসহায় পরিবার, খাদ্য সহায়তা,
+    প্রাকৃতিক দুর্যোগ ত্রাণ, মসজিদ নির্মাণ/সংস্কার, স্বাস্থ্য সেবা, অন্যান্য
+- Created sadaqah-actions.ts with full server actions:
+  - getSadaqahCauses: load active causes for family
+  - createSadaqahCause: create custom cause
+  - importSadaqahCause: import from SADAQAH_CAUSES library
+  - deactivateSadaqahCause: soft delete (preserves donation history)
+  - requestSadaqah: child dedicates stars (atomic — deducts + creates PENDING donation + notifies parents)
+  - confirmSadaqahDonation: parent confirms real-world donation (records realAmount, realDate, note, AuditLog)
+  - cancelSadaqahDonation: parent cancels (atomic refund of stars, AuditLog)
+  - getPendingSadaqahDonations: for parent dashboard
+  - getSadaqahHistory: confirmed/cancelled donations history
+- Updated settings-actions.ts SettingsSchema:
+  - +sadaqahPledgeEnabled, +sadaqahStarsPerUnit, +sadaqahCurrency, +sadaqahAmountPerUnit
+  - Added to both update and create in upsert
+- Lint clean
+
+Stage Summary:
+- Phase 4 schema applied (SadaqahCause, SadaqahDonation, FamilySettings)
+- 8 sadaqah causes in library
+- Full server actions for cause CRUD + donation request/confirm/cancel
+- All actions atomic, family-isolated, with AuditLog
+- Per spec §6.1 + §6.2: virtual points separate from real money
+  - Parent pledge is a family commitment, not inherent cash value
+  - Stars deducted on request, refunded on cancel
+  - Parent confirms real-world donation with amount + date + note
+- 15/20 sessions complete (75%)
+- Next: S4.2 — Child sadaqah flow (UI for dedicate stars, parent review)
+
+
 
 
 

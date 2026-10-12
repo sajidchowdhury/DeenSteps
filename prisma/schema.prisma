@@ -95,6 +95,8 @@ model Family {
   settings       FamilySettings?
   auditLogs      AuditLog[]
   incidents      Incident[]
+  sadaqahCauses  SadaqahCause[]
+  sadaqahDonations SadaqahDonation[]
 
   @@index([createdBy])
 }
@@ -136,6 +138,7 @@ model ChildProfile {
   childAchievements ChildAchievement[]
   notifications  Notification[]
   incidentReports IncidentReport[]
+  sadaqahDonations SadaqahDonation[]
 
   @@index([familyId])
   @@index([status])
@@ -157,6 +160,11 @@ model FamilySettings {
   theme                 String   @default("light")
   // Phase 2 (S2.1): Monthly reward budget
   monthlyRewardBudget   Float?   // optional monthly spending limit (null = no budget)
+  // Phase 4 (S4.1): Sadaqah pledge configuration
+  sadaqahPledgeEnabled  Boolean  @default(false)
+  sadaqahStarsPerUnit   Int      @default(100)
+  sadaqahCurrency       String   @default("BDT")
+  sadaqahAmountPerUnit  Float    @default(100)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -309,6 +317,7 @@ model PointsTransaction {
   submission  TaskSubmission?
   redemption  RewardRedemption?
   incidentResolution  IncidentResolution?
+  sadaqahDonation  SadaqahDonation?
 
   @@index([childId])
   @@index([familyId])
@@ -567,4 +576,48 @@ model IncidentResolution {
   pointsTxn      PointsTransaction? @relation(fields: [pointsTxnId], references: [id])
 
   @@index([incidentId])
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Phase 4 (S4.1): Sadaqah & Charitable Giving
+// ────────────────────────────────────────────────────────────────────────────
+
+model SadaqahCause {
+  id          String   @id @default(cuid())
+  familyId    String
+  title       String
+  description String?
+  iconKey     String   @default("heart")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  family      Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  donations   SadaqahDonation[]
+
+  @@index([familyId, active])
+}
+
+model SadaqahDonation {
+  id               String    @id @default(cuid())
+  familyId         String
+  childId          String
+  causeId          String
+  starsDedicated   Int     // points the child dedicated
+  pointsTxnId      String?  @unique  // link to debit PointsTransaction
+  status           String    @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  parentConfirmedAt DateTime?
+  realAmount       Float?    // actual money donated (parent records)
+  realDate         DateTime?
+  confirmationNote String?
+  createdAt        DateTime  @default(now())
+
+  family           Family         @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  child            ChildProfile   @relation(fields: [childId], references: [id], onDelete: Cascade)
+  cause            SadaqahCause   @relation(fields: [causeId], references: [id], onDelete: Cascade)
+  pointsTxn        PointsTransaction? @relation(fields: [pointsTxnId], references: [id])
+
+  @@index([familyId])
+  @@index([childId])
+  @@index([causeId])
+  @@index([status])
 }

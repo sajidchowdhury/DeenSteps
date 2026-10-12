@@ -30,6 +30,11 @@ const SettingsSchema = z.object({
   theme: z.enum(['light', 'dark']).default('light'),
   // Phase 2 (S2.3): Monthly reward budget
   monthlyRewardBudget: z.number().min(0).nullable().optional(),
+  // Phase 4 (S4.1): Sadaqah pledge configuration
+  sadaqahPledgeEnabled: z.boolean().default(false),
+  sadaqahStarsPerUnit: z.number().int().min(1).default(100),
+  sadaqahCurrency: z.string().max(10).default('BDT'),
+  sadaqahAmountPerUnit: z.number().min(0).default(100),
 })
 
 const ParentProfileSchema = z.object({
@@ -89,6 +94,10 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       emailNotifications: d.emailNotifications,
       theme: d.theme,
       monthlyRewardBudget: d.monthlyRewardBudget ?? null,
+      sadaqahPledgeEnabled: d.sadaqahPledgeEnabled,
+      sadaqahStarsPerUnit: d.sadaqahStarsPerUnit,
+      sadaqahCurrency: d.sadaqahCurrency,
+      sadaqahAmountPerUnit: d.sadaqahAmountPerUnit,
     },
     create: {
       familyId: family.id,
@@ -104,6 +113,10 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       emailNotifications: d.emailNotifications,
       theme: d.theme,
       monthlyRewardBudget: d.monthlyRewardBudget ?? null,
+      sadaqahPledgeEnabled: d.sadaqahPledgeEnabled,
+      sadaqahStarsPerUnit: d.sadaqahStarsPerUnit,
+      sadaqahCurrency: d.sadaqahCurrency,
+      sadaqahAmountPerUnit: d.sadaqahAmountPerUnit,
     },
   })
   revalidatePath('/settings')
