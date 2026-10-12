@@ -21,6 +21,12 @@ const RewardSchema = z.object({
   requiresApproval: z.boolean().default(true),
   redemptionLimit: z.number().int().min(1).optional(),
   expirationDate: z.string().optional(),
+  // Phase 2 (S2.1): Category, frequency limits, estimated cost
+  category: z.enum(['EXPERIENCE', 'LEARNING', 'PRIVILEGE', 'FOOD']).default('EXPERIENCE'),
+  maxPerWeek: z.number().int().min(1).nullable().optional(),
+  maxPerMonth: z.number().int().min(1).nullable().optional(),
+  cooldownDays: z.number().int().min(0).default(0),
+  estimatedCost: z.number().min(0).nullable().optional(),
 })
 
 export type RewardResult = { ok: true; rewardId: string } | { ok: false; error: string; fieldErrors?: Record<string, string> }
@@ -50,6 +56,11 @@ export async function createReward(input: z.infer<typeof RewardSchema>): Promise
       redemptionLimit: d.redemptionLimit,
       expirationDate: d.expirationDate ? new Date(d.expirationDate) : null,
       status: 'ACTIVE',
+      category: d.category,
+      maxPerWeek: d.maxPerWeek ?? null,
+      maxPerMonth: d.maxPerMonth ?? null,
+      cooldownDays: d.cooldownDays,
+      estimatedCost: d.estimatedCost ?? null,
     },
   })
 
@@ -78,6 +89,11 @@ export async function updateReward(rewardId: string, input: Partial<z.infer<type
       ...(d.requiresApproval !== undefined && { requiresApproval: d.requiresApproval }),
       ...(d.redemptionLimit !== undefined && { redemptionLimit: d.redemptionLimit }),
       ...(d.expirationDate !== undefined && { expirationDate: d.expirationDate ? new Date(d.expirationDate) : null }),
+      ...(d.category !== undefined && { category: d.category }),
+      ...(d.maxPerWeek !== undefined && { maxPerWeek: d.maxPerWeek }),
+      ...(d.maxPerMonth !== undefined && { maxPerMonth: d.maxPerMonth }),
+      ...(d.cooldownDays !== undefined && { cooldownDays: d.cooldownDays }),
+      ...(d.estimatedCost !== undefined && { estimatedCost: d.estimatedCost }),
     },
   })
 
@@ -106,6 +122,11 @@ export async function importLibraryReward(libraryIndex: number) {
     requiredPoints: lib.requiredPoints,
     rewardType: 'POINTS',
     requiresApproval: true,
+    category: lib.category as 'EXPERIENCE' | 'LEARNING' | 'PRIVILEGE' | 'FOOD',
+    maxPerWeek: lib.maxPerWeek,
+    maxPerMonth: lib.maxPerMonth,
+    cooldownDays: lib.cooldownDays,
+    estimatedCost: lib.estimatedCost,
   })
 }
 

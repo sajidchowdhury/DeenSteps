@@ -153,6 +153,8 @@ model FamilySettings {
   notifyOnMilestone     Boolean  @default(true)
   emailNotifications    Boolean  @default(false)
   theme                 String   @default("light")
+  // Phase 2 (S2.1): Monthly reward budget
+  monthlyRewardBudget   Float?   // optional monthly spending limit (null = no budget)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -327,6 +329,12 @@ model Reward {
   expirationDate DateTime?
   requiresApproval Boolean @default(true)
   status         String   @default("ACTIVE") // ACTIVE | ARCHIVED
+  // Phase 2 (S2.1): Category, frequency limits, estimated cost
+  category       String   @default("EXPERIENCE") // EXPERIENCE | LEARNING | PRIVILEGE | FOOD
+  maxPerWeek     Int?     // null = unlimited
+  maxPerMonth    Int?     // null = unlimited
+  cooldownDays   Int      @default(0) // min days between redemptions (0 = no cooldown)
+  estimatedCost  Float?   // optional real-money cost for budget tracking
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -336,6 +344,7 @@ model Reward {
 
   @@index([familyId])
   @@index([status])
+  @@index([familyId, category])
 }
 
 model RewardEligibility {

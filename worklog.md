@@ -283,6 +283,51 @@ Stage Summary:
 - 7/20 sessions complete (35%)
 - Next: S2.1 — Reward categories (Phase 2 starts)
 
+---
+Task ID: S2.1
+Agent: main (Super Z)
+Task: Reward categories — Experiences, Learning, Privileges, Food + frequency limits + budget schema
+
+Work Log:
+- Re-read SCHEMA_PLAN.md Phase 2 for exact field specs
+- Applied Phase 2 schema changes:
+  - Reward: +category (EXPERIENCE|LEARNING|PRIVILEGE|FOOD), +maxPerWeek, +maxPerMonth, +cooldownDays, +estimatedCost
+  - Reward: +@@index([familyId, category])
+  - FamilySettings: +monthlyRewardBudget (Float?)
+- Ran db:push — schema applied, no data loss
+- Added REWARD_CATEGORIES constant (4 categories with Bengali labels, colors, icons, descriptions)
+- Rewrote REWARD_LIBRARY: 21 rewards across 4 categories with:
+  - category field on each reward
+  - maxPerWeek, maxPerMonth, cooldownDays, estimatedCost
+  - 7 Experiences (game night, park, outing, cycling, story time, activity, movie)
+  - 4 Learning (book, art supply, craft, learning project)
+  - 4 Privileges (bedtime story, movie pick, extra play time, hobby time)
+  - 6 Food (ice cream, chocolate, pizza, burger, snacks, dinner — all limited)
+- Updated reward-actions.ts:
+  - RewardSchema: +category, +maxPerWeek, +maxPerMonth, +cooldownDays, +estimatedCost
+  - createReward: passes all new fields to db
+  - updateReward: passes all new fields to db
+  - importLibraryReward: passes category, limits, cooldown, cost from library
+- Rewrote RewardQuickAdd component:
+  - Rewards grouped by category with colored category badges
+  - Each reward shows frequency limits (সপ্তাহে X×, মাসে X×)
+  - Category descriptions shown
+  - Color-coded: emerald=experience, amber=learning, sky=privilege, rose=food
+- Updated seed script with category + limits on all 8 demo rewards
+- Recompiled seed.js for Docker
+- Reset DB and re-seeded
+- Lint clean
+
+Stage Summary:
+- Phase 2 schema applied (Reward + FamilySettings)
+- 4 reward categories with 21 library items
+- Frequency limits (maxPerWeek, maxPerMonth, cooldownDays) in schema + library
+- Estimated cost for budget tracking
+- FamilySettings has monthlyRewardBudget field (ready for S2.3)
+- 8/20 sessions complete (40%)
+- Next: S2.2 — Enforce frequency limits & cooldown at redemption time
+
+
 
 
 

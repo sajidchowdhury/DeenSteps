@@ -96,14 +96,14 @@ async function main() {
 
   // ── Rewards (পুরস্কার — সহজ বাংলা) ────────────────────────────────────
   const rewards = [
-    { id: 'demo-reward-0', title: 'বাসায় পিৎজা', iconKey: 'utensils', requiredPoints: 40, description: 'বাসায় পিৎজা অর্ডার করা হবে।' },
-    { id: 'demo-reward-1', title: 'বাসায় বার্গার', iconKey: 'utensils', requiredPoints: 30, description: 'বাসায় বার্গার বানানো হবে।' },
-    { id: 'demo-reward-2', title: 'বিকেলের নাস্তা রেস্টুরেন্টে', iconKey: 'utensils', requiredPoints: 60, description: 'বিকেলে রেস্টুরেন্টে নাস্তা।' },
-    { id: 'demo-reward-3', title: 'আইসক্রিম', iconKey: 'gift', requiredPoints: 20, description: 'পছন্দের আইসক্রিম।' },
-    { id: 'demo-reward-4', title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'পরিবার মিলে গেম খেলা।' },
-    { id: 'demo-reward-5', title: 'পার্কে খেলতে যাওয়া', iconKey: 'map', requiredPoints: 35, description: 'পার্কে খেলতে যাওয়া।' },
-    { id: 'demo-reward-6', title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।' },
-    { id: 'demo-reward-7', title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন।' },
+    { id: 'demo-reward-0', title: 'বাসায় পিৎজা', iconKey: 'utensils', requiredPoints: 40, description: 'বাসায় পিৎজা অর্ডার করা হবে।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 5, estimatedCost: 400 },
+    { id: 'demo-reward-1', title: 'বাসায় বার্গার', iconKey: 'utensils', requiredPoints: 30, description: 'বাসায় বার্গার বানানো হবে।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 5, estimatedCost: 200 },
+    { id: 'demo-reward-2', title: 'বিকেলের নাস্তা রেস্টুরেন্টে', iconKey: 'utensils', requiredPoints: 60, description: 'বিকেলে রেস্টুরেন্টে নাস্তা।', category: 'FOOD', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 14, estimatedCost: 300 },
+    { id: 'demo-reward-3', title: 'আইসক্রিম', iconKey: 'gift', requiredPoints: 20, description: 'পছন্দের আইসক্রিম।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 4, estimatedCost: 100 },
+    { id: 'demo-reward-4', title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'পরিবার মিলে গেম খেলা।', category: 'EXPERIENCE', maxPerWeek: 2, maxPerMonth: null, cooldownDays: 2, estimatedCost: 0 },
+    { id: 'demo-reward-5', title: 'পার্কে খেলতে যাওয়া', iconKey: 'map', requiredPoints: 35, description: 'পার্কে খেলতে যাওয়া।', category: 'EXPERIENCE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
+    { id: 'demo-reward-6', title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।', category: 'LEARNING', maxPerWeek: null, maxPerMonth: 2, cooldownDays: 7, estimatedCost: 300 },
+    { id: 'demo-reward-7', title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন।', category: 'EXPERIENCE', maxPerWeek: 1, maxPerMonth: 4, cooldownDays: 3, estimatedCost: 0 },
   ]
   for (const r of rewards) {
     await prisma.reward.upsert({

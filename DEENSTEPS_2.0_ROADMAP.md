@@ -20,7 +20,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 ## 📊 Progress Tracker
 
-> **Last updated:** Session S1.5 complete — Phase 1 COMPLETE
+> **Last updated:** Session S2.1 complete
 
 ### Phase 0 — Audit & Foundation
 
@@ -29,7 +29,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 | **S0.1** | Codebase audit — ledger, task lifecycle, auth, rewards | ✅ **DONE** | `AUDIT.md` |
 | **S0.2** | Schema migration plan — new models/fields, migration order | ✅ **DONE** | `SCHEMA_PLAN.md` |
 
-### Phase 1 — Core Integrity (5 sessions)
+### Phase 1 — Core Integrity (5 sessions) — COMPLETE
 
 | Session | Scope | Status |
 |---------|-------|--------|
@@ -43,7 +43,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 
 | Session | Scope | Status |
 |---------|-------|--------|
-| S2.1 | Reward categories — Experiences, Learning, Privileges, Food | ⬜ |
+| **S2.1** | Reward categories — Experiences, Learning, Privileges, Food | ✅ **DONE** |
 | S2.2 | Frequency limits & cooldown — maxPerWeek, maxPerMonth, cooldownDays | ⬜ |
 | S2.3 | Family budget — monthly limit, committed/remaining tracking | ⬜ |
 | S2.4 | Non-food & low-cost alternatives — category tabs, promotion | ⬜ |
@@ -78,11 +78,11 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 |-------|----------|-----------|-----------|
 | Phase 0 | 2 | 2 | 0 |
 | Phase 1 | 5 | 5 | 0 |
-| Phase 2 | 4 | 0 | 4 |
+| Phase 2 | 4 | 1 | 3 |
 | Phase 3 | 3 | 0 | 3 |
 | Phase 4 | 3 | 0 | 3 |
 | Phase 5 | 3 | 0 | 3 |
-| **Total** | **20** | **7** | **13** |
+| **Total** | **20** | **8** | **12** |
 
 ### Key Audit Findings (from S0.1)
 
@@ -103,7 +103,7 @@ DeenSteps 2.0 হলো একটি **parent-guided Islamic tarbiyah প্ল�
 - ❌ No automated tests
 - ❌ Library has only 4 categories (need 6), no tiers, no age filter
 
-**Next session:** S2.1 — Reward categories (Experiences, Learning, Privileges, Food) — Phase 2 starts
+**Next session:** S2.2 — Frequency limits & cooldown (enforce maxPerWeek, maxPerMonth, cooldownDays at redemption)
 
 ---
 

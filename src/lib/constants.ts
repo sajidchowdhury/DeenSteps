@@ -131,22 +131,45 @@ export const TASK_LIBRARY = [
   { title: 'পারিবারিক দানমূলক কাজে অংশ', category: 'Generosity & Community', subcategory: 'সাদাকাহ', iconKey: 'heart', pointsValue: 5, frequency: 'CUSTOM', scheduledDays: ['FRI'], tier: 5, minAge: null, maxAge: null, description: 'পরিবার-অনুমোদিত দানমূলক কাজে অংশ নেওয়া।' },
 ] as const
 
+/**
+ * Reward categories — per spec §4.2
+ */
+export const REWARD_CATEGORIES = [
+  { key: 'EXPERIENCE', label: 'অভিজ্ঞতা', color: 'emerald', icon: 'map', description: 'পারিবারিক আনন্দ, বেড়াতে যাওয়া, একসাথে সময়।' },
+  { key: 'LEARNING', label: 'শেখা ও সৃজন', color: 'amber', icon: 'book', description: 'বই, আর্ট সাপ্লাই, নতুন দক্ষতা।' },
+  { key: 'PRIVILEGE', label: 'বিশেষ সুবিধা', color: 'sky', icon: 'star', description: 'বেডটাইম স্টোরি, মুভি, অতিরিক্ত সময়।' },
+  { key: 'FOOD', label: 'খাবার', color: 'rose', icon: 'utensils', description: 'আইসক্রিম, পিৎজা, রেস্টুরেন্ট — সীমিত।' },
+] as const
+
 export const REWARD_LIBRARY = [
-  { title: 'বাসায় পিৎজা', iconKey: 'utensils', requiredPoints: 40, description: 'বাসায় পিৎজা অর্ডার করা হবে।' },
-  { title: 'বাসায় বার্গার', iconKey: 'utensils', requiredPoints: 30, description: 'বাসায় বার্গার বানানো হবে।' },
-  { title: 'বিকেলের নাস্তা রেস্টুরেন্টে', iconKey: 'utensils', requiredPoints: 60, description: 'বিকেলে রেস্টুরেন্টে নাস্তা।' },
-  { title: 'রেস্টুরেন্টে ডিনার', iconKey: 'utensils', requiredPoints: 100, description: 'পরিবারের সাথে রেস্টুরেন্টে রাতের খাবার।' },
-  { title: 'আইসক্রিম', iconKey: 'gift', requiredPoints: 20, description: 'পছন্দের আইসক্রিম।' },
-  { title: 'চকলেট', iconKey: 'gift', requiredPoints: 15, description: 'একটি চকলেট।' },
-  { title: 'একটি পুতুল', iconKey: 'gift', requiredPoints: 80, description: 'নতুন একটি পুতুল।' },
-  { title: 'একটি খেলনা', iconKey: 'gift', requiredPoints: 90, description: 'পছন্দের একটি খেলনা।' },
-  { title: 'একটি গেম', iconKey: 'dice', requiredPoints: 120, description: 'একটি নতুন গেম।' },
-  { title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'পরিবার মিলে গেম খেলা।' },
-  { title: 'পারিবারিক বেড়াতে যাওয়া', iconKey: 'map', requiredPoints: 150, description: 'পরিবারের সাথে বেড়াতে যাওয়া।' },
-  { title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন দেখা।' },
-  { title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।' },
-  { title: 'পার্কে খেলতে যাওয়া', iconKey: 'map', requiredPoints: 35, description: 'পার্কে খেলতে যাওয়া।' },
-  { title: 'অতিরিক্ত খেলার সময়', iconKey: 'star', requiredPoints: 25, description: '৩০ মিনিট অতিরিক্ত খেলার সময়।' },
+  // ─── Experiences ────────────────────────────────────────────────────
+  { title: 'ফ্যামিলি গেম নাইট', iconKey: 'dice', requiredPoints: 50, description: 'পরিবার মিলে গেম খেলা।', category: 'EXPERIENCE', maxPerWeek: 2, maxPerMonth: null, cooldownDays: 2, estimatedCost: 0 },
+  { title: 'পার্কে খেলতে যাওয়া', iconKey: 'map', requiredPoints: 35, description: 'পার্কে খেলতে যাওয়া।', category: 'EXPERIENCE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
+  { title: 'পারিবারিক বেড়াতে যাওয়া', iconKey: 'map', requiredPoints: 150, description: 'পরিবারের সাথে বেড়াতে যাওয়া।', category: 'EXPERIENCE', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 7, estimatedCost: 500 },
+  { title: 'সাইকেল চালানো / বাইরে খেলা', iconKey: 'activity', requiredPoints: 30, description: 'বাইরে সাইকেল চালানো বা খেলা।', category: 'EXPERIENCE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
+  { title: 'বাবা-মায়ের সাথে গল্পের সময়', iconKey: 'book', requiredPoints: 25, description: 'বাবা-মায়ের সাথে গল্প পড়ার বিশেষ সময়।', category: 'EXPERIENCE', maxPerWeek: 5, maxPerMonth: null, cooldownDays: 0, estimatedCost: 0 },
+  { title: 'পরিবারের সাথে কার্যক্রম বেছে নেওয়া', iconKey: 'calendar', requiredPoints: 60, description: 'সপ্তাহের শেষে একটি কার্যক্রম বেছে নেওয়া।', category: 'EXPERIENCE', maxPerWeek: 1, maxPerMonth: null, cooldownDays: 3, estimatedCost: 200 },
+  { title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন দেখা।', category: 'EXPERIENCE', maxPerWeek: 1, maxPerMonth: 4, cooldownDays: 3, estimatedCost: 0 },
+
+  // ─── Learning & Creativity ──────────────────────────────────────────
+  { title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।', category: 'LEARNING', maxPerWeek: null, maxPerMonth: 2, cooldownDays: 7, estimatedCost: 300 },
+  { title: 'আর্ট সাপ্লাই', iconKey: 'palette', requiredPoints: 80, description: 'নতুন আর্ট সাপ্লাই বেছে নেওয়া।', category: 'LEARNING', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 14, estimatedCost: 400 },
+  { title: 'ক্রাফট কার্যক্রম', iconKey: 'palette', requiredPoints: 40, description: 'পরিবারের সাথে ক্রাফট বানানো।', category: 'LEARNING', maxPerWeek: 2, maxPerMonth: null, cooldownDays: 3, estimatedCost: 100 },
+  { title: 'পারিবারিক শেখার প্রজেক্ট', iconKey: 'graduation-cap', requiredPoints: 100, description: 'একসাথে নতুন কিছু শেখার প্রজেক্ট।', category: 'LEARNING', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 14, estimatedCost: 200 },
+
+  // ─── Privileges ─────────────────────────────────────────────────────
+  { title: 'বেডটাইম স্টোরি বেছে নেওয়া', iconKey: 'book', requiredPoints: 20, description: 'রাতের গল্প নিজে বেছে নেওয়া।', category: 'PRIVILEGE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
+  { title: 'ফ্যামিলি মুভি বেছে নেওয়া', iconKey: 'star', requiredPoints: 35, description: 'পরিবারের মুভি নাইটে মুভি বেছে নেওয়া।', category: 'PRIVILEGE', maxPerWeek: 1, maxPerMonth: null, cooldownDays: 3, estimatedCost: 0 },
+  { title: 'অতিরিক্ত খেলার সময়', iconKey: 'star', requiredPoints: 25, description: '৩০ মিনিট অতিরিক্ত খেলার সময়।', category: 'PRIVILEGE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
+  { title: 'শখের জন্য অতিরিক্ত সময়', iconKey: 'star', requiredPoints: 30, description: 'পছন্দের শখের জন্য অতিরিক্ত সময়।', category: 'PRIVILEGE', maxPerWeek: 2, maxPerMonth: null, cooldownDays: 2, estimatedCost: 0 },
+
+  // ─── Food Treats (limited) ──────────────────────────────────────────
+  { title: 'আইসক্রিম', iconKey: 'gift', requiredPoints: 20, description: 'পছন্দের আইসক্রিম।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 4, estimatedCost: 100 },
+  { title: 'চকলেট', iconKey: 'gift', requiredPoints: 15, description: 'একটি চকলেট।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 4, estimatedCost: 50 },
+  { title: 'বাসায় পিৎজা', iconKey: 'utensils', requiredPoints: 40, description: 'বাসায় পিৎজা অর্ডার করা হবে।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 5, estimatedCost: 400 },
+  { title: 'বাসায় বার্গার', iconKey: 'utensils', requiredPoints: 30, description: 'বাসায় বার্গার বানানো হবে।', category: 'FOOD', maxPerWeek: 1, maxPerMonth: 2, cooldownDays: 5, estimatedCost: 200 },
+  { title: 'বিকেলের নাস্তা রেস্টুরেন্টে', iconKey: 'utensils', requiredPoints: 60, description: 'বিকেলে রেস্টুরেন্টে নাস্তা।', category: 'FOOD', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 14, estimatedCost: 300 },
+  { title: 'রেস্টুরেন্টে ডিনার', iconKey: 'utensils', requiredPoints: 100, description: 'পরিবারের সাথে রেস্টুরেন্টে রাতের খাবার।', category: 'FOOD', maxPerWeek: null, maxPerMonth: 1, cooldownDays: 14, estimatedCost: 800 },
 ] as const
 
 /**
