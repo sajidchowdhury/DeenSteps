@@ -28,6 +28,7 @@ import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
 import { ReviewActions } from '@/components/deensteps/review-actions'
 import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
+import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
 import { format, formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -171,6 +172,9 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Missed tasks section — Phase 1 (S1.3) */}
+        <MissedTasksSection missedTasks={data.missedTasks} />
 
         {/* Charts section — চার্ট ও ইনসাইট */}
         <div className="grid gap-6 lg:grid-cols-3">

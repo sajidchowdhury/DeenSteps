@@ -252,6 +252,97 @@ export async function generateAllOccurrences() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// Phase 1 (S1.3): Missed task policy — NO point deduction for missed worship
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Mark old ASSIGNED occurrences as MISSED.
+ * Called when dashboard loads — marks all occurrences from before today
+ * that are still in ASSIGNED status (not submitted, not approved).
+ *
+ * IMPORTANT: This does NOT deduct any points. Points were never awarded
+ * because the task was never submitted/approved. The child simply didn't
+ * earn points for that occurrence — no penalty, no debt.
+ *
+ * This is idempotent — only updates ASSIGNED → MISSED, skips already
+ * MISSED/EXCUSED/APPROVED occurrences.
+ */
+export async function markMissedOccurrences(): Promise<{ ok: true; markedCount: number }> {
+  const { family } = await requireFamily()
+
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+
+  const result = await db.taskOccurrence.updateMany({
+    where: {
+      task: { familyId: family.id },
+      scheduledDate: { lt: todayStart },
+      status: 'ASSIGNED',
+    },
+    data: {
+      status: 'MISSED',
+      missedAt: new Date(),
+    },
+  })
+
+  if (result.count > 0) {
+    revalidatePath('/dashboard')
+    revalidatePath(`/child/`)
+  }
+
+  return { ok: true, markedCount: result.count }
+}
+
+/**
+ * Parent excuses a missed task — records a follow-up plan.
+ * Creates a TaskExcusal with followUpType and followUpNote.
+ * Sets occurrence status to EXCUSED.
+ *
+ * This is restorative, not punitive. The parent records what the child
+ * will do instead (e.g., practice wudu, learn about salah, plan a routine).
+ * No points are deducted or awarded for the excused occurrence.
+ */
+export async function excuseTaskOccurrence(
+  occurrenceId: string,
+  reason: string,
+  followUpType?: string,
+  followUpNote?: string
+): Promise<{ ok: boolean; error?: string }> {
+  const { user, family } = await requireFamily()
+
+  const occ = await db.taskOccurrence.findUnique({
+    where: { id: occurrenceId },
+    include: { task: { select: { familyId: true } } },
+  })
+  if (!occ) return { ok: false, error: 'কাজটি পাওয়া যায়নি।' }
+  if (occ.task.familyId !== family.id) return { ok: false, error: 'FORBIDDEN' }
+  if (occ.status !== 'MISSED') return { ok: false, error: 'শুধু মিসড কাজই ছাড় করা যায়।' }
+
+  // Check if already excused
+  const existing = await db.taskExcusal.findUnique({ where: { occurrenceId } })
+  if (existing) return { ok: false, error: 'এই কাজটি ইতিমধ্যে ছাড় করা হয়েছে।' }
+
+  await db.$transaction([
+    db.taskExcusal.create({
+      data: {
+        occurrenceId,
+        reason,
+        excusedById: user.id,
+        followUpType: followUpType ?? null,
+        followUpNote: followUpNote ?? null,
+      },
+    }),
+    db.taskOccurrence.update({
+      where: { id: occurrenceId },
+      data: { status: 'EXCUSED' },
+    }),
+  ])
+
+  revalidatePath('/dashboard')
+  return { ok: true }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // Library import
 // ────────────────────────────────────────────────────────────────────────────
 

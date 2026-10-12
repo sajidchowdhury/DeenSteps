@@ -3,12 +3,17 @@
 import * as React from 'react'
 import { db } from '@/lib/db'
 import { requireFamily } from '@/lib/auth/session'
+import { markMissedOccurrences } from '@/server/actions/task-actions'
 
 /**
  * Load the parent dashboard summary: children, today's activity, points, etc.
  */
 export async function getDashboardData() {
   const { user, family } = await requireFamily()
+
+  // Phase 1 (S1.3): Mark old ASSIGNED occurrences as MISSED before loading
+  // This is idempotent — only marks ASSIGNED → MISSED, no point deduction
+  await markMissedOccurrences()
 
   const now = new Date()
   const todayStart = new Date(now)
@@ -219,6 +224,57 @@ export async function getDashboardData() {
     categoryCounts[cat] = (categoryCounts[cat] || 0) + 1
   }
 
+  // ── Recent missed tasks (last 7 days, not yet excused) ─────────────────
+  const sevenDaysAgoForMissed = new Date()
+  sevenDaysAgoForMissed.setDate(sevenDaysAgoForMissed.getDate() - 7)
+  sevenDaysAgoForMissed.setHours(0, 0, 0, 0)
+
+  const missedTasks = await db.taskOccurrence.findMany({
+    where: {
+      task: { familyId: family.id },
+      status: 'MISSED',
+      scheduledDate: { gte: sevenDaysAgoForMissed },
+    },
+    orderBy: { scheduledDate: 'desc' },
+    take: 15,
+    include: {
+      task: { select: { title: true, category: true, iconKey: true, pointsValue: true } },
+    },
+  })
+
+  // Load child info for missed tasks
+  const missedChildIds = [...new Set(
+    (await db.taskAssignment.findMany({
+      where: { taskId: { in: missedTasks.map((m) => m.taskId) } },
+      select: { childId: true, taskId: true },
+    })).map((a) => a.childId)
+  )]
+  const missedChildren = await db.childProfile.findMany({
+    where: { id: { in: missedChildIds } },
+    select: { id: true, displayName: true, avatarColor: true },
+  })
+  const childMap = new Map(missedChildren.map((c) => [c.id, c]))
+  const assignmentMap = new Map<string, string[]>() // taskId → childIds
+  const assignments = await db.taskAssignment.findMany({
+    where: { taskId: { in: missedTasks.map((m) => m.taskId) } },
+    select: { taskId: true, childId: true },
+  })
+  for (const a of assignments) {
+    if (!assignmentMap.has(a.taskId)) assignmentMap.set(a.taskId, [])
+    assignmentMap.get(a.taskId)!.push(a.childId)
+  }
+
+  const missedTasksWithChildren = missedTasks.map((m) => ({
+    id: m.id,
+    scheduledDate: m.scheduledDate,
+    missedAt: m.missedAt,
+    taskTitle: m.task.title,
+    taskCategory: m.task.category,
+    taskIconKey: m.task.iconKey,
+    taskPointsValue: m.task.pointsValue,
+    children: (assignmentMap.get(m.taskId) || []).map((cid) => childMap.get(cid)).filter(Boolean),
+  }))
+
   return {
     family,
     user,
@@ -236,5 +292,6 @@ export async function getDashboardData() {
     pendingReviewSubmissions,
     trendByChild,
     categoryCounts,
+    missedTasks: missedTasksWithChildren,
   }
 }

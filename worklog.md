@@ -136,5 +136,59 @@ Stage Summary:
 - 4/20 sessions complete (20%)
 - Next: S1.3 — Missed task policy (mark missed, encouraging messages, parent follow-up)
 
+---
+Task ID: S1.3
+Agent: main (Super Z)
+Task: Missed task policy — mark missed, encouraging messages, parent follow-up
+
+Work Log:
+- Re-read worklog S1.2 and SCHEMA_PLAN.md Phase 1 §1.2-1.4 for context
+- Added markMissedOccurrences server action to task-actions.ts:
+  - Marks all ASSIGNED occurrences from before today as MISSED
+  - Sets missedAt timestamp
+  - Idempotent — only updates ASSIGNED → MISSED
+  - NO point deduction (points were never awarded)
+  - Called automatically when getDashboardData loads
+- Added excuseTaskOccurrence server action to task-actions.ts:
+  - Parent excuses a missed task with reason + followUpType + followUpNote
+  - Creates TaskExcusal record (uses new fields from S1.1 schema)
+  - Sets occurrence status to EXCUSED
+  - Transactional (TaskExcusal create + occurrence update)
+  - Idempotent (checks if already excused)
+- Updated getDashboardData in dashboard-actions.ts:
+  - Calls markMissedOccurrences before loading data
+  - Loads recent MISSED tasks (last 7 days, with child info)
+  - Returns missedTasks array with task title, category, icon, points, children
+- Created ExcuseTaskDialog component (excuse-task-dialog.tsx):
+  - Reason textarea (required)
+  - Follow-up type selector (practice_wudu, learn_about_salah, plan_routine, etc.)
+  - Follow-up note textarea (optional)
+  - All text in Bengali
+  - Calls excuseTaskOccurrence server action
+- Created MissedTasksSection component (missed-tasks-section.tsx):
+  - Shows on parent dashboard when there are MISSED tasks
+  - Orange-tinted card with "মিসড কাজ" heading
+  - Each missed task shows icon, title, date, assigned children
+  - "ছাড় করুন" button opens ExcuseTaskDialog
+  - Description: "কোনো তারা কাটা হয়নি। উৎসাহ দিন, ছাড় করুন।"
+- Added MissedTasksSection to parent dashboard (between review section and charts)
+- Updated child dashboard:
+  - Queries recent MISSED tasks (last 3 days)
+  - Shows encouraging banner: "কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱"
+  - Subtext: "তারা কাটা হয়নি — শুধু আজ থেকে আবার চেষ্টা করো।"
+  - Shows which tasks were missed as small chips
+- Lint clean, routes compile
+
+Stage Summary:
+- Missed task policy implemented per spec §3.3:
+  1. ✅ Mark as missed after scheduled period ends
+  2. ✅ No points deducted (never earned)
+  3. ✅ Encouraging message on child dashboard
+  4. ✅ Parent follow-up record (TaskExcusal with type + note)
+- NO automatic financial-style debt or negative balance
+- 5/20 sessions complete (25%)
+- Next: S1.4 — Child ledger ("আমার তারার হিসাব" full view with filters)
+
+
 
 

@@ -137,6 +137,22 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
   // Pending parent approvals (submitted tasks awaiting review)
   const pendingApprovals = todayOccurrences.filter((o) => o.status === 'SUBMITTED').length
 
+  // Phase 1 (S1.3): Recent missed tasks (last 3 days, not excused)
+  const threeDaysAgo = new Date()
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+  threeDaysAgo.setHours(0, 0, 0, 0)
+
+  const missedTasks = await db.taskOccurrence.findMany({
+    where: {
+      task: { assignments: { some: { childId: child.id } }, status: 'ACTIVE' },
+      status: 'MISSED',
+      scheduledDate: { gte: threeDaysAgo, lt: todayStart },
+    },
+    orderBy: { scheduledDate: 'desc' },
+    take: 3,
+    include: { task: { select: { title: true, iconKey: true } } },
+  })
+
   return (
     <div className="min-h-screen bg-secondary/20">
       {/* Child dashboard header — separate from parent app shell */}
@@ -169,6 +185,33 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             আজকের কাজগুলো এখানে। একেক পদক্ষেপে এগিয়ে যাও — প্রতিটি ভালো কাজ গণ্য হয়।
           </p>
         </div>
+
+        {/* Phase 1 (S1.3): Encouraging message for missed tasks */}
+        {missedTasks.length > 0 && (
+          <div className="mb-6 rounded-2xl border border-orange-200 bg-orange-50/50 p-4 dark:border-orange-900 dark:bg-orange-950/20">
+            <div className="flex items-start gap-3">
+              <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/40">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-base font-bold text-foreground">
+                  কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  গত কয়েকদিনে কিছু কাজ মিস হয়েছে। তারা কাটা হয়নি — শুধু আজ থেকে আবার চেষ্টা করো।
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {missedTasks.map((m) => (
+                    <span key={m.id} className="inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 text-xs text-muted-foreground">
+                      <DynamicIcon iconKey={m.task.iconKey} className="h-3 w-3" />
+                      {m.task.title}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stat cards */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
