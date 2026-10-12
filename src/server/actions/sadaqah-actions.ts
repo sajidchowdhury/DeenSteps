@@ -181,6 +181,15 @@ export async function requestSadaqah(
 
   revalidatePath(`/child/${childId}`)
   revalidatePath('/dashboard')
+
+  // Phase D (D3): Evaluate child achievements triggered by sadaqah requests.
+  try {
+    const { evaluateChildAchievements } = await import('@/server/actions/achievement-actions')
+    await evaluateChildAchievements(childId, 'sadaqah_requested')
+  } catch {
+    // Best-effort
+  }
+
   return { ok: true }
 }
 

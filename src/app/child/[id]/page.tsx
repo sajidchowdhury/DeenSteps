@@ -16,6 +16,8 @@ import { RewardRequestButton } from '@/components/deensteps/reward-request-butto
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
 import { SadaqahButton } from '@/components/deensteps/sadaqah-button'
 import { getMilestoneProgressForChild } from '@/server/actions/milestone-actions'
+import { getChildAchievementStatus, getEarnedChildAchievements } from '@/server/actions/achievement-actions'
+import { AchievementGrid, AchievementCelebrationOverlay } from '@/components/deensteps/achievement-celebration'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 
@@ -115,11 +117,13 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     orderBy: { requiredPoints: 'asc' },
   })
 
-  // Phase A (UI audit): achievements query removed — the ChildAchievement table
-  // is never written to by any code in the codebase, so querying it always
-  // returns []. The dead অর্জন card that consumed this data is also hidden.
-  // Both will be restored together in Phase D when the real child-level
-  // achievement engine is wired up. See UI_UX_IMPROVEMENT_PLAN.md §4 Phase D.
+  // Phase D (D4): Child achievement status — 12 badges with awarded state.
+  // The engine (achievement-actions.ts) evaluates these after every APPROVED
+  // task + sadaqah request + milestone qualification. This was hidden in
+  // Phase A because the ChildAchievement table was never written to. Now
+  // the engine is live, so we restore the অর্জন card with real data.
+  const childAchievements = await getChildAchievementStatus(child.id)
+  const earnedAchievements = await getEarnedChildAchievements(child.id)
 
   // Recent point transactions
   const recentTxns = await db.pointsTransaction.findMany({
@@ -486,14 +490,28 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </CardContent>
             </Card>
 
-            {/* Achievements — Phase A (UI audit): temporarily hidden.
-                The ChildAchievement table is never written to by any code in the
-                codebase, so this card always shows the empty state ("প্রথম ব্যাজ
-                অর্জন করতে কাজ সম্পন্ন করো!") no matter how many tasks a child
-                completes. Showing a perpetually-empty achievement card teaches
-                the child that the app lies. We will restore this in Phase D
-                when the real child-level achievement engine is wired up.
-                See UI_UX_IMPROVEMENT_PLAN.md §4 Phase D. */}
+            {/* Phase D (D4): অর্জন — restored with real data.
+                The child achievement engine (achievement-actions.ts) now
+                writes to ChildAchievement after every APPROVED task,
+                sadaqah request, and milestone qualification. 12 badges total. */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-amber-500" /> অর্জন
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AchievementGrid achievements={childAchievements} size="sm" />
+                <div className="mt-3 text-center">
+                  <Link
+                    href={`/child/${child.id}/achievements`}
+                    className="text-xs font-medium text-primary hover:underline"
+                  >
+                    সব অর্জন দেখুন →
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Recent activity */}
             <Card>
@@ -533,6 +551,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
         </div>
       </main>
+
+      {/* Phase D (D5): Achievement unlock celebration overlay.
+          Detects newly-awarded achievements (via localStorage "seen" set)
+          and shows a full-screen celebration with Nūr + confetti. */}
+      <AchievementCelebrationOverlay childId={child.id} earnedAchievements={earnedAchievements} />
     </div>
   )
 }

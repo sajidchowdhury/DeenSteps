@@ -89,6 +89,11 @@ export async function submitTaskOccurrence(occurrenceId: string, childId: string
         await evaluateFamilyAchievements('family_service_task')
       }
       await evaluateFamilyAchievements('all_children_milestone')
+
+      // Phase D (D3): Child achievement evaluation on auto-approval too
+      const { evaluateChildAchievements } = await import('@/server/actions/achievement-actions')
+      await evaluateChildAchievements(childId, 'task_approved')
+      await evaluateChildAchievements(childId, 'milestone_qualified')
     } catch {
       // Best-effort — do not fail the submission
     }
@@ -217,6 +222,16 @@ export async function reviewSubmission(
           await evaluateFamilyAchievements('family_service_task')
         }
         await evaluateFamilyAchievements('all_children_milestone')
+
+        // Phase D (D3): Evaluate child-level achievements (12 badges).
+        // This runs after every APPROVED task — checks streaks, totals,
+        // category counts, etc. Awards any newly-satisfied badges.
+        const { evaluateChildAchievements } = await import('@/server/actions/achievement-actions')
+        await evaluateChildAchievements(submission.childId, 'task_approved')
+
+        // Also check milestone_qualified trigger (in case this approval
+        // pushed the child over the milestone threshold)
+        await evaluateChildAchievements(submission.childId, 'milestone_qualified')
       }
     } catch {
       // Best-effort — do not fail the review

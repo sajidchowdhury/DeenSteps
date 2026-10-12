@@ -354,6 +354,123 @@ export const FAMILY_ACHIEVEMENT_LIBRARY = [
   },
 ] as const
 
+/**
+ * Phase D (D1): Child Achievement Library
+ *
+ * 12 child-level achievements, auto-awarded based on actions.
+ * Each has a `trigger` that determines when the evaluation engine checks it.
+ *
+ * Triggers:
+ *   task_approved    — evaluated after every APPROVED task review
+ *   sadaqah_requested — evaluated after a child requests sadaqah
+ *   milestone_qualified — evaluated after monthly milestone engine runs
+ *
+ * The engine (achievement-actions.ts) checks the condition and awards
+ * the badge if satisfied + not already awarded (idempotent via
+ * @@unique([achievementId, childId])).
+ *
+ * Per spec §7C: celebrate progress privately. No leaderboard, no
+ * sibling comparison. Each badge is a personal milestone.
+ */
+export const CHILD_ACHIEVEMENT_LIBRARY = [
+  {
+    key: 'first_task',
+    name: 'প্রথম পদক্ষেপ',
+    description: 'তোমার প্রথম কাজ সম্পন্ন! যাত্রা শুরু হলো। 🌟',
+    iconKey: 'sparkles',
+    trigger: 'task_approved' as const,
+    condition: { type: 'total_approved', min: 1 },
+  },
+  {
+    key: 'ten_tasks',
+    name: 'দশ পদক্ষেপ',
+    description: '১০টি কাজ সম্পন্ন। ধারাবাহিকতা শুরু! ✨',
+    iconKey: 'check',
+    trigger: 'task_approved' as const,
+    condition: { type: 'total_approved', min: 10 },
+  },
+  {
+    key: 'first_streak_3',
+    name: '৩ দিন ধারাবাহিক',
+    description: 'টানা ৩ দিন কাজ সম্পন্ন! 🔥',
+    iconKey: 'flame',
+    trigger: 'task_approved' as const,
+    condition: { type: 'streak', min: 3 },
+  },
+  {
+    key: 'first_streak_7',
+    name: 'এক সপ্তাহ!',
+    description: 'টানা ৭ দিন কাজ সম্পন্ন! অভ্যাস হয়ে ওঠছে। 🔥🔥',
+    iconKey: 'flame',
+    trigger: 'task_approved' as const,
+    condition: { type: 'streak', min: 7 },
+  },
+  {
+    key: 'salah_5_a_day',
+    name: 'এক দিনে ৫ নামাজ',
+    description: 'এক দিনে সব নামাজ সম্পন্ন! আল্লাহ তোমাকে বরকত দিন। 🕌',
+    iconKey: 'mosque',
+    trigger: 'task_approved' as const,
+    condition: { type: 'category_in_day', category: 'Islamic Practices', subcategory: 'নামাজ', min: 5 },
+  },
+  {
+    key: 'quran_7_days',
+    name: 'কুরআন প্রেমিক',
+    description: 'টানা ৭ দিন কুরআন তিলাওয়াত! 📖',
+    iconKey: 'book-open',
+    trigger: 'task_approved' as const,
+    condition: { type: 'subcategory_streak', subcategory: 'কুরআন', min: 7 },
+  },
+  {
+    key: 'kindness_week',
+    name: 'কোমল সপ্তাহ',
+    description: 'এই সপ্তাহে ৩ দিন কোমল আচরণ করেছ! 💛',
+    iconKey: 'heart',
+    trigger: 'task_approved' as const,
+    condition: { type: 'category_in_week', category: 'Character & Manners', min: 3 },
+  },
+  {
+    key: 'helping_hand',
+    name: 'সাহায্যকারী হাত',
+    description: '১০ বার বাবা-মাকে সাহায্য করেছ! 🤝',
+    iconKey: 'hand-heart',
+    trigger: 'task_approved' as const,
+    condition: { type: 'category_total', category: 'Family Responsibilities', min: 10 },
+  },
+  {
+    key: 'honest_tongue',
+    name: 'সত্যবাদী',
+    description: '২০ বার সত্য কথা বলেছ! নবীজি সবসময় সত্য বলতেন। 🛡️',
+    iconKey: 'shield-check',
+    trigger: 'task_approved' as const,
+    condition: { type: 'subcategory_total', subcategory: 'সততা', min: 20 },
+  },
+  {
+    key: 'first_sadaqah',
+    name: 'ছোট দাতা',
+    description: 'প্রথম সাদাকাহ নিবেদন! আল্লাহ কবুল করুন। 🤲',
+    iconKey: 'gift',
+    trigger: 'sadaqah_requested' as const,
+    condition: { type: 'sadaqah_count', min: 1 },
+  },
+  {
+    key: 'first_milestone',
+    name: 'মাসিক মাইলস্টোন',
+    description: 'এই মাসের মাইলস্টোন অর্জিত! ধারাবাহিকতার জয়! 🏆',
+    iconKey: 'trophy',
+    trigger: 'milestone_qualified' as const,
+    condition: { type: 'milestone_qualified' },
+  },
+  {
+    key: 'fifty_tasks',
+    name: 'অভ্যাস পাওয়া',
+    description: '৫০টি কাজ সম্পন্ন! তুমি এখন একজন অভ্যাসবান মানুষ। ⭐',
+    iconKey: 'star',
+    trigger: 'task_approved' as const,
+    condition: { type: 'total_approved', min: 50 },
+  },
+] as const
+
 export const APPROVAL_POLICIES = [
   { value: 'MANUAL', label: 'ম্যানুয়াল রিভিউ', description: 'পয়েন্ট দেওয়ার আগে আপনি প্রতিটি সাবমিশন অনুমোদন করেন।' },
   { value: 'AUTO', label: 'অটোমেটিক অনুমোদন', description: 'সন্তান সাবমিট করলেই পয়েন্ট যোগ হয়ে যায়।' },
