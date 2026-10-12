@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Award, Gift, TrendingUp, CheckCircle2, Clock, AlertCircle, History } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -219,6 +219,16 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           <StatCard icon={TrendingUp} label="এই সপ্তাহ" value={`+${weekPoints._sum.amount ?? 0}`} accent="emerald" />
           <StatCard icon={Flame} label="ধারাবাহিক দিন" value={streak} accent="orange" />
           <StatCard icon={CheckCircle2} label="আজ সম্পন্ন" value={`${todayApproved}/${todayTotal}`} accent="sage" />
+        </div>
+
+        {/* Phase 1 (S1.4): Ledger access button */}
+        <div className="mb-6">
+          <Button asChild variant="outline" className="w-full justify-center gap-2">
+            <Link href={`/child/${child.id}/ledger`}>
+              <History className="h-4 w-4" />
+              আমার তারার হিসাব
+            </Link>
+          </Button>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
