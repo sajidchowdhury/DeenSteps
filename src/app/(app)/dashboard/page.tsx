@@ -112,40 +112,9 @@ export default async function DashboardPage() {
           <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
 
-        {/* Family overview */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <div>
-              <CardTitle className="font-display">পরিবারের সারসংক্ষেপ</CardTitle>
-              <CardDescription>আজ আর এই সপ্তাহে প্রতিটি সন্তানের অগ্রগতি।</CardDescription>
-            </div>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/children">ম্যানেজ <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {data.children.length === 0 ? (
-              <EmptyState
-                icon={Users}
-                title="এখনো কোনো সন্তান নেই"
-                description="প্রথম সন্তানের প্রোফাইল যোগ করে কাজ নির্ধারণ শুরু করুন।"
-                action={<Button asChild><Link href="/children">সন্তান যোগ করুন</Link></Button>}
-              />
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {data.children.map((c) => (
-                  <ChildCard key={c.child.id} data={c} />
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Phase C (C2): Inline review section removed.
-            The "What to do now" hero above now surfaces pending reviews with
-            a one-click link to /review. The full /review page has filters +
-            batch approve (Phase C5). No need to duplicate the review queue on
-            the dashboard. */}
+        {/* Family overview card removed per user request — the child cards
+            are accessible via /children and the "what to do now" hero
+            surfaces actionable items. The dashboard is now leaner. */}
 
         {/* Missed tasks section — Phase 1 (S1.3) */}
         <MissedTasksSection missedTasks={data.missedTasks} />
@@ -182,33 +151,19 @@ export default async function DashboardPage() {
           </Card>
         )}
 
-        {/* Charts section — চার্ট ও ইনসাইট */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* 7-day trend line chart */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="font-display text-lg flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-emerald-600" />
-                গত ৭ দিনের তারা অর্জন
-              </CardTitle>
-              <CardDescription>প্রতিদিনের পয়েন্ট ট্রেন্ড — সন্তান অনুযায়ী।</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <WeeklyTrendChart data={data.trendByChild} />
-            </CardContent>
-          </Card>
-
-          {/* Category donut chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-display text-lg">৩০ দিনের কাজের ধরন</CardTitle>
-              <CardDescription>কোন ক্যাটাগরিতে বেশি কাজ হচ্ছে।</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <CategoryDonutChart counts={data.categoryCounts} />
-            </CardContent>
-          </Card>
-        </div>
+        {/* 7-day trend chart (full width — donut chart removed per user request) */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-emerald-600" />
+              গত ৭ দিনের তারা অর্জন
+            </CardTitle>
+            <CardDescription>প্রতিদিনের পয়েন্ট ট্রেন্ড — সন্তান অনুযায়ী।</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <WeeklyTrendChart data={data.trendByChild} />
+          </CardContent>
+        </Card>
 
         {/* Child-wise progress bars */}
         <Card>

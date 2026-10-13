@@ -89,7 +89,8 @@ export default async function ReviewPage() {
             {recent.length === 0 ? (
               <p className="text-sm text-muted-foreground">এখনো কোনো রিভিউ নেই।</p>
             ) : (
-              <ul className="divide-y divide-border">
+              <div className="max-h-96 overflow-y-auto">
+                <ul className="divide-y divide-border">
                 {recent.map((s) => {
                   const meta = TASK_STATUS_META[s.decision ?? '']
                   return (
@@ -115,7 +116,8 @@ export default async function ReviewPage() {
                     </li>
                   )
                 })}
-              </ul>
+                </ul>
+              </div>
             )}
           </CardContent>
         </Card>

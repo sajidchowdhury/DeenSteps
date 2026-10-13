@@ -21,6 +21,10 @@ import {
   CalendarRange,
   ClipboardCheck,
   Trophy,
+  Star,
+  Book,
+  Heart,
+  Award,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Logo } from '@/components/deensteps/brand'
@@ -250,12 +254,30 @@ const AVATAR_COLOR_CLASS: Record<string, string> = {
   sky: 'bg-sky-500 text-white',
 }
 
+// Phase E+ (user request): Map for Islamic icon avatars (no faces/eyes/mouth)
+const ICON_MAP: Record<string, typeof Star> = {
+  star: Star,
+  moon: Moon,
+  book: Book,
+  heart: Heart,
+  award: Award,
+}
+
 export function Avatar({ color, name, size = 'md' }: { color: string; name: string; size?: 'sm' | 'md' | 'lg' }) {
-  const initials = name.trim().slice(0, 2).toUpperCase()
-  const sizeClass = size === 'sm' ? 'h-7 w-7 text-xs' : size === 'lg' ? 'h-12 w-12 text-base' : 'h-9 w-9 text-sm'
+  // Phase E+ (user request): Replace face/initial avatars with Islamic icons.
+  // Pick an icon based on the name's first character hash — deterministic per child.
+  // Icons: Star, Moon, Book, Heart, Award — all Islamic/symbolic, no faces.
+  const islamicIcons = ['star', 'moon', 'book', 'heart', 'award']
+  const hashCode = name.charCodeAt(0) ?? 0
+  const iconKey = islamicIcons[hashCode % islamicIcons.length]
+
+  const sizeClass = size === 'sm' ? 'h-7 w-7' : size === 'lg' ? 'h-12 w-12' : 'h-9 w-9'
+  const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-6 w-6' : 'h-4 w-4'
+  const Icon = ICON_MAP[iconKey] ?? Star
+
   return (
-    <span className={cn('inline-flex items-center justify-center rounded-full font-bold', AVATAR_COLOR_CLASS[color] || AVATAR_COLOR_CLASS.emerald, sizeClass)}>
-      {initials}
+    <span className={cn('inline-flex items-center justify-center rounded-full', AVATAR_COLOR_CLASS[color] || AVATAR_COLOR_CLASS.emerald, sizeClass)}>
+      <Icon className={cn(iconSize, 'text-white')} />
     </span>
   )
 }

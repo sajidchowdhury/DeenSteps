@@ -114,37 +114,9 @@ export default async function PlannerPage() {
           </CardContent>
         </Card>
 
-        {/* Quick stats */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <QuickStat
-            icon={ListChecks}
-            label="সক্রিয় কাজ"
-            value={planner.stats.activeTasks}
-            href="/tasks"
-            accent="bg-primary/10 text-primary"
-          />
-          <QuickStat
-            icon={Clock}
-            label="অপেক্ষমান রিভিউ"
-            value={planner.stats.pendingSubmissions}
-            href="/review"
-            accent="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
-          />
-          <QuickStat
-            icon={Gift}
-            label="সক্রিয় পুরস্কার"
-            value={planner.stats.activeRewards}
-            href="/rewards"
-            accent="bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200"
-          />
-          <QuickStat
-            icon={CheckCircle2}
-            label="আজ সম্পন্ন"
-            value={`${planner.stats.todayApproved}/${planner.stats.todayOccurrences}`}
-            href="/dashboard"
-            accent="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200"
-          />
-        </div>
+        {/* Quick stats removed per user request — the dashboard already
+            has summary cards with the same data. The planner focuses on
+            schedule + reflection + achievements. */}
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Today's schedule */}
@@ -169,7 +141,8 @@ export default async function PlannerPage() {
                   </Button>
                 </div>
               ) : (
-                <ul className="space-y-2">
+                <div className="max-h-96 overflow-y-auto">
+                  <ul className="space-y-2">
                   {planner.todaysSchedule.map((o) => {
                     const meta = TASK_STATUS_META[o.status] ?? TASK_STATUS_META.ASSIGNED
                     return (
@@ -207,7 +180,8 @@ export default async function PlannerPage() {
                       </li>
                     )
                   })}
-                </ul>
+                  </ul>
+                </div>
               )}
             </CardContent>
           </Card>

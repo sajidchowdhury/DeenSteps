@@ -50,7 +50,16 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
       task: true,
       submission: true,
     },
+    // Sort by tier desc (high tier first), then points desc (high points first)
     orderBy: { dueTime: 'asc' },
+  })
+
+  // Phase E+ (user request): Sort tasks by tier desc, then pointsValue desc.
+  // This puts the most important tasks (highest tier + highest points) at the top.
+  const sortedOccurrences = [...todayOccurrences].sort((a, b) => {
+    const tierDiff = (b.task.tier ?? 3) - (a.task.tier ?? 3)
+    if (tierDiff !== 0) return tierDiff
+    return b.task.pointsValue - a.task.pointsValue
   })
 
   // Stats
@@ -126,20 +135,8 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
   const childAchievements = await getChildAchievementStatus(child.id)
   const earnedAchievements = await getEarnedChildAchievements(child.id)
 
-  // Recent point transactions
-  const recentTxns = await db.pointsTransaction.findMany({
-    where: { childId: child.id },
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-  })
-
-  // Recent redemptions
-  const recentRedemptions = await db.rewardRedemption.findMany({
-    where: { childId: child.id },
-    orderBy: { requestedAt: 'desc' },
-    take: 3,
-    include: { reward: true },
-  })
+  // সাম্প্রতিক তারা + রিডিম্পশন queries removed per user request.
+  // The ledger page (/child/[id]/ledger) shows the full star history.
 
   // Pending parent approvals (submitted tasks awaiting review)
   const pendingApprovals = todayOccurrences.filter((o) => o.status === 'SUBMITTED').length
@@ -431,7 +428,8 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 )}
               </CardHeader>
               <CardContent>
-                <ChildTaskList occurrences={todayOccurrences.map((o) => ({
+                <div className="max-h-[500px] overflow-y-auto">
+                <ChildTaskList occurrences={sortedOccurrences.map((o) => ({
                   id: o.id,
                   status: o.status,
                   dueTime: o.dueTime,
@@ -447,6 +445,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   reviewerNote: o.submission?.reviewerNote ?? null,
                   childId: child.id,
                 }))} />
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -528,41 +527,9 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </CardContent>
             </Card>
 
-            {/* Recent activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg">সাম্প্রতিক তারা</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {recentTxns.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">এখনো কোনো তারা অর্জিত হয়নি।</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {recentTxns.map((t) => (
-                      <li key={t.id} className="flex items-center justify-between text-sm">
-                        <span className="min-w-0 flex-1 truncate text-muted-foreground">{t.description}</span>
-                        <span className={t.amount >= 0 ? 'font-semibold text-emerald-600' : 'font-semibold text-rose-600'}>
-                          {t.amount >= 0 ? '+' : ''}{t.amount}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {recentRedemptions.length > 0 && (
-                  <div className="mt-3 border-t border-border pt-3">
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">সাম্প্রতিক রিডিম্পশন</p>
-                    <ul className="space-y-1.5">
-                      {recentRedemptions.map((r) => (
-                        <li key={r.id} className="flex items-center justify-between text-xs">
-                          <span className="truncate text-foreground">{r.reward.title}</span>
-                          <Badge variant="outline" className="ml-2 text-[10px]">{r.status.toLowerCase()}</Badge>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            {/* সাম্প্রতিক তারা section removed per user request.
+                The ledger page (/child/[id]/ledger) shows the full star history
+                with a chart + transaction cards. The dashboard is now leaner. */}
           </div>
         </div>
       </main>

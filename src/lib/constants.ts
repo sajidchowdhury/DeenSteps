@@ -149,7 +149,7 @@ export const REWARD_LIBRARY = [
   { title: 'সাইকেল চালানো / বাইরে খেলা', iconKey: 'activity', requiredPoints: 30, description: 'বাইরে সাইকেল চালানো বা খেলা।', category: 'EXPERIENCE', maxPerWeek: 3, maxPerMonth: null, cooldownDays: 1, estimatedCost: 0 },
   { title: 'বাবা-মায়ের সাথে গল্পের সময়', iconKey: 'book', requiredPoints: 25, description: 'বাবা-মায়ের সাথে গল্প পড়ার বিশেষ সময়।', category: 'EXPERIENCE', maxPerWeek: 5, maxPerMonth: null, cooldownDays: 0, estimatedCost: 0 },
   { title: 'পরিবারের সাথে কার্যক্রম বেছে নেওয়া', iconKey: 'calendar', requiredPoints: 60, description: 'সপ্তাহের শেষে একটি কার্যক্রম বেছে নেওয়া।', category: 'EXPERIENCE', maxPerWeek: 1, maxPerMonth: null, cooldownDays: 3, estimatedCost: 200 },
-  { title: 'সিনেমা/কার্টুন দেখা', iconKey: 'star', requiredPoints: 45, description: 'পছন্দের সিনেমা বা কার্টুন দেখা।', category: 'EXPERIENCE', maxPerWeek: 1, maxPerMonth: 4, cooldownDays: 3, estimatedCost: 0 },
+  // সিনেমা/কার্টুন দেখা removed — not Islamic. Per user request.
 
   // ─── Learning & Creativity ──────────────────────────────────────────
   { title: 'নতুন একটি বই', iconKey: 'book', requiredPoints: 70, description: 'নতুন একটি বই।', category: 'LEARNING', maxPerWeek: null, maxPerMonth: 2, cooldownDays: 7, estimatedCost: 300 },
@@ -210,7 +210,7 @@ export const CHALLENGE_SUGGESTIONS = [
     name: 'ধৈর্যের অনুশীলন',
     description: 'কঠিন মুহূর্তে ধৈর্য ধরে শান্ত থাকার চেষ্টা করো।',
     targetPercent: 80,
-    rewardTitle: 'সিনেমা/কার্টুন দেখা',
+    rewardTitle: 'ফ্যামিলি গেম নাইট',
   },
 ] as const
 

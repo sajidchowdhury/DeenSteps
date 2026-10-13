@@ -114,10 +114,12 @@ export default async function ChallengesPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-4 lg:grid-cols-2">
-                {activeChallenges.map((c) => (
-                  <ChallengeCard key={c.id} challenge={c} />
-                ))}
+              <div className="max-h-[600px] overflow-y-auto pr-1">
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {activeChallenges.map((c) => (
+                    <ChallengeCard key={c.id} challenge={c} />
+                  ))}
+                </div>
               </div>
             )}
 
@@ -128,10 +130,14 @@ export default async function ChallengesPage() {
                   <CardTitle className="font-display text-lg">Past challenges</CardTitle>
                   <CardDescription>A history of finished and cancelled challenges.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {pastChallenges.map((c) => (
-                    <PastChallengeRow key={c.id} challenge={c} />
-                  ))}
+                <CardContent>
+                  <div className="max-h-64 overflow-y-auto">
+                    <div className="space-y-3">
+                      {pastChallenges.map((c) => (
+                        <PastChallengeRow key={c.id} challenge={c} />
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
