@@ -14,7 +14,6 @@ import {
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/server/actions/dashboard-actions'
-import { getActiveInvestments } from '@/server/actions/investment-actions'
 import { getSetupProgress } from '@/server/actions/setup-progress-actions'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
@@ -23,15 +22,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { SetupProgressBar } from '@/components/deensteps/setup-progress-bar'
-import { WeeklyTrendChart, CategoryDonutChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
-import { MissedTasksSection } from '@/components/deensteps/missed-tasks-section'
-import { IncidentsSection } from '@/components/deensteps/incidents-section'
-import { ResolvedIncidentsSection } from '@/components/deensteps/resolved-incidents-section'
-import { SadaqahReviewSection } from '@/components/deensteps/sadaqah-review-section'
-import { SadaqahHistorySection } from '@/components/deensteps/sadaqah-history-section'
-import { InvestmentReviewSection } from '@/components/deensteps/investment-review-section'
-import { WeeklyReflectionSection } from '@/components/deensteps/weekly-reflection-section'
-import { MilestoneProgressSection } from '@/components/deensteps/milestone-progress-section'
+import { WeeklyTrendChart, ChildProgressBars } from '@/components/deensteps/dashboard-charts'
 import { format } from 'date-fns'
 
 export default async function DashboardPage() {
@@ -42,7 +33,6 @@ export default async function DashboardPage() {
 
   const data = await getDashboardData()
   const setupProgress = await getSetupProgress()
-  const activeInvestments = await getActiveInvestments()
 
   // Children list for sidebar
   const childrenList = data.children.map((c) => ({
@@ -115,44 +105,10 @@ export default async function DashboardPage() {
           <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
 
-        {/* Family overview card removed per user request — the child cards
-            are accessible via /children and the "what to do now" hero
-            surfaces actionable items. The dashboard is now leaner. */}
-
-        {/* Missed tasks section — Phase 1 (S1.3) */}
-        <MissedTasksSection missedTasks={data.missedTasks} />
-
-        {/* Incidents section — Phase 3 (S3.1) */}
-        <IncidentsSection incidents={data.openIncidents} childrenList={childrenList} />
-
-        {/* Family reward budget — Phase 2 (S2.3) */}
-        {data.budgetInfo && (
-          <Card className="border-sky-200 bg-sky-50/30 dark:border-sky-900 dark:bg-sky-950/10">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground">এই মাসের পুরস্কার বাজেট</p>
-                  <p className="mt-1 font-display text-2xl font-extrabold text-foreground">
-                    ৳{data.budgetInfo.remaining} <span className="text-sm font-normal text-muted-foreground">/ ৳{data.budgetInfo.monthlyBudget}</span>
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-muted-foreground">খরচ হয়েছে</p>
-                  <p className="mt-1 text-lg font-bold text-rose-600">৳{data.budgetInfo.committed}</p>
-                </div>
-              </div>
-              <Progress
-                value={Math.min(100, Math.round((data.budgetInfo.committed / data.budgetInfo.monthlyBudget) * 100))}
-                className="mt-3 h-2"
-              />
-              <p className="mt-2 text-xs text-muted-foreground">
-                {data.budgetInfo.remaining > 0
-                  ? `আর ৳${data.budgetInfo.remaining} বাকি আছে এই মাসে।`
-                  : 'এই মাসের বাজেট শেষ — পরের মাসে নতুন পুরস্কার অনুরোধ করা যাবে।'}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        {/* Dashboard is now data-only — no activity sections.
+            All activity (review, incidents, sadaqah, investments,
+            deductions, reflections) moved to /review (কার্যকলাপ কেন্দ্র).
+            The "what to do now" hero above links there. */}
 
         {/* 7-day trend chart (full width — donut chart removed per user request) */}
         <Card>
@@ -182,29 +138,34 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Resolved incidents history — Phase 3 (S3.3) */}
-        <ResolvedIncidentsSection incidents={data.resolvedIncidents} />
-
-        {/* Sadaqah review section — Phase 4 (S4.2) */}
-        <SadaqahReviewSection donations={data.pendingSadaqah} />
-
-        {/* Sadaqah history — Phase 4 (S4.3) */}
-        <SadaqahHistorySection history={data.sadaqahHistory} />
-
-        {/* Investment review — parent returns profit */}
-        <InvestmentReviewSection investments={activeInvestments as any} />
-
-        {/* Weekly reflection — Phase 5 (S5.1) */}
-        <WeeklyReflectionSection childrenList={childrenList} recentReflections={data.recentReflections} />
-
-        {/* Monthly milestone progress — Phase 5 (S5.2) */}
-        <MilestoneProgressSection progress={data.milestoneProgress} />
-
-        {/* Phase C (C2): Removed the old "recent activity + quick actions + recent stars"
-            two-column section at the bottom. Quick Actions moved up to right after
-            the hero. Recent submissions are now surfaced via the "what to do now"
-            hero + the /review page. Recent stars are on /reports. The dashboard
-            is now shorter and more focused. */}
+        {/* Family reward budget — Phase 2 (S2.3) */}
+        {data.budgetInfo && (
+          <Card className="border-sky-200 bg-sky-50/30 dark:border-sky-900 dark:bg-sky-950/10">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">এই মাসের পুরস্কার বাজেট</p>
+                  <p className="mt-1 font-display text-2xl font-extrabold text-foreground">
+                    ৳{data.budgetInfo.remaining} <span className="text-sm font-normal text-muted-foreground">/ ৳{data.budgetInfo.monthlyBudget}</span>
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">খরচ হয়েছে</p>
+                  <p className="mt-1 text-lg font-bold text-rose-600">৳{data.budgetInfo.committed}</p>
+                </div>
+              </div>
+              <Progress
+                value={Math.min(100, Math.round((data.budgetInfo.committed / data.budgetInfo.monthlyBudget) * 100))}
+                className="mt-3 h-2"
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                {data.budgetInfo.remaining > 0
+                  ? `আর ৳${data.budgetInfo.remaining} বাকি আছে এই মাসে।`
+                  : 'এই মাসের বাজেট শেষ — পরের মাসে নতুন পুরস্কার অনুরোধ করা যাবে।'}
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </AppShell>
   )

@@ -33,7 +33,7 @@ import { cn } from '@/lib/utils'
 
 const NAV = [
   { href: '/dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
-  { href: '/review', label: 'রিভিউ', icon: ClipboardCheck },
+  { href: '/review', label: 'কার্যকলাপ', icon: ClipboardCheck },
   { href: '/planner', label: 'প্ল্যানার', icon: CalendarRange },
   { href: '/children', label: 'সন্তান', icon: Users },
   { href: '/tasks', label: 'কাজ', icon: ListChecks },
