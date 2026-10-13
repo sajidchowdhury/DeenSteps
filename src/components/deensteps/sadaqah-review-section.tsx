@@ -32,7 +32,7 @@ export function SadaqahReviewSection({ donations }: { donations: SadaqahDonation
           সাদাকাহ অনুরোধ ({donations.length})
         </CardTitle>
         <CardDescription>
-          সন্তান তার তারা সাদাকাহর জন্য দিতে চায়। নিশ্চিত করুন বা বাতিল করুন।
+          সন্তান তার পয়েন্ট সাদাকাহর জন্য দিতে চায়। নিশ্চিত করুন বা বাতিল করুন।
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -71,7 +71,7 @@ function SadaqahRow({ donation }: { donation: SadaqahDonation }) {
     try {
       const res = await cancelSadaqahDonation(donation.id, 'বাবা-মা বাতিল করেছেন')
       if (res.ok) {
-        toast.success('সাদাকাহ বাতিল হয়েছে। তারা ফেরত দেওয়া হয়েছে।')
+        toast.success('সাদাকাহ বাতিল হয়েছে। পয়েন্ট ফেরত দেওয়া হয়েছে।')
         router.refresh()
       } else {
         toast.error(res.error ?? 'বাতিল করা যায়নি।')
@@ -101,7 +101,7 @@ function SadaqahRow({ donation }: { donation: SadaqahDonation }) {
           <div className="mt-1.5 flex items-center gap-1.5">
             <Badge variant="outline" className="gap-1 text-emerald-700 dark:text-emerald-300">
               <Star className="h-3 w-3 fill-emerald-400 text-emerald-400" />
-              {donation.starsDedicated} তারা
+              {donation.starsDedicated} পয়েন্ট
             </Badge>
           </div>
         </div>

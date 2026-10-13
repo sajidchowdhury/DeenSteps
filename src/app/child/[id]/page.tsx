@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Gift, Clock, History, Trophy, Heart, HeartHandshake } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Gift, Clock, History, Trophy, Heart, HeartHandshake, TrendingUp } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -15,8 +15,11 @@ import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
 import { SadaqahButton } from '@/components/deensteps/sadaqah-button'
+import { InvestmentButton } from '@/components/deensteps/investment-button'
+import { InvestmentHistory } from '@/components/deensteps/investment-history'
 import { getMilestoneProgressForChild } from '@/server/actions/milestone-actions'
 import { getChildAchievementStatus, getEarnedChildAchievements } from '@/server/actions/achievement-actions'
+import { getChildInvestments, getChildInvestmentSummary } from '@/server/actions/investment-actions'
 import { AchievementGrid, AchievementCelebrationOverlay } from '@/components/deensteps/achievement-celebration'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
@@ -135,7 +138,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
   const childAchievements = await getChildAchievementStatus(child.id)
   const earnedAchievements = await getEarnedChildAchievements(child.id)
 
-  // সাম্প্রতিক তারা + রিডিম্পশন queries removed per user request.
+  // Phase E+ (user request): Investment data
+  const childInvestments = await getChildInvestments(child.id)
+  const investmentSummary = await getChildInvestmentSummary(child.id)
+
+  // সাম্প্রতিক পয়েন্ট + রিডিম্পশন queries removed per user request.
   // The ledger page (/child/[id]/ledger) shows the full star history.
 
   // Pending parent approvals (submitted tasks awaiting review)
@@ -249,7 +256,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-bold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
                   <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                  {currentBalance} তারা
+                  {currentBalance} পয়েন্ট
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1.5 text-sm font-bold text-orange-800 dark:bg-orange-900/40 dark:text-orange-200">
                   <Flame className={cn("h-4 w-4 text-orange-500", streak > 0 && "animate-flame-flicker")} />
@@ -260,7 +267,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent/40"
                 >
                   <History className="h-4 w-4" />
-                  তারার হিসাব
+                  পয়েন্টর হিসাব
                 </Link>
               </div>
             </div>
@@ -279,7 +286,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   কোনো সমস্যা নেই — আজ আবার নতুন করে শুরু করি! 🌱
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  গত কয়েকদিনে কিছু কাজ মিস হয়েছে। তারা কাটা হয়নি — শুধু আজ থেকে আবার চেষ্টা করো।
+                  গত কয়েকদিনে কিছু কাজ মিস হয়েছে। পয়েন্ট কাটা হয়নি — শুধু আজ থেকে আবার চেষ্টা করো।
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {missedTasks.map((m) => (
@@ -295,12 +302,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
         )}
 
         {/* ════════════════════════════════════════════════════════════════
-            Phase B (B2): Two big action cards
-            Replaces: tiny text-xs pill buttons in a flex-wrap row
-            with two prominent cards: Sadaqah (emerald) + I need help (rose).
-            Both are always visible — the child always knows where to find them.
+            Phase B (B2) + E+ (investment): Three big action cards
+            Sadaqah (emerald) + Investment (sky) + I need help (rose).
+            All always visible — the child always knows where to find them.
             ════════════════════════════════════════════════════════════════ */}
-        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {/* Sadaqah card */}
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
             <div className="flex items-center gap-3">
@@ -309,11 +315,27 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display font-bold text-foreground">সাদাকাহ</p>
-                <p className="text-xs text-muted-foreground">তোমার তারা দিয়ে ভালো কাজ করো</p>
+                <p className="text-xs text-muted-foreground">পয়েন্ট দিয়ে ভালো কাজ করো</p>
               </div>
             </div>
             <div className="mt-3">
               <SadaqahButton childId={child.id} causes={sadaqahCauses} currentBalance={currentBalance} />
+            </div>
+          </div>
+
+          {/* Investment card */}
+          <div className="rounded-2xl border border-sky-200 bg-sky-50/50 p-4 dark:border-sky-900/40 dark:bg-sky-950/20">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-300">
+                <TrendingUp className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display font-bold text-foreground">বিনিয়োগ</p>
+                <p className="text-xs text-muted-foreground">পয়েন্ট বিনিয়োগ করে বাড়াও</p>
+              </div>
+            </div>
+            <div className="mt-3">
+              <InvestmentButton childId={child.id} currentBalance={currentBalance} />
             </div>
           </div>
 
@@ -325,7 +347,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display font-bold text-foreground">সাহায্য চাই</p>
-                <p className="text-xs text-muted-foreground">বাবা-মাকে একটি সমস্যা জানাও</p>
+                <p className="text-xs text-muted-foreground">বাবা-মাকে সমস্যা জানাও</p>
               </div>
             </div>
             <div className="mt-3">
@@ -343,11 +365,11 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display text-base font-bold text-foreground">
-                  তোমার তারা দিয়ে ভালো কাজ করো! 🤲
+                  তোমার পয়েন্ট দিয়ে ভালো কাজ করো! 🤲
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {familySettings.sadaqahStarsPerUnit} তারা = {familySettings.sadaqahCurrency === 'BDT' ? '৳' : familySettings.sadaqahCurrency + ' '}{familySettings.sadaqahAmountPerUnit} সাদাকাহ।
-                  বাবা-মা প্রকৃত দান করবেন — তারা সরাসরি টাকা নয়।
+                  {familySettings.sadaqahStarsPerUnit} পয়েন্ট = {familySettings.sadaqahCurrency === 'BDT' ? '৳' : familySettings.sadaqahCurrency + ' '}{familySettings.sadaqahAmountPerUnit} সাদাকাহ।
+                  বাবা-মা প্রকৃত দান করবেন — পয়েন্ট সরাসরি টাকা নয়।
                 </p>
                 <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-300">
                   আল্লাহ বলেছেন: &ldquo;যে আল্লাহকে ভালো ঋণ দেবে, তিনি তার জন্য বহুগুণ বৃদ্ধি করবেন।&rdquo;
@@ -458,7 +480,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 <CardTitle className="font-display text-lg flex items-center gap-2">
                   <Gift className="h-5 w-5 text-amber-500" /> পুরস্কার
                 </CardTitle>
-                <CardDescription>তারা জমিয়ে এগুলো আনলক করো।</CardDescription>
+                <CardDescription>পয়েন্ট জমিয়ে এগুলো আনলক করো।</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {rewards.length === 0 ? (
@@ -480,12 +502,12 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                               <p className="truncate text-sm font-semibold text-foreground">{r.title}</p>
                               <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[9px] text-muted-foreground">{catLabel}</span>
                             </div>
-                            <p className="text-xs text-muted-foreground">{r.requiredPoints} তারা</p>
+                            <p className="text-xs text-muted-foreground">{r.requiredPoints} পয়েন্ট</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">
-                            {eligible ? 'প্রস্তুত!' : `${remaining} তারা বাকি`}
+                            {eligible ? 'প্রস্তুত!' : `${remaining} পয়েন্ট বাকি`}
                           </span>
                           <span className="font-medium text-foreground">{progress}%</span>
                         </div>
@@ -527,7 +549,10 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </CardContent>
             </Card>
 
-            {/* সাম্প্রতিক তারা section removed per user request.
+            {/* Investment history */}
+            <InvestmentHistory investments={childInvestments as any} summary={investmentSummary} />
+
+            {/* সাম্প্রতিক পয়েন্ট section removed per user request.
                 The ledger page (/child/[id]/ledger) shows the full star history
                 with a chart + transaction cards. The dashboard is now leaner. */}
           </div>

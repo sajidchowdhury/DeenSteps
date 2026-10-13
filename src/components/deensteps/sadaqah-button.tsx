@@ -66,11 +66,11 @@ export function SadaqahButton({
       return
     }
     if (!stars || stars <= 0) {
-      toast.error('কত তারা দিতে চাও তা লিখো।')
+      toast.error('কত পয়েন্ট দিতে চাও তা লিখো।')
       return
     }
     if (stars > currentBalance) {
-      toast.error(`তোমার কাছে মাত্র ${currentBalance} তারা আছে।`)
+      toast.error(`তোমার কাছে মাত্র ${currentBalance} পয়েন্ট আছে।`)
       return
     }
 
@@ -111,13 +111,13 @@ export function SadaqahButton({
               সাদাকাহ দিন
             </DialogTitle>
             <DialogDescription>
-              তোমার তারা দিয়ে একটি ভালো কাজে সাহায্য করো। বাবা-মা নিশ্চিত করবেন।
+              তোমার পয়েন্ট দিয়ে একটি ভালো কাজে সাহায্য করো। বাবা-মা নিশ্চিত করবেন।
             </DialogDescription>
           </DialogHeader>
 
           {/* Balance display */}
           <div className="rounded-lg bg-emerald-50 p-3 text-center dark:bg-emerald-950/30">
-            <p className="text-xs text-muted-foreground">তোমার বর্তমান তারা</p>
+            <p className="text-xs text-muted-foreground">তোমার বর্তমান পয়েন্ট</p>
             <p className="mt-0.5 inline-flex items-center gap-1 font-display text-2xl font-extrabold text-foreground">
               <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
               {currentBalance}
@@ -160,7 +160,7 @@ export function SadaqahButton({
 
           {/* Stepper — replaces the number input */}
           <div className="space-y-1.5">
-            <Label>কত তারা নিবেদন করবে?</Label>
+            <Label>কত পয়েন্ট নিবেদন করবে?</Label>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setStars(Math.max(1, stars - 1))}
@@ -214,7 +214,7 @@ export function SadaqahButton({
 
           {/* Balance preview */}
           <p className="text-xs text-muted-foreground">
-            নিবেদনের পর ব্যালেন্স থাকবে: <span className="font-bold text-foreground">{currentBalance - stars} তারা</span>
+            নিবেদনের পর ব্যালেন্স থাকবে: <span className="font-bold text-foreground">{currentBalance - stars} পয়েন্ট</span>
           </p>
 
           <DialogFooter>
@@ -238,7 +238,7 @@ export function SadaqahButton({
               জাযাকাল্লাহু খাইরান 🤲
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              তুমি তোমার তারা সাদাকাহর জন্য নিবেদন করেছ। আল্লাহ তোমার নিয়ামত বাড়িয়ে দিন।
+              তুমি তোমার পয়েন্ট সাদাকাহর জন্য নিবেদন করেছ। আল্লাহ তোমার নিয়ামত বাড়িয়ে দিন।
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               বাবা-মা শীঘ্রই প্রকৃত দান নিশ্চিত করবেন।

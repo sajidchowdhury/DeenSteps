@@ -45,7 +45,7 @@ export function MissedTasksSection({ missedTasks }: { missedTasks: MissedTask[] 
           মিসড কাজ ({missedTasks.length})
         </CardTitle>
         <CardDescription>
-          সন্তান যে কাজগুলো সম্পন্ন করতে পারেনি — কোনো তারা কাটা হয়নি। উৎসাহ দিন, ছাড় করুন।
+          সন্তান যে কাজগুলো সম্পন্ন করতে পারেনি — কোনো পয়েন্ট কাটা হয়নি। উৎসাহ দিন, ছাড় করুন।
         </CardDescription>
       </CardHeader>
       <CardContent>

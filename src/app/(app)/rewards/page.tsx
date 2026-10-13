@@ -167,7 +167,7 @@ export default async function RewardsPage() {
                         <div className="mt-4">
                           <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
                             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                            {reward.requiredPoints} তারা
+                            {reward.requiredPoints} পয়েন্ট
                           </Badge>
                         </div>
                       </CardContent>

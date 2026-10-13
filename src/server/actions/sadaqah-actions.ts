@@ -117,7 +117,7 @@ export async function requestSadaqah(
   })
   if (!cause) return { ok: false, error: 'কারণ পাওয়া যায়নি।' }
 
-  if (starsToDedicate <= 0) return { ok: false, error: 'অন্তত ১ তারা দিন।' }
+  if (starsToDedicate <= 0) return { ok: false, error: 'অন্তত ১ পয়েন্ট দিন।' }
 
   try {
     await db.$transaction(async (tx) => {
@@ -129,7 +129,7 @@ export async function requestSadaqah(
       })
       const balance = last?.balanceAfter ?? 0
       if (balance < starsToDedicate) {
-        throw new Error(`পর্যাপ্ত তারা নেই। তোমার আছে ${balance}, দিতে চেয়েছ ${starsToDedicate}।`)
+        throw new Error(`পর্যাপ্ত পয়েন্ট নেই। তোমার আছে ${balance}, দিতে চেয়েছ ${starsToDedicate}।`)
       }
 
       // Deduct stars atomically
@@ -139,7 +139,7 @@ export async function requestSadaqah(
           familyId: family.id,
           amount: -starsToDedicate,
           type: 'ADJUSTMENT',
-          description: `সাদাকাহ — ${cause.title} (${starsToDedicate} তারা)`,
+          description: `সাদাকাহ — ${cause.title} (${starsToDedicate} পয়েন্ট)`,
           balanceAfter: balance - starsToDedicate,
           reason: `সাদাকাহ: ${cause.title}`,
           adjustedById: null, // child initiated
@@ -170,7 +170,7 @@ export async function requestSadaqah(
             childId,
             type: 'SADAQAH_REQUESTED',
             title: 'সাদাকাহ অনুরোধ',
-            message: `${child.displayName} ${starsToDedicate} তারা "${cause.title}"-এ দিতে চায়।`,
+            message: `${child.displayName} ${starsToDedicate} পয়েন্ট "${cause.title}"-এ দিতে চায়।`,
           },
         })
       }
@@ -231,7 +231,7 @@ export async function confirmSadaqahDonation(
           childId: donation.childId,
           type: 'SADAQAH_CONFIRMED',
           title: 'তোমার সাদাকাহ নিশ্চিত হয়েছে! 🤲',
-          message: `বাবা-মা তোমার ${donation.starsDedicated} তারা সাদাকাহ নিশ্চিত করেছেন। আল্লাহ তোমাকে উত্তম প্রতিদান দিন।`,
+          message: `বাবা-মা তোমার ${donation.starsDedicated} পয়েন্ট সাদাকাহ নিশ্চিত করেছেন। আল্লাহ তোমাকে উত্তম প্রতিদান দিন।`,
         },
       })
 

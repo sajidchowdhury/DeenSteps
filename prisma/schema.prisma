@@ -99,6 +99,7 @@ model Family {
   sadaqahDonations SadaqahDonation[]
   reflections       WeeklyReflection[]
   familyAchievements FamilyAchievement[]
+  investments       Investment[]
 
   @@index([createdBy])
 }
@@ -142,6 +143,7 @@ model ChildProfile {
   incidentReports IncidentReport[]
   sadaqahDonations SadaqahDonation[]
   reflections     WeeklyReflection[]
+  investments     Investment[]
 
   @@index([familyId])
   @@index([status])
@@ -661,4 +663,28 @@ model FamilyAchievement {
 
   @@unique([familyId, key])
   @@index([familyId])
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Investment — child invests points as "money" with parents
+// ────────────────────────────────────────────────────────────────────────────
+
+model Investment {
+  id              String   @id @default(cuid())
+  familyId        String
+  childId         String
+  amountInvested  Int      // points the child invested
+  parentPromise   String   // what parent promises to return (approximate, not definite)
+  status          String   @default("ACTIVE") // ACTIVE | RETURNED
+  profitReturned  Int?     // points returned as profit (null until returned)
+  pointsTxnId     String?  // the deduction transaction
+  profitTxnId     String?  // the profit return transaction
+  createdAt       DateTime @default(now())
+  returnedAt      DateTime?
+
+  family          Family              @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  child           ChildProfile        @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@index([familyId])
+  @@index([childId])
 }

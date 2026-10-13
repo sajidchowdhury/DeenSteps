@@ -294,7 +294,7 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
               <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-950/20">
                 <Clock className="h-4 w-4 text-amber-500" />
                 <p className="text-xs text-amber-700 dark:text-amber-300">
-                  বাবা-মার রিভিউর অপেক্ষায়। {task.approvalPolicy === 'AUTO' ? 'তারা স্বয়ংক্রিয়ভাবে যোগ হবে।' : 'অনুমোদনের পর তারা যোগ হবে।'}
+                  বাবা-মার রিভিউর অপেক্ষায়। {task.approvalPolicy === 'AUTO' ? 'পয়েন্ট স্বয়ংক্রিয়ভাবে যোগ হবে।' : 'অনুমোদনের পর পয়েন্ট যোগ হবে।'}
                 </p>
               </div>
             )}
@@ -322,8 +322,8 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
             <DialogTitle>&ldquo;{task.taskTitle}&rdquo; সম্পন্ন করেছ?</DialogTitle>
             <DialogDescription>
               {task.approvalPolicy === 'AUTO'
-                ? 'তারা সাথে সাথে তোমার ব্যালেন্সে যোগ হবে!'
-                : 'বাবা-মা রিভিউ করার পর তারা যোগ হবে।'}
+                ? 'পয়েন্ট সাথে সাথে তোমার ব্যালেন্সে যোগ হবে!'
+                : 'বাবা-মা রিভিউ করার পর পয়েন্ট যোগ হবে।'}
               {' '}
               চাইলে একটি নোট যোগ করতে পারো।
             </DialogDescription>

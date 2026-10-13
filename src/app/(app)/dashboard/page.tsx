@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/server/actions/dashboard-actions'
+import { getActiveInvestments } from '@/server/actions/investment-actions'
 import { getSetupProgress } from '@/server/actions/setup-progress-actions'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
@@ -28,6 +29,7 @@ import { IncidentsSection } from '@/components/deensteps/incidents-section'
 import { ResolvedIncidentsSection } from '@/components/deensteps/resolved-incidents-section'
 import { SadaqahReviewSection } from '@/components/deensteps/sadaqah-review-section'
 import { SadaqahHistorySection } from '@/components/deensteps/sadaqah-history-section'
+import { InvestmentReviewSection } from '@/components/deensteps/investment-review-section'
 import { WeeklyReflectionSection } from '@/components/deensteps/weekly-reflection-section'
 import { MilestoneProgressSection } from '@/components/deensteps/milestone-progress-section'
 import { format } from 'date-fns'
@@ -40,6 +42,7 @@ export default async function DashboardPage() {
 
   const data = await getDashboardData()
   const setupProgress = await getSetupProgress()
+  const activeInvestments = await getActiveInvestments()
 
   // Children list for sidebar
   const childrenList = data.children.map((c) => ({
@@ -107,7 +110,7 @@ export default async function DashboardPage() {
           <SummaryCard icon={Users} label="সন্তান" value={data.stats.totalChildren} accent="emerald" href="/children" />
           <SummaryCard icon={ShieldCheck} label="রিভিউ বাকি" value={data.stats.pendingApprovals} accent="amber" href="/review" />
           <SummaryCard icon={CheckCircle2} label="আজকের সম্পন্ন" value={`${data.stats.todayFamilyCompletion}%`} accent="sage" />
-          <SummaryCard icon={Star} label="এই সপ্তাহের তারা" value={data.stats.weekFamilyPoints} accent="gold" />
+          <SummaryCard icon={Star} label="এই সপ্তাহের পয়েন্ট" value={data.stats.weekFamilyPoints} accent="gold" />
           <SummaryCard icon={ListChecks} label="কাজ" value={data.stats.activeTasks ?? 0} accent="violet" href="/tasks" />
           <SummaryCard icon={Gift} label="উপলব্ধ পুরস্কার" value={data.stats.upcomingRewards.length} accent="rose" href="/rewards" />
         </div>
@@ -156,7 +159,7 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle className="font-display text-lg flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-emerald-600" />
-              গত ৭ দিনের তারা অর্জন
+              গত ৭ দিনের পয়েন্ট অর্জন
             </CardTitle>
             <CardDescription>প্রতিদিনের পয়েন্ট ট্রেন্ড — সন্তান অনুযায়ী।</CardDescription>
           </CardHeader>
@@ -187,6 +190,9 @@ export default async function DashboardPage() {
 
         {/* Sadaqah history — Phase 4 (S4.3) */}
         <SadaqahHistorySection history={data.sadaqahHistory} />
+
+        {/* Investment review — parent returns profit */}
+        <InvestmentReviewSection investments={activeInvestments as any} />
 
         {/* Weekly reflection — Phase 5 (S5.1) */}
         <WeeklyReflectionSection childrenList={childrenList} recentReflections={data.recentReflections} />

@@ -42,7 +42,7 @@ export function IncidentReportButton({ childId }: { childId: string }) {
         helpNeeded.trim() || undefined,
       )
       if (res.ok) {
-        toast.success('বাবা-মাকে জানানো হয়েছে। তারা শীঘ্রই তোমার সাথে কথা বলবেন। 💚')
+        toast.success('বাবা-মাকে জানানো হয়েছে। পয়েন্ট শীঘ্রই তোমার সাথে কথা বলবেন। 💚')
         setWhatHappened('')
         setWhoInvolved('')
         setHowFelt('')

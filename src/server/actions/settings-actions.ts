@@ -17,7 +17,7 @@ const FamilySchema = z.object({
 })
 
 const SettingsSchema = z.object({
-  pointsName: z.string().min(1).max(40).default('Points'),
+  pointsName: z.string().min(1).max(40).default('পয়েন্ট'),
   defaultApprovalPolicy: z.enum(['MANUAL', 'AUTO']).default('MANUAL'),
   weeklyStartDay: z.enum(['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']).default('SUNDAY'),
   monthlyPlanType: z.enum(['FOUR_WEEK', 'CALENDAR_MONTH']).default('FOUR_WEEK'),

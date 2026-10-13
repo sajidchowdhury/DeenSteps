@@ -50,7 +50,7 @@ export function RewardRequestButton({
   if (!eligible) {
     return (
       <Button size="sm" variant="ghost" disabled className="mt-2 w-full text-xs">
-        <Lock className="mr-1 h-3 w-3" /> আরও {requiredPoints - currentBalance} তারা দরকার
+        <Lock className="mr-1 h-3 w-3" /> আরও {requiredPoints - currentBalance} পয়েন্ট দরকার
       </Button>
     )
   }
@@ -66,12 +66,12 @@ export function RewardRequestButton({
         <DialogHeader>
           <DialogTitle>এই পুরস্কারটি নিতে চাও?</DialogTitle>
           <DialogDescription>
-            {requiredPoints} তারা তোমার ব্যালেন্স থেকে আরক্ষিত হবে। বাবা-মা নোটিফাই হবেন আর অনুমোদন বা প্রত্যাখ্যান করতে পারবেন। প্রত্যাখ্যাত হলে তোমার তারা ফেরত পাবে।
+            {requiredPoints} পয়েন্ট তোমার ব্যালেন্স থেকে আরক্ষিত হবে। বাবা-মা নোটিফাই হবেন আর অনুমোদন বা প্রত্যাখ্যান করতে পারবেন। প্রত্যাখ্যাত হলে তোমার পয়েন্ট ফেরত পাবে।
           </DialogDescription>
         </DialogHeader>
         <div className="rounded-lg bg-secondary/60 p-3 text-sm">
-          <p className="text-foreground">বর্তমান ব্যালেন্স: <strong>{currentBalance} তারা</strong></p>
-          <p className="text-foreground">রিডিম্পশনের পর: <strong>{currentBalance - requiredPoints} তারা</strong></p>
+          <p className="text-foreground">বর্তমান ব্যালেন্স: <strong>{currentBalance} পয়েন্ট</strong></p>
+          <p className="text-foreground">রিডিম্পশনের পর: <strong>{currentBalance - requiredPoints} পয়েন্ট</strong></p>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>বাতিল</Button>

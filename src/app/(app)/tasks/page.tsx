@@ -184,7 +184,7 @@ function TaskRow({ task, childOptions }: { task: TaskWithAssignments; childOptio
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
               <Badge variant="secondary" className="text-[10px]">{task.category}</Badge>
               <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
-                {task.pointsValue} তারা
+                {task.pointsValue} পয়েন্ট
               </Badge>
               <span className="text-muted-foreground/80">{frequencyLabel}</span>
               {task.dueTime && <span className="text-muted-foreground/80">· {task.dueTime}</span>}

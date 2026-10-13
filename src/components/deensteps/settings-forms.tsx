@@ -359,7 +359,7 @@ export function ThemePicker({ initial }: { initial: 'light' | 'dark' }) {
     if (current !== initial) {
       // fire-and-forget
       updateFamilySettings({
-        pointsName: 'Points',
+        pointsName: 'পয়েন্ট',
         defaultApprovalPolicy: 'MANUAL',
         weeklyStartDay: 'SUNDAY',
         monthlyPlanType: 'FOUR_WEEK',

@@ -68,7 +68,7 @@ export function IncidentResolutionDialog({
       return
     }
     if (pts !== 0 && !affectedChildId) {
-      toast.error('কার তারা সমন্বয় হবে তা নির্বাচন করুন।')
+      toast.error('কার পয়েন্ট সমন্বয় হবে তা নির্বাচন করুন।')
       return
     }
 
@@ -140,11 +140,11 @@ export function IncidentResolutionDialog({
           {/* Optional point adjustment */}
           <div className="rounded-lg border border-dashed border-border p-3">
             <p className="text-xs font-medium text-muted-foreground mb-2">
-              তারা সমন্বয় (ঐচ্ছিক — সাবধানতার সাথে ব্যবহার করুন)
+              পয়েন্ট সমন্বয় (ঐচ্ছিক — সাবধানতার সাথে ব্যবহার করুন)
             </p>
             <div className="space-y-2">
               <div className="space-y-1.5">
-                <Label htmlFor="points-adjust">তারা পরিবর্তন</Label>
+                <Label htmlFor="points-adjust">পয়েন্ট পরিবর্তন</Label>
                 <Input
                   id="points-adjust"
                   type="number"
@@ -157,7 +157,7 @@ export function IncidentResolutionDialog({
               {pointsAdjusted && parseInt(pointsAdjusted, 10) !== 0 && (
                 <>
                   <div className="space-y-1.5">
-                    <Label>কার তারা সমন্বয় হবে?</Label>
+                    <Label>কার পয়েন্ট সমন্বয় হবে?</Label>
                     <Select value={affectedChildId} onValueChange={setAffectedChildId}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="সন্তান নির্বাচন করুন" />
@@ -175,7 +175,7 @@ export function IncidentResolutionDialog({
                     <Label htmlFor="adjust-reason">কারণ (আবশ্যক)</Label>
                     <Textarea
                       id="adjust-reason"
-                      placeholder="কেন তারা সমন্বয় করা হচ্ছে..."
+                      placeholder="কেন পয়েন্ট সমন্বয় করা হচ্ছে..."
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       rows={2}

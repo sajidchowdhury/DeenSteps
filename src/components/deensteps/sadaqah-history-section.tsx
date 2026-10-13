@@ -45,7 +45,7 @@ export function SadaqahHistorySection({ history }: { history: SadaqahHistoryItem
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <DynamicIcon iconKey={d.cause.iconKey} className="h-3 w-3 text-emerald-600" />
                   <span className="text-xs text-muted-foreground">{d.cause.title}</span>
-                  <span className="text-xs text-muted-foreground">· {d.starsDedicated} তারা</span>
+                  <span className="text-xs text-muted-foreground">· {d.starsDedicated} পয়েন্ট</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">

@@ -88,7 +88,7 @@ export function ExcuseTaskDialog({
             মিসড কাজ ছাড় করুন
           </DialogTitle>
           <DialogDescription>
-            &ldquo;{taskTitle}&rdquo; — এই কাজটি সম্পন্ন হয়নি। সন্তানকে উৎসাহ দিন, শাস্তি নয়। কোনো তারা কাটা হবে না।
+            &ldquo;{taskTitle}&rdquo; — এই কাজটি সম্পন্ন হয়নি। সন্তানকে উৎসাহ দিন, শাস্তি নয়। কোনো পয়েন্ট কাটা হবে না।
           </DialogDescription>
         </DialogHeader>
 

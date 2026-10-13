@@ -72,7 +72,7 @@ export function SadaqahSettings({
     setSaving(true)
     try {
       const res = await updateFamilySettings({
-        pointsName: 'তারা',
+        pointsName: 'পয়েন্ট',
         defaultApprovalPolicy: 'MANUAL',
         weeklyStartDay: 'SUNDAY',
         monthlyPlanType: 'FOUR_WEEK',
@@ -110,24 +110,24 @@ export function SadaqahSettings({
             সাদাকাহ প্লেজ কনফিগারেশন
           </CardTitle>
           <CardDescription>
-            সন্তানের তারা কীভাবে বাস্তব দানে পরিণত হবে তা নির্ধারণ করুন। এটি একটি পারিবারিক অঙ্গীকার — তারার কোনো স্বয়ংক্রিয় নগদ মূল্য নেই।
+            সন্তানের পয়েন্ট কীভাবে বাস্তব দানে পরিণত হবে তা নির্ধারণ করুন। এটি একটি পারিবারিক অঙ্গীকার — পয়েন্টর কোনো স্বয়ংক্রিয় নগদ মূল্য নেই।
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border border-border p-3">
             <div>
               <p className="text-sm font-medium text-foreground">সাদাকাহ প্লেজ সক্রিয়</p>
-              <p className="text-xs text-muted-foreground">চালু করলে সন্তান তারা দান করতে পারবে।</p>
+              <p className="text-xs text-muted-foreground">চালু করলে সন্তান পয়েন্ট দান করতে পারবে।</p>
             </div>
             <Switch checked={pledgeEnabled} onCheckedChange={setPledgeEnabled} />
           </div>
 
           {pledgeEnabled && (
             <div className="space-y-3 rounded-lg border border-dashed border-border p-3">
-              <p className="text-xs font-medium text-muted-foreground">রূপান্তর হার (উদাহরণ: ১০০ তারা = ১০০ টাকা)</p>
+              <p className="text-xs font-medium text-muted-foreground">রূপান্তর হার (উদাহরণ: ১০০ পয়েন্ট = ১০০ টাকা)</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="stars-per-unit">তারা</Label>
+                  <Label htmlFor="stars-per-unit">পয়েন্ট</Label>
                   <Input id="stars-per-unit" type="number" min={1} value={starsPerUnit} onChange={(e) => setStarsPerUnit(e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
@@ -150,7 +150,7 @@ export function SadaqahSettings({
                 </Select>
               </div>
               <p className="text-xs text-emerald-700 dark:text-emerald-300">
-                💡 এটি একটি পারিবারিক অঙ্গীকার। বাবা-মা প্রকৃত দান করবেন — তারা সরাসরি নগদ নয়।
+                💡 এটি একটি পারিবারিক অঙ্গীকার। বাবা-মা প্রকৃত দান করবেন — পয়েন্ট সরাসরি নগদ নয়।
               </p>
             </div>
           )}
@@ -174,7 +174,7 @@ export function SadaqahSettings({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="font-display">সাদাকাহ কারণ তালিকা</CardTitle>
-              <CardDescription>সন্তান যেসব কারণে তারা দিতে পারবে সেগুলো ম্যানেজ করুন।</CardDescription>
+              <CardDescription>সন্তান যেসব কারণে পয়েন্ট দিতে পারবে সেগুলো ম্যানেজ করুন।</CardDescription>
             </div>
             <div className="flex gap-2">
               <ImportCausesDialog />

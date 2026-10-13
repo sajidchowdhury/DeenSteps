@@ -258,7 +258,7 @@ export default async function ReportsPage() {
               </div>
               <p className="mt-4 font-display text-lg font-semibold text-foreground">এখনো কোনো ডেটা নেই</p>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                সন্তানরা কাজ জমা দিয়ে তারা অর্জন করা শুরু করলে এখানে দৈনিক, সাপ্তাহিক ও মাসিক সারসংক্ষেপ দেখা যাবে।
+                সন্তানরা কাজ জমা দিয়ে পয়েন্ট অর্জন করা শুরু করলে এখানে দৈনিক, সাপ্তাহিক ও মাসিক সারসংক্ষেপ দেখা যাবে।
               </p>
             </CardContent>
           </Card>
@@ -362,15 +362,15 @@ export default async function ReportsPage() {
             <TabsContent value="weekly" className="mt-4 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display">অর্জিত তারা — গত ৭ দিন</CardTitle>
+                  <CardTitle className="font-display">অর্জিত পয়েন্ট — গত ৭ দিন</CardTitle>
                   <CardDescription>
-                    পরিবারে প্রতিদিন প্রদত্ত তারা। এই সপ্তাহে মোট: <span className="font-semibold text-foreground">{weeklyTotal} তারা</span>।
+                    পরিবারে প্রতিদিন প্রদত্ত পয়েন্ট। এই সপ্তাহে মোট: <span className="font-semibold text-foreground">{weeklyTotal} পয়েন্ট</span>।
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {weeklyTotal === 0 ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                      এই সপ্তাহে এখনো কোনো তারা অর্জিত হয়নি।
+                      এই সপ্তাহে এখনো কোনো পয়েন্ট অর্জিত হয়নি।
                     </p>
                   ) : (
                     <WeeklyPointsChart data={weeklyChartData} />
@@ -380,8 +380,8 @@ export default async function ReportsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display text-lg">সন্তান অনুযায়ী সাপ্তাহিক তারা</CardTitle>
-                  <CardDescription>এই সপ্তাহে অর্জিত তারা ও বর্তমান ব্যালেন্স।</CardDescription>
+                  <CardTitle className="font-display text-lg">সন্তান অনুযায়ী সাপ্তাহিক পয়েন্ট</CardTitle>
+                  <CardDescription>এই সপ্তাহে অর্জিত পয়েন্ট ও বর্তমান ব্যালেন্স।</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
@@ -427,13 +427,13 @@ export default async function ReportsPage() {
 
               <SummaryCard>
                 {weeklyTotal === 0 ? (
-                  <>এই সপ্তাহে এখনো কোনো তারা প্রদান করা হয়নি। সন্তানরা কাজ সম্পন্ন করে ও আপনি অনুমোদন দিলে এই ট্রেন্ড আপডেট হবে।</>
+                  <>এই সপ্তাহে এখনো কোনো পয়েন্ট প্রদান করা হয়নি। সন্তানরা কাজ সম্পন্ন করে ও আপনি অনুমোদন দিলে এই ট্রেন্ড আপডেট হবে।</>
                 ) : (
                   <>
-                    আপনার পরিবার গত ৭ দিনে <span className="font-semibold">{weeklyTotal}</span> তারা অর্জন করেছে।
+                    আপনার পরিবার গত ৭ দিনে <span className="font-semibold">{weeklyTotal}</span> পয়েন্ট অর্জন করেছে।
                     {' '}
                     {weeklyChartData.filter((d) => d.points > 0).length === 7
-                      ? 'প্রতিদিন নিয়মিত তারা এসেছে — দারুণ ছন্দ!'
+                      ? 'প্রতিদিন নিয়মিত পয়েন্ট এসেছে — দারুণ ছন্দ!'
                       : weeklyChartData.filter((d) => d.points > 0).length >= 4
                         ? 'বেশিরভাগ দিনেই কাজ হয়েছে, কয়েকদিন একটু কম ছিল।'
                         : 'কাজ কয়েকদিনে কেন্দ্রীভূত হয়েছে — ছন্দ একটু সমান করা যেতে পারে।'}
@@ -448,15 +448,15 @@ export default async function ReportsPage() {
             <TabsContent value="monthly" className="mt-4 space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-display">ক্যাটাগরি অনুযায়ী তারা — {format(now, 'MMMM')}</CardTitle>
+                  <CardTitle className="font-display">ক্যাটাগরি অনুযায়ী পয়েন্ট — {format(now, 'MMMM')}</CardTitle>
                   <CardDescription>
-                    এই মাসে তারা কোন ক্যাটাগরি থেকে এসেছে। কোন ক্ষেত্রগুলো সক্রিয় তা বুঝতে সাহায্য করে।
+                    এই মাসে পয়েন্ট কোন ক্যাটাগরি থেকে এসেছে। কোন ক্ষেত্রগুলো সক্রিয় তা বুঝতে সাহায্য করে।
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {monthlyByCategory.every((c) => c.points === 0) ? (
                     <p className="py-6 text-center text-sm text-muted-foreground">
-                      এই মাসে এখনো কোনো তারা অর্জিত হয়নি।
+                      এই মাসে এখনো কোনো পয়েন্ট অর্জিত হয়নি।
                     </p>
                   ) : (
                     <MonthlyCategoryChart data={monthlyByCategory} />
@@ -499,7 +499,7 @@ export default async function ReportsPage() {
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground">
-                              {d.qualifyingWeeks}/{d.requiredWeeks} কোয়ালিফাইং সপ্তাহ · {d.monthPoints} তারা
+                              {d.qualifyingWeeks}/{d.requiredWeeks} কোয়ালিফাইং সপ্তাহ · {d.monthPoints} পয়েন্ট
                             </p>
                           </div>
                           <Progress value={pct} className="mt-2 h-1.5" />
@@ -512,10 +512,10 @@ export default async function ReportsPage() {
 
               <SummaryCard>
                 {monthlyByCategory.every((c) => c.points === 0) ? (
-                  <>এই মাসে এখনো কোনো তারা প্রদান করা হয়নি। অনুমোদন আসলে কোন ক্যাটাগরিগুলো সবচেয়ে সক্রিয় তা দেখা যাবে।</>
+                  <>এই মাসে এখনো কোনো পয়েন্ট প্রদান করা হয়নি। অনুমোদন আসলে কোন ক্যাটাগরিগুলো সবচেয়ে সক্রিয় তা দেখা যাবে।</>
                 ) : (
                   <>
-                    এই মাসে, তারা মূলত এসেছে{' '}
+                    এই মাসে, পয়েন্ট মূলত এসেছে{' '}
                     <span className="font-semibold">
                       {monthlyByCategory.slice().sort((a, b) => b.points - a.points)[0].categoryFull}
                     </span>

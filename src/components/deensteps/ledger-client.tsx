@@ -66,7 +66,7 @@ export function LedgerClient({ data }: { data: LedgerData }) {
           </Button>
           <div className="flex items-center gap-2">
             <History className="h-5 w-5 text-primary" />
-            <span className="font-display text-sm font-bold text-foreground">আমার তারার হিসাব</span>
+            <span className="font-display text-sm font-bold text-foreground">আমার পয়েন্টর হিসাব</span>
           </div>
           <div className="w-20" />
         </div>
@@ -196,9 +196,9 @@ export function LedgerClient({ data }: { data: LedgerData }) {
 
         {/* Info note */}
         <div className="mt-4 rounded-lg border border-dashed border-border bg-card/30 p-3 text-center text-xs text-muted-foreground">
-          প্রতিটি তারা একটি অডিটযোগ্য লেজারে ট্র্যাক করা হয়। কখনোই মুছে ফেলা হয় না।
+          প্রতিটি পয়েন্ট একটি অডিটযোগ্য লেজারে ট্র্যাক করা হয়। কখনোই মুছে ফেলা হয় না।
           <br />
-          দৈনিক কাজ রিসেট হয়, অর্জিত তারা হয় না।
+          দৈনিক কাজ রিসেট হয়, অর্জিত পয়েন্ট হয় না।
         </div>
       </main>
     </div>

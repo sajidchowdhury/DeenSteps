@@ -37,7 +37,7 @@ export function ProductPreviewSection() {
                   <p className="text-base font-bold text-foreground">২</p>
                 </div>
                 <div className="rounded-lg bg-sunshine p-2.5">
-                  <p className="text-[10px] text-muted-foreground">তারা</p>
+                  <p className="text-[10px] text-muted-foreground">পয়েন্ট</p>
                   <p className="text-base font-bold text-foreground">৯৫</p>
                 </div>
               </div>
@@ -70,7 +70,7 @@ export function ProductPreviewSection() {
                 <div className="rounded-lg bg-sunshine p-2 text-center">
                   <Star className="mx-auto h-3.5 w-3.5 text-amber-600" />
                   <p className="mt-0.5 text-sm font-bold text-foreground">৭৯</p>
-                  <p className="text-[9px] text-muted-foreground">তারা</p>
+                  <p className="text-[9px] text-muted-foreground">পয়েন্ট</p>
                 </div>
                 <div className="rounded-lg bg-emerald-soft p-2 text-center">
                   <CheckCircle2 className="mx-auto h-3.5 w-3.5 text-emerald-600" />
@@ -142,7 +142,7 @@ export function ProductPreviewSection() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-foreground">বাসায় পিৎজা</p>
-                  <p className="text-[10px] text-muted-foreground">৪০ তারা লাগবে</p>
+                  <p className="text-[10px] text-muted-foreground">৪০ পয়েন্ট লাগবে</p>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-extrabold text-amber-600">৭৯/৪০</p>

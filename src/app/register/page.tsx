@@ -47,7 +47,7 @@ export default function RegisterPage() {
   const onSubmit = handleSubmit(async (values) => {
     setLoading(true)
     try {
-      // সবসময় বাংলা + Asia/Dhaka, পয়েন্টের নাম 'তারা'
+      // সবসময় বাংলা + Asia/Dhaka, পয়েন্টের নাম 'পয়েন্ট'
       const result = await registerFamily({
         ...values,
         timezone: 'Asia/Dhaka',

@@ -98,7 +98,7 @@ export function RewardQuickAdd() {
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-foreground">{r.title}</p>
                           <div className="flex items-center gap-1.5">
-                            <p className="text-xs text-muted-foreground">{r.requiredPoints} তারা</p>
+                            <p className="text-xs text-muted-foreground">{r.requiredPoints} পয়েন্ট</p>
                             {r.maxPerWeek && (
                               <span className="text-[10px] text-muted-foreground">· সপ্তাহে {r.maxPerWeek}×</span>
                             )}

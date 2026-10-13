@@ -134,7 +134,7 @@ function RewardCardWithCategory({ reward }: { reward: Reward }) {
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="gap-1 text-amber-700 dark:text-amber-300">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            {reward.requiredPoints} তারা
+            {reward.requiredPoints} পয়েন্ট
           </Badge>
           <Badge variant="outline" className={cn('text-[10px]', CATEGORY_COLORS[reward.category])}>
             {catLabel}

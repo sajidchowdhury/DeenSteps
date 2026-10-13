@@ -83,7 +83,7 @@ export function ResolvedIncidentsSection({ incidents }: { incidents: Incident[] 
                         </Badge>
                         {incident.resolution.pointsAdjusted !== 0 && (
                           <Badge variant="outline" className={incident.resolution.pointsAdjusted < 0 ? 'text-[9px] text-rose-600' : 'text-[9px] text-emerald-600'}>
-                            {incident.resolution.pointsAdjusted > 0 ? '+' : ''}{incident.resolution.pointsAdjusted} তারা
+                            {incident.resolution.pointsAdjusted > 0 ? '+' : ''}{incident.resolution.pointsAdjusted} পয়েন্ট
                           </Badge>
                         )}
                       </div>

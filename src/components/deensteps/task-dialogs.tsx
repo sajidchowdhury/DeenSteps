@@ -260,7 +260,7 @@ export function TaskFormDialog({
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="pointsValue">তারা</Label>
+              <Label htmlFor="pointsValue">পয়েন্ট</Label>
               <Input
                 id="pointsValue"
                 type="number"

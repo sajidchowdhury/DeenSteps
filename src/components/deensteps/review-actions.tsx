@@ -37,7 +37,7 @@ export function ReviewActions({
     startTransition(async () => {
       const res = await reviewSubmission(submissionId, 'APPROVED')
       if (res.ok) {
-        toast.success(`অনুমোদিত! +${pointsValue} তারা যোগ হয়েছে।`)
+        toast.success(`অনুমোদিত! +${pointsValue} পয়েন্ট যোগ হয়েছে।`)
         router.refresh()
       } else {
         toast.error(res.error ?? 'অনুমোদন দেওয়া যায়নি।')

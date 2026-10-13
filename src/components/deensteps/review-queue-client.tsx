@@ -216,7 +216,7 @@ export function ReviewQueueClient({ items }: { items: ReviewQueueItem[] }) {
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         <Badge variant="outline" className="text-xs">{s.taskCategory}</Badge>
                         <Badge variant="secondary" className="text-xs">
-                          +{s.pointsValue} {s.approvalPolicy === 'AUTO' ? '(স্বয়ংক্রিয়)' : 'তারা'}
+                          +{s.pointsValue} {s.approvalPolicy === 'AUTO' ? '(স্বয়ংক্রিয়)' : 'পয়েন্ট'}
                         </Badge>
                       </div>
                       {s.note && (

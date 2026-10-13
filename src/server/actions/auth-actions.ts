@@ -58,7 +58,7 @@ export async function registerFamily(input: z.infer<typeof RegisterSchema>): Pro
       memberships: { create: { userId: user.id, role: 'PARENT' } },
       settings: {
         create: {
-          pointsName: 'তারা',
+          pointsName: 'পয়েন্ট',
         },
       },
     },
