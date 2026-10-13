@@ -1,13 +1,13 @@
-import { BookOpen, ShieldCheck, Star, Target, Gift, Users } from 'lucide-react'
+import { BookOpen, ShieldCheck, Star, Target, Gift, Users, Heart, TrendingUp, Trophy } from 'lucide-react'
 import { CentralChildIllustration } from '@/components/marketing/illustrations'
 
 const FEATURES = [
-  { icon: BookOpen, title: 'দৈনিক অভ্যাস', desc: 'নামাজ, কুরআন ও ভালো কাজ।', color: 'emerald', pos: 'top-left' },
-  { icon: ShieldCheck, title: 'অভিভাবকের গাইড', desc: 'কাজ দেখুন, অনুমোদন দিন।', color: 'sky', pos: 'top-right' },
-  { icon: Star, title: 'পয়েন্ট ও অগ্রগতি', desc: 'প্রতিদিনের চেষ্টা চোখের সামনে।', color: 'amber', pos: 'mid-left' },
-  { icon: Target, title: 'সাপ্তাহিক লক্ষ্য', desc: 'ছোট লক্ষ্য পূরণের আনন্দ।', color: 'sky', pos: 'mid-right' },
-  { icon: Gift, title: 'পারিবারিক পুরস্কার', desc: 'একসঙ্গে সময় ও পছন্দের উপহার।', color: 'emerald', pos: 'bottom-left' },
-  { icon: Users, title: 'একাধিক সন্তান', desc: 'প্রত্যেকের আলাদা অগ্রগতি।', color: 'amber', pos: 'bottom-right' },
+  { icon: BookOpen, title: 'দৈনিক ইসলামি অভ্যাস', desc: 'নামাজ, কুরআন, আজকার, ভালো আচরণ।', color: 'emerald', pos: 'top-left' },
+  { icon: ShieldCheck, title: 'অভিভাবকের গাইড', desc: 'কাজ দেখুন, অনুমোদন দিন, ফলোআপ করুন।', color: 'sky', pos: 'top-right' },
+  { icon: Star, title: 'পয়েন্ট জমানো', desc: 'ভালো কাজে পয়েন্ট, অগ্রগতি চোখের সামনে।', color: 'amber', pos: 'mid-left' },
+  { icon: Gift, title: 'পুরস্কার নেওয়া', desc: 'পয়েন্ট দিয়ে পারিবারিক পুরস্কার।', color: 'emerald', pos: 'mid-right' },
+  { icon: Heart, title: 'সাদাকাহ দেওয়া', desc: 'পয়েন্ট দিয়ে দান, বাবা-মা নিশ্চিত করবেন।', color: 'amber', pos: 'bottom-left' },
+  { icon: TrendingUp, title: 'বিনিয়োগ করা', desc: 'পয়েন্ট বিনিয়োগ, মুনাফা পাওয়া।', color: 'sky', pos: 'bottom-right' },
 ]
 
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {

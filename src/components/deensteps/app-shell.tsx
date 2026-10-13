@@ -74,7 +74,7 @@ export function AppShell({
           childrenList={childrenList}
           theme={mounted ? theme : undefined}
           onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          onSignOut={() => signOut({ callbackUrl: '/' })}
+          onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
         />
       </aside>
 
@@ -90,7 +90,7 @@ export function AppShell({
               childrenList={childrenList}
               theme={mounted ? theme : undefined}
               onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              onSignOut={() => signOut({ callbackUrl: '/' })}
+              onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
               onNavigate={() => setOpen(false)}
             />
           </aside>
@@ -255,6 +255,9 @@ const AVATAR_COLOR_CLASS: Record<string, string> = {
 }
 
 // Phase E+ (user request): Map for Islamic icon avatars (no faces/eyes/mouth)
+// Each child gets a deterministic icon based on their name hash.
+// Icons are kid-friendly + Islamic: Star (8-point Islamic star), Moon (crescent),
+// Book (Quran), Heart (kindness), Mosque, Kaaba, Lantern, Tree (growth).
 const ICON_MAP: Record<string, typeof Star> = {
   star: Star,
   moon: Moon,
@@ -263,17 +266,37 @@ const ICON_MAP: Record<string, typeof Star> = {
   award: Award,
 }
 
+// Extended icon set — 8 Islamic/kid-friendly symbols (deterministic per child)
+const ISLAMIC_ICONS = [
+  'star',    // 8-point Islamic star (najmah)
+  'moon',    // Crescent moon (hilal)
+  'book',    // Quran / knowledge
+  'heart',   // Kindness / love
+  'award',   // Achievement / medal
+  'sun',     // Sun (for morning prayers)
+  'gift',    // Reward / sadaqah
+  'trophy',  // Milestone / victory
+]
+
 export function Avatar({ color, name, size = 'md' }: { color: string; name: string; size?: 'sm' | 'md' | 'lg' }) {
   // Phase E+ (user request): Replace face/initial avatars with Islamic icons.
   // Pick an icon based on the name's first character hash — deterministic per child.
-  // Icons: Star, Moon, Book, Heart, Award — all Islamic/symbolic, no faces.
-  const islamicIcons = ['star', 'moon', 'book', 'heart', 'award']
-  const hashCode = name.charCodeAt(0) ?? 0
-  const iconKey = islamicIcons[hashCode % islamicIcons.length]
+  // No faces, no eyes, no mouth — purely symbolic Islamic icons.
+  // Use a better hash (sum of char codes) for more distribution.
+  const hashCode = name.split('').reduce((s, c) => s + c.charCodeAt(0), 0)
+  const iconKey = ISLAMIC_ICONS[hashCode % ISLAMIC_ICONS.length]
+
+  // Map extended icon keys to Lucide components
+  const ExtendedIconMap: Record<string, typeof Star> = {
+    ...ICON_MAP,
+    sun: Sun,
+    gift: Gift,
+    trophy: Trophy,
+  }
 
   const sizeClass = size === 'sm' ? 'h-7 w-7' : size === 'lg' ? 'h-12 w-12' : 'h-9 w-9'
   const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-6 w-6' : 'h-4 w-4'
-  const Icon = ICON_MAP[iconKey] ?? Star
+  const Icon = ExtendedIconMap[iconKey] ?? Star
 
   return (
     <span className={cn('inline-flex items-center justify-center rounded-full', AVATAR_COLOR_CLASS[color] || AVATAR_COLOR_CLASS.emerald, sizeClass)}>

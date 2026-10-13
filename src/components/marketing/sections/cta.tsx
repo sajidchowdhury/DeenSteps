@@ -17,7 +17,7 @@ export function CtaSection() {
                 সন্তানের সুন্দর আগামী গড়ার শুরু হোক আজই।
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                একটি ভালো অভ্যাস দিয়ে শুরু করুন। ধীরে ধীরে এগিয়ে চলুন, একসঙ্গে।
+                ইসলামি অভ্যাস, সাদাকাহ, বিনিয়োগ — সব এক জায়গায়। একটি ভালো অভ্যাস দিয়ে শুরু করুন, ধীরে ধীরে এগিয়ে চলুন, একসঙ্গে।
               </p>
               <div className="mt-7">
                 <Button asChild size="lg" className="w-full sm:w-auto">
