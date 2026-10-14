@@ -4,6 +4,14 @@ import * as React from 'react'
 import { Volume2, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+// Helper: construct API URL with correct basePath.
+function apiUrl(path: string): string {
+  if (typeof window === 'undefined') return path
+  const segments = window.location.pathname.split('/')
+  const basePath = segments[1] === 'deensteps' ? '/deensteps' : ''
+  return `${basePath}${path}`
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 // TTS (Text-to-Speech) button — uses server-side Google Translate TTS API
 // for clean Bengali voice. Falls back to browser Web Speech API if the
@@ -43,7 +51,7 @@ export function TtsButton({
 
     try {
       // Try server-side Google Translate TTS first (best Bengali quality)
-      const res = await fetch('api/tts', {
+      const res = await fetch(apiUrl('/api/tts'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),

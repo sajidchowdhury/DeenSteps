@@ -17,6 +17,18 @@ import {
 import { cn } from '@/lib/utils'
 
 // ────────────────────────────────────────────────────────────────────────────
+// Helper: construct API URL with correct basePath.
+// On VPS: pathname starts with /deensteps → prepend /deensteps
+// On local dev: no basePath → just use /api/...
+// ────────────────────────────────────────────────────────────────────────────
+function apiUrl(path: string): string {
+  if (typeof window === 'undefined') return path
+  const segments = window.location.pathname.split('/')
+  const basePath = segments[1] === 'deensteps' ? '/deensteps' : ''
+  return `${basePath}${path}`
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // Parent Lock — 4-digit PIN system.
 //
 // Fixes:
@@ -116,7 +128,7 @@ export function ParentLockButton({
     setVerifying(true)
     try {
       // Use relative path — Next.js basePath is automatically applied
-      const res = await fetch('api/verify-pin', {
+      const res = await fetch(apiUrl('/api/verify-pin'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pin: pinInput }),
@@ -154,7 +166,7 @@ export function ParentLockButton({
     setResetting(true)
     try {
       // Use relative path — Next.js basePath is automatically applied
-      const res = await fetch('api/reset-pin', {
+      const res = await fetch(apiUrl('/api/reset-pin'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, newPin }),

@@ -107,7 +107,8 @@ export function PinSettingsForm({ hasPin }: { hasPin: boolean }) {
           ৪ ডিজিট পিন সেট করুন। লক করলে সন্তানরা প্যারেন্ট এরিয়া অ্যাক্সেস করতে পারবে না।
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent>
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-3">
         {hasPin && (
           <div className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950/20 dark:text-emerald-200">
             <ShieldCheck className="mr-1.5 inline h-4 w-4" />
@@ -154,6 +155,7 @@ export function PinSettingsForm({ hasPin }: { hasPin: boolean }) {
             </Button>
           )}
         </div>
+        </form>
       </CardContent>
     </Card>
   )
