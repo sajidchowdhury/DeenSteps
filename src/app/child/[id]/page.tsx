@@ -25,6 +25,7 @@ import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { ParentLockButton } from '@/components/deensteps/parent-lock'
+import { ShareCardButton } from '@/components/deensteps/share-card-button'
 
 export default async function ChildDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: childId } = await params
@@ -296,6 +297,16 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   <TrendingUp className="h-4 w-4" />
                   আমার বিনিয়োগ
                 </Link>
+                <ShareCardButton
+                  childName={child.displayName}
+                  childAvatarColor={child.avatarColor}
+                  totalPoints={currentBalance}
+                  streak={streak}
+                  weekPoints={weekPoints._sum.amount ?? 0}
+                  todayCompleted={todayApproved}
+                  todayTotal={todayTotal}
+                  achievements={childAchievements}
+                />
               </div>
             </div>
           </div>
