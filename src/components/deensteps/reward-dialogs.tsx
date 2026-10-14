@@ -72,6 +72,11 @@ const Schema = z.object({
   requiredPoints: z.coerce.number().int().min(0).max(10000),
   rewardType: z.enum(['POINTS', 'ACHIEVEMENT']),
   requiresApproval: z.boolean(),
+  category: z.enum(['EXPERIENCE', 'LEARNING', 'PRIVILEGE', 'FOOD']).default('EXPERIENCE'),
+  maxPerWeek: z.coerce.number().int().min(0).max(100).nullable().optional(),
+  maxPerMonth: z.coerce.number().int().min(0).max(100).nullable().optional(),
+  cooldownDays: z.coerce.number().int().min(0).max(365).nullable().optional(),
+  estimatedCost: z.coerce.number().min(0).nullable().optional(),
 })
 
 type FormValues = z.infer<typeof Schema>
@@ -265,6 +270,45 @@ export function RewardFormDialog({
               />
             </div>
           )}
+
+          {/* Frequency limits — parent can set how often a child can claim this reward */}
+          <div className="rounded-lg border border-border bg-secondary/20 p-3 space-y-3">
+            <p className="text-sm font-semibold text-foreground">ফ্রিকোয়েন্সি লিমিট (ঐচ্ছিক)</p>
+            <p className="text-xs text-muted-foreground">সন্তান কতবার এই পুরস্কার নিতে পারবে তা নির্ধারণ করুন। খালি রাখলে কোনো লিমিট থাকবে না।</p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-1">
+                <Label htmlFor="maxPerWeek" className="text-xs">সপ্তাহে সর্বোচ্চ</Label>
+                <Input
+                  id="maxPerWeek"
+                  type="number"
+                  min={0}
+                  placeholder="যেমন: 1"
+                  {...form.register('maxPerWeek', { setValueAs: (v) => v === '' || v === null ? null : Number(v) })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="maxPerMonth" className="text-xs">মাসে সর্বোচ্চ</Label>
+                <Input
+                  id="maxPerMonth"
+                  type="number"
+                  min={0}
+                  placeholder="যেমন: 2"
+                  {...form.register('maxPerMonth', { setValueAs: (v) => v === '' || v === null ? null : Number(v) })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="cooldownDays" className="text-xs">কুলডাউন (দিন)</Label>
+                <Input
+                  id="cooldownDays"
+                  type="number"
+                  min={0}
+                  placeholder="যেমন: 3"
+                  {...form.register('cooldownDays', { setValueAs: (v) => v === '' || v === null ? null : Number(v) })}
+                />
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground">উদাহরণ: সপ্তাহে ১ আইসক্রিম → "সপ্তাহে সর্বোচ্চ: ১"</p>
+          </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={pending}>

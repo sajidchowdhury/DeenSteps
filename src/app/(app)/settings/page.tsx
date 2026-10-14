@@ -18,6 +18,7 @@ import {
   DeleteFamilyButton,
 } from '@/components/deensteps/settings-forms'
 import { SadaqahSettings } from '@/components/deensteps/sadaqah-settings'
+import { PinSettingsForm } from '@/components/deensteps/pin-settings-form'
 import { getSadaqahCauses } from '@/server/actions/sadaqah-actions'
 
 export const dynamic = 'force-dynamic'
@@ -180,6 +181,9 @@ export default async function SettingsPage() {
 
           {/* Privacy & data */}
           <TabsContent value="privacy" className="mt-4 space-y-4">
+            {/* Parent lock PIN */}
+            <PinSettingsForm hasPin={!!pinSettings?.parentPin} />
+
             <Card>
               <CardHeader>
                 <CardTitle className="font-display">Export your data</CardTitle>

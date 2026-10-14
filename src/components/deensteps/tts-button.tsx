@@ -48,18 +48,35 @@ export function TtsButton({
 
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = 'bn-BD'
-    utterance.rate = 0.9  // Slightly slower for kids
-    utterance.pitch = 1.1 // Slightly higher pitch (friendlier)
+    utterance.rate = 0.85  // Slower for kids
+    utterance.pitch = 1.0
 
-    // Try to find a Bengali voice
+    // Try to find a Bengali voice — load voices if not yet loaded
     const voices = window.speechSynthesis.getVoices()
-    const bnVoice = voices.find((v) => v.lang.startsWith('bn'))
+
+    // Priority 1: Bengali (bn-BD or bn-IN)
+    const bnVoice = voices.find((v) => v.lang.toLowerCase().startsWith('bn'))
     if (bnVoice) {
       utterance.voice = bnVoice
+      utterance.lang = bnVoice.lang
     } else {
-      // If no Bengali voice, try any Indic voice
-      const indicVoice = voices.find((v) => v.lang.startsWith('hi') || v.lang.startsWith('ur'))
-      if (indicVoice) utterance.voice = indicVoice
+      // Priority 2: Hindi (hi-IN) — many Hindi TTS engines can read Bengali script
+      // because they share the Devanagari/Bengali script family
+      const hiVoice = voices.find((v) => v.lang.toLowerCase().startsWith('hi'))
+      if (hiVoice) {
+        utterance.voice = hiVoice
+        utterance.lang = 'hi-IN'
+      } else {
+        // Priority 3: Any voice with 'bn' or 'hi' or 'ur' in the name
+        const indicVoice = voices.find((v) =>
+          v.lang.toLowerCase().startsWith('ur') ||
+          v.name.toLowerCase().includes('bengali') ||
+          v.name.toLowerCase().includes('hindi')
+        )
+        if (indicVoice) {
+          utterance.voice = indicVoice
+        }
+      }
     }
 
     utterance.onstart = () => setSpeaking(true)
