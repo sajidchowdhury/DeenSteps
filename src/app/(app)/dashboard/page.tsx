@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import {
   Users,
   ShieldCheck,
@@ -30,6 +31,7 @@ export default async function DashboardPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const data = await getDashboardData()
   const setupProgress = await getSetupProgress()
@@ -42,7 +44,7 @@ export default async function DashboardPage() {
   }))
 
   return (
-    <AppShell familyName={family.name} pendingCount={data.stats.pendingApprovals} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={data.stats.pendingApprovals} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-7xl space-y-6">
         {/* Greeting */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

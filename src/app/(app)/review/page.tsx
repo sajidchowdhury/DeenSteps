@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { formatDistanceToNow, parseISO } from 'date-fns'
 import { ClipboardCheck, AlertCircle, Heart, TrendingUp, Minus, CheckCircle2 } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
@@ -21,6 +22,7 @@ export default async function ReviewPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const [childrenList, pending, recent, resolvedIncidents, sadaqahHistory, activeInvestments, recentDeductions] = await Promise.all([
     db.childProfile.findMany({
@@ -130,7 +132,7 @@ export default async function ReviewPage() {
   }))
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-5xl space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

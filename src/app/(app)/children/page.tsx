@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { redirect } from 'next/navigation'
 import { format } from 'date-fns'
 import { Users, Plus, ArrowRight, Sparkles, Star, TrendingUp } from 'lucide-react'
@@ -21,6 +22,7 @@ export default async function ChildrenPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const children = await db.childProfile.findMany({
     where: { familyId: family.id },
@@ -102,7 +104,7 @@ export default async function ChildrenPage() {
   )
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

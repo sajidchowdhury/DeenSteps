@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { Users, User, Star, Bell, Palette, ShieldAlert, Heart } from 'lucide-react'
 
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
@@ -26,6 +27,7 @@ export default async function SettingsPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const [settings, childrenList, pendingCount] = await Promise.all([
     db.familySettings.findUnique({ where: { familyId: family.id } }),
@@ -58,7 +60,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <div>

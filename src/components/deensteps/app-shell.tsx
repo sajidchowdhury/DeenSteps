@@ -29,6 +29,7 @@ import {
 import { useTheme } from 'next-themes'
 import { Logo } from '@/components/deensteps/brand'
 import { Button } from '@/components/ui/button'
+import { ParentLockButton } from '@/components/deensteps/parent-lock'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -48,11 +49,15 @@ export function AppShell({
   familyName,
   pendingCount = 0,
   childrenList = [],
+  hasPin = false,
+  firstChildId = null,
 }: {
   children: React.ReactNode
   familyName: string
   pendingCount?: number
   childrenList?: { id: string; displayName: string; avatarColor: string }[]
+  hasPin?: boolean
+  firstChildId?: string | null
 }) {
   const pathname = usePathname()
   const [open, setOpen] = React.useState(false)
@@ -75,6 +80,8 @@ export function AppShell({
           theme={mounted ? theme : undefined}
           onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
+          hasPin={hasPin}
+          firstChildId={firstChildId}
         />
       </aside>
 
@@ -92,6 +99,8 @@ export function AppShell({
               onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
               onNavigate={() => setOpen(false)}
+              hasPin={hasPin}
+              firstChildId={firstChildId}
             />
           </aside>
         </div>
@@ -117,6 +126,7 @@ export function AppShell({
             </p>
           </div>
           <div className="flex items-center gap-1">
+            <ParentLockButton hasPin={hasPin} firstChildId={firstChildId} />
             <Button
               variant="ghost"
               size="icon"
@@ -158,6 +168,8 @@ function SidebarContent({
   onToggleTheme,
   onSignOut,
   onNavigate,
+  hasPin = false,
+  firstChildId = null,
 }: {
   familyName: string
   isActive: (href: string) => boolean
@@ -167,6 +179,8 @@ function SidebarContent({
   onToggleTheme: () => void
   onSignOut: () => void
   onNavigate?: () => void
+  hasPin?: boolean
+  firstChildId?: string | null
 }) {
   return (
     <>

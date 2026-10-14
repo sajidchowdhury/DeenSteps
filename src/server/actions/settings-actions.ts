@@ -35,6 +35,8 @@ const SettingsSchema = z.object({
   sadaqahStarsPerUnit: z.number().int().min(1).default(100),
   sadaqahCurrency: z.string().max(10).default('BDT'),
   sadaqahAmountPerUnit: z.number().min(0).default(100),
+  // Parent lock PIN (4 digits, optional)
+  parentPin: z.string().max(4).optional(),
 })
 
 const ParentProfileSchema = z.object({
@@ -98,6 +100,7 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       sadaqahStarsPerUnit: d.sadaqahStarsPerUnit,
       sadaqahCurrency: d.sadaqahCurrency,
       sadaqahAmountPerUnit: d.sadaqahAmountPerUnit,
+      ...(d.parentPin !== undefined && { parentPin: d.parentPin || null }),
     },
     create: {
       familyId: family.id,
@@ -117,6 +120,7 @@ export async function updateFamilySettings(input: z.infer<typeof SettingsSchema>
       sadaqahStarsPerUnit: d.sadaqahStarsPerUnit,
       sadaqahCurrency: d.sadaqahCurrency,
       sadaqahAmountPerUnit: d.sadaqahAmountPerUnit,
+      ...(d.parentPin !== undefined && { parentPin: d.parentPin || null }),
     },
   })
   revalidatePath('/settings')
@@ -238,11 +242,148 @@ export async function exportFamilyData() {
 export async function deleteFamilyData(): Promise<{ ok: boolean; error?: string }> {
   const { family } = await requireFamily()
   try {
-    // Cascading deletes are configured on Family relations, so deleting the
-    // family row removes everything tied to it. We also drop the user's
-    // family memberships so they can create a new workspace.
-    await db.familyMembership.deleteMany({ where: { familyId: family.id } })
-    await db.family.delete({ where: { id: family.id } })
+    // Per user request: do NOT delete the account, family, or children.
+    // Only delete activity data: tasks, occurrences, submissions, reviews,
+    // rewards, redemptions, transactions, incidents, sadaqah, investments,
+    // reflections, achievements, challenges, notifications, audit logs.
+    // The family, children, settings, and user account are preserved.
+
+    // Get all child IDs for this family
+    const children = await db.childProfile.findMany({
+      where: { familyId: family.id },
+      select: { id: true },
+    })
+    const childIds = children.map((c) => c.id)
+
+    // Delete in dependency order (children first, then parents)
+    // 1. Child achievements
+    await db.childAchievement.deleteMany({
+      where: { childId: { in: childIds } },
+    })
+
+    // 2. Incident reports (must be before incidents)
+    await db.incidentReport.deleteMany({
+      where: { incident: { familyId: family.id } },
+    })
+
+    // 3. Incident resolutions (must be before incidents)
+    await db.incidentResolution.deleteMany({
+      where: { incident: { familyId: family.id } },
+    })
+
+    // 4. Incidents
+    await db.incident.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 5. Sadaqah donations (must be before causes)
+    await db.sadaqahDonation.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 6. Sadaqah causes
+    await db.sadaqahCause.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 7. Investments
+    await db.investment.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 8. Weekly reflections
+    await db.weeklyReflection.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 9. Family achievements
+    await db.familyAchievement.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 10. Achievement definitions
+    await db.achievement.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 11. Monthly milestones
+    await db.monthlyMilestone.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 12. Challenge participants (must be before challenges)
+    await db.challengeParticipant.deleteMany({
+      where: { challenge: { familyId: family.id } },
+    })
+
+    // 13. Weekly challenges
+    await db.weeklyChallenge.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 14. Task reviews (must be before submissions)
+    await db.taskReview.deleteMany({
+      where: { submission: { child: { familyId: family.id } } },
+    })
+
+    // 15. Task submissions (must be before occurrences)
+    await db.taskSubmission.deleteMany({
+      where: { child: { familyId: family.id } },
+    })
+
+    // 16. Task excusals (must be before occurrences)
+    await db.taskExcusal.deleteMany({
+      where: { occurrence: { task: { familyId: family.id } } },
+    })
+
+    // 17. Task occurrences (must be before tasks)
+    await db.taskOccurrence.deleteMany({
+      where: { task: { familyId: family.id } },
+    })
+
+    // 18. Task assignments (must be before tasks)
+    await db.taskAssignment.deleteMany({
+      where: { task: { familyId: family.id } },
+    })
+
+    // 19. Task templates
+    await db.taskTemplate.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 20. Reward redemptions (must be before rewards)
+    await db.rewardRedemption.deleteMany({
+      where: { child: { familyId: family.id } },
+    })
+
+    // 21. Reward eligibilities
+    if (db.rewardEligibility) {
+      await db.rewardEligibility.deleteMany({
+        where: { reward: { familyId: family.id } },
+      })
+    }
+
+    // 22. Rewards
+    await db.reward.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 23. Points transactions
+    await db.pointsTransaction.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 24. Notifications
+    await db.notification.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // 25. Audit logs
+    await db.auditLog.deleteMany({
+      where: { familyId: family.id },
+    })
+
+    // Family, children, settings, and user account are PRESERVED.
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'Could not delete family data.' }
   }

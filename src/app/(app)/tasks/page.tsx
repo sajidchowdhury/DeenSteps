@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { ListChecks } from 'lucide-react'
 
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
@@ -47,6 +48,7 @@ export default async function TasksPage({
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const params = await searchParams
   const activeCategory = params.category ?? 'ALL'
@@ -99,7 +101,7 @@ export default async function TasksPage({
   }
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

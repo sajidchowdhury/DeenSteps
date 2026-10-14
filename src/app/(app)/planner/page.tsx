@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { redirect } from 'next/navigation'
 import {
   Calendar,
@@ -34,6 +35,7 @@ export default async function PlannerPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const [planner, achievementStatus, pendingCount, childrenList] = await Promise.all([
     getPlannerData(),
@@ -52,7 +54,7 @@ export default async function PlannerPage() {
   const totalCount = achievementStatus.length
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

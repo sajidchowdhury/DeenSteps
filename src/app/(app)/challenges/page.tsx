@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { getPinAndFirstChild } from "@/server/actions/pin-actions"
 import { format } from 'date-fns'
 import { Target, CalendarRange, Trophy, Award, Plus } from 'lucide-react'
 
@@ -42,6 +43,7 @@ export default async function ChallengesPage() {
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+  const { pinSettings, firstChildId } = await getPinAndFirstChild()
 
   const [challenges, childrenList, pendingCount] = await Promise.all([
     db.weeklyChallenge.findMany({
@@ -75,7 +77,7 @@ export default async function ChallengesPage() {
   const childOptions = childrenList.map((c) => ({ id: c.id, displayName: c.displayName, avatarColor: c.avatarColor }))
 
   return (
-    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList}>
+    <AppShell familyName={family.name} pendingCount={pendingCount} childrenList={childrenList} hasPin={!!pinSettings?.parentPin} firstChildId={firstChildId}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

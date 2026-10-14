@@ -170,6 +170,8 @@ model FamilySettings {
   sadaqahStarsPerUnit   Int      @default(100)
   sadaqahCurrency       String   @default("BDT")
   sadaqahAmountPerUnit  Float    @default(100)
+  // Parent lock PIN — 4 digit code to lock/unlock the parent area
+  parentPin             String?  // null = no PIN set, "1234" = PIN set
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
