@@ -1,0 +1,47 @@
+import { db } from '../src/lib/db'
+
+async function main() {
+  console.log('Clearing all data from database...')
+  
+  await db.childAchievement.deleteMany()
+  await db.incidentReport.deleteMany()
+  await db.incidentResolution.deleteMany()
+  await db.incident.deleteMany()
+  await db.sadaqahDonation.deleteMany()
+  await db.sadaqahCause.deleteMany()
+  await db.investment.deleteMany()
+  await db.weeklyReflection.deleteMany()
+  await db.familyAchievement.deleteMany()
+  await db.achievement.deleteMany()
+  await db.monthlyMilestone.deleteMany()
+  await db.challengeParticipant.deleteMany()
+  await db.weeklyChallenge.deleteMany()
+  await db.taskReview.deleteMany()
+  await db.taskSubmission.deleteMany()
+  await db.taskExcusal.deleteMany()
+  await db.taskOccurrence.deleteMany()
+  await db.taskAssignment.deleteMany()
+  await db.taskTemplate.deleteMany()
+  await db.rewardRedemption.deleteMany()
+  await db.reward.deleteMany()
+  await db.pointsTransaction.deleteMany()
+  await db.notification.deleteMany()
+  await db.auditLog.deleteMany()
+  await db.childProfile.deleteMany()
+  await db.familySettings.deleteMany()
+  await db.familyMembership.deleteMany()
+  await db.family.deleteMany()
+  await db.session.deleteMany()
+  await db.verificationToken.deleteMany()
+  await db.user.deleteMany()
+  
+  console.log('All data cleared. Database is now empty.')
+  
+  const userCount = await db.user.count()
+  const familyCount = await db.family.count()
+  console.log(`Users: ${userCount}, Families: ${familyCount}`)
+}
+
+main()
+  .catch(console.error)
+  .finally(() => db.$disconnect())

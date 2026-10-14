@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { Lock, Unlock, Loader2, ShieldCheck } from 'lucide-react'
+import { Lock, Unlock, Loader2, ShieldCheck, KeyRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -52,6 +52,13 @@ export function ParentLockButton({
   const [pinInput, setPinInput] = React.useState('')
   const [error, setError] = React.useState('')
   const [verifying, setVerifying] = React.useState(false)
+  // Forgot PIN state
+  const [forgotOpen, setForgotOpen] = React.useState(false)
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [newPin, setNewPin] = React.useState('')
+  const [confirmNewPin, setConfirmNewPin] = React.useState('')
+  const [resetting, setResetting] = React.useState(false)
 
   // Read lock state from localStorage on mount
   React.useEffect(() => {
@@ -127,6 +134,48 @@ export function ParentLockButton({
     }
   }
 
+  const handleResetPin = async () => {
+    if (newPin.length !== 4) {
+      setError('পিন অবশ্যই ৪ ডিজিট হতে হবে।')
+      return
+    }
+    if (newPin !== confirmNewPin) {
+      setError('নতুন পিন দুটি মিলছে না।')
+      return
+    }
+
+    setResetting(true)
+    try {
+      const res = await fetch('/api/reset-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, newPin }),
+      })
+      const data = await res.json()
+
+      if (data.ok) {
+        // Unlock + close modals
+        try {
+          localStorage.setItem(LOCK_STORAGE_KEY, 'false')
+        } catch {}
+        setLocked(false)
+        setForgotOpen(false)
+        setUnlockOpen(false)
+        setEmail('')
+        setPassword('')
+        setNewPin('')
+        setConfirmNewPin('')
+        router.push('/dashboard')
+      } else {
+        setError(data.error ?? 'রিসেট করা যায়নি।')
+      }
+    } catch {
+      setError('একটি সমস্যা হয়েছে।')
+    } finally {
+      setResetting(false)
+    }
+  }
+
   return (
     <>
       <Button
@@ -169,11 +218,94 @@ export function ParentLockButton({
             />
             {error && <p className="text-xs text-destructive">{error}</p>}
           </div>
+
+          {/* Forgot PIN link */}
+          <button
+            onClick={() => { setUnlockOpen(false); setForgotOpen(true); setError(''); setEmail(''); setPassword(''); setNewPin(''); setConfirmNewPin(''); }}
+            className="text-xs text-primary hover:underline"
+          >
+            পিন ভুলে গেছেন?
+          </button>
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setUnlockOpen(false)}>বাতিল</Button>
             <Button onClick={verifyPin} disabled={verifying || pinInput.length !== 4}>
               {verifying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="mr-1.5 h-4 w-4" />}
               আনলক
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Forgot PIN modal — reset via email + password */}
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <KeyRound className="h-5 w-5 text-amber-500" />
+              পিন রিসেট করুন
+            </DialogTitle>
+            <DialogDescription>
+              পিন ভুলে গেছেন? আপনার ইমেইল ও পাসওয়ার্ড দিয়ে নতুন পিন সেট করুন।
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="reset-email">ইমেইল</Label>
+              <Input
+                id="reset-email"
+                type="email"
+                placeholder="parent@example.com"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="reset-password">পাসওয়ার্ড</Label>
+              <Input
+                id="reset-password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="new-pin">নতুন পিন (৪ ডিজিট)</Label>
+              <Input
+                id="new-pin"
+                type="password"
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="••••"
+                value={newPin}
+                onChange={(e) => { setNewPin(e.target.value.replace(/\D/g, '')); setError(''); }}
+                className="text-center text-xl tracking-widest"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="confirm-new-pin">নতুন পিন নিশ্চিত করুন</Label>
+              <Input
+                id="confirm-new-pin"
+                type="password"
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="••••"
+                value={confirmNewPin}
+                onChange={(e) => { setConfirmNewPin(e.target.value.replace(/\D/g, '')); setError(''); }}
+                className="text-center text-xl tracking-widest"
+              />
+            </div>
+            {error && <p className="text-xs text-destructive">{error}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setForgotOpen(false)}>বাতিল</Button>
+            <Button
+              onClick={handleResetPin}
+              disabled={resetting || !email || !password || newPin.length !== 4 || newPin !== confirmNewPin}
+            >
+              {resetting ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="mr-1.5 h-4 w-4" />}
+              পিন রিসেট করুন
             </Button>
           </DialogFooter>
         </DialogContent>
