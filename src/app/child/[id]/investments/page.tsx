@@ -1,3 +1,4 @@
+import { ParentLockButton } from "@/components/deensteps/parent-lock"
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp } from 'lucide-react'
 import { redirect } from 'next/navigation'
@@ -36,6 +37,7 @@ export default async function ChildInvestmentsPage({ params }: { params: Promise
           </Button>
           <Logo />
           <div className="flex items-center gap-2">
+            <ParentLockButton hasPin={false} firstChildId={null} />
             <Avatar color={child.avatarColor} name={child.displayName} size="sm" />
             <span className="hidden text-sm font-medium text-foreground sm:inline">{child.displayName}</span>
           </div>

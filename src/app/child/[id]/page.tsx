@@ -24,6 +24,7 @@ import { AchievementGrid, AchievementCelebrationOverlay } from '@/components/dee
 import { TASK_STATUS_META } from '@/lib/constants'
 import { format, startOfWeek, endOfWeek, subDays, differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { ParentLockButton } from '@/components/deensteps/parent-lock'
 
 export default async function ChildDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: childId } = await params
@@ -31,6 +32,18 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
   if (!family) redirect('/onboarding')
+
+  // Load PIN settings for the lock button on child header
+  const pinSettings = await db.familySettings.findUnique({
+    where: { familyId: family.id },
+    select: { parentPin: true },
+  })
+  // Get first child for lock redirect
+  const firstChild = await db.childProfile.findFirst({
+    where: { familyId: family.id, status: 'ACTIVE' },
+    orderBy: { createdAt: 'asc' },
+    select: { id: true },
+  })
 
   const child = await db.childProfile.findFirst({
     where: { id: childId, familyId: family.id },
@@ -192,6 +205,8 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
           <Logo />
           <div className="flex items-center gap-2">
+            {/* Parent lock/unlock button — visible on child page so parents can unlock */}
+            <ParentLockButton hasPin={!!pinSettings?.parentPin} firstChildId={firstChild?.id ?? null} />
             <Avatar color={child.avatarColor} name={child.displayName} size="sm" />
             <span className="hidden text-sm font-medium text-foreground sm:inline">{child.displayName}</span>
           </div>

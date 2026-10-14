@@ -5,9 +5,9 @@ import { Volume2, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // ────────────────────────────────────────────────────────────────────────────
-// TTS (Text-to-Speech) button — reads text aloud in Bengali.
-// Uses the browser's Web Speech API (speechSynthesis).
-// Falls back gracefully if Bengali voice is not available.
+// TTS (Text-to-Speech) button — uses server-side Google Translate TTS API
+// for clean Bengali voice. Falls back to browser Web Speech API if the
+// server API fails.
 // ────────────────────────────────────────────────────────────────────────────
 
 export function TtsButton({
@@ -20,63 +20,83 @@ export function TtsButton({
   className?: string
 }) {
   const [speaking, setSpeaking] = React.useState(false)
-  const [supported, setSupported] = React.useState(true)
+  const audioRef = React.useRef<HTMLAudioElement | null>(null)
 
-  React.useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setSupported(false)
-    }
-  }, [])
-
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return () => {
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel()
-      }
-    }
-  }, [])
-
-  const handleSpeak = (e: React.MouseEvent) => {
+  const handleSpeak = async (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
 
-    if (!supported || !text) return
+    if (!text) return
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel()
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+
+    // Stop browser speech synthesis if running
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+
+    setSpeaking(true)
+
+    try {
+      // Try server-side Google Translate TTS first (best Bengali quality)
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      })
+
+      if (res.ok) {
+        const blob = await res.blob()
+        const audioUrl = URL.createObjectURL(blob)
+        const audio = new Audio(audioUrl)
+        audioRef.current = audio
+
+        audio.onended = () => {
+          setSpeaking(false)
+          URL.revokeObjectURL(audioUrl)
+        }
+        audio.onerror = () => {
+          setSpeaking(false)
+          URL.revokeObjectURL(audioUrl)
+          // Fallback to browser TTS
+          browserTTSFallback(text)
+        }
+
+        await audio.play()
+      } else {
+        // Fallback to browser TTS
+        browserTTSFallback(text)
+      }
+    } catch {
+      setSpeaking(false)
+      // Fallback to browser TTS
+      browserTTSFallback(text)
+    }
+  }
+
+  // Fallback: use browser's built-in Web Speech API
+  const browserTTSFallback = (text: string) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setSpeaking(false)
+      return
+    }
 
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = 'bn-BD'
-    utterance.rate = 0.85  // Slower for kids
-    utterance.pitch = 1.0
+    utterance.rate = 0.85
 
-    // Try to find a Bengali voice — load voices if not yet loaded
+    // Try to find a Bengali voice
     const voices = window.speechSynthesis.getVoices()
-
-    // Priority 1: Bengali (bn-BD or bn-IN)
     const bnVoice = voices.find((v) => v.lang.toLowerCase().startsWith('bn'))
     if (bnVoice) {
       utterance.voice = bnVoice
-      utterance.lang = bnVoice.lang
     } else {
-      // Priority 2: Hindi (hi-IN) — many Hindi TTS engines can read Bengali script
-      // because they share the Devanagari/Bengali script family
       const hiVoice = voices.find((v) => v.lang.toLowerCase().startsWith('hi'))
-      if (hiVoice) {
-        utterance.voice = hiVoice
-        utterance.lang = 'hi-IN'
-      } else {
-        // Priority 3: Any voice with 'bn' or 'hi' or 'ur' in the name
-        const indicVoice = voices.find((v) =>
-          v.lang.toLowerCase().startsWith('ur') ||
-          v.name.toLowerCase().includes('bengali') ||
-          v.name.toLowerCase().includes('hindi')
-        )
-        if (indicVoice) {
-          utterance.voice = indicVoice
-        }
-      }
+      if (hiVoice) utterance.voice = hiVoice
     }
 
     utterance.onstart = () => setSpeaking(true)
@@ -86,7 +106,17 @@ export function TtsButton({
     window.speechSynthesis.speak(utterance)
   }
 
-  if (!supported) return null
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
 
   return (
     <button
