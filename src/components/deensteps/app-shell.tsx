@@ -79,7 +79,7 @@ export function AppShell({
           childrenList={childrenList}
           theme={mounted ? theme : undefined}
           onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
+          onSignOut={() => signOut({ callbackUrl: '/' })}
           hasPin={hasPin}
           firstChildId={firstChildId}
         />
@@ -97,7 +97,7 @@ export function AppShell({
               childrenList={childrenList}
               theme={mounted ? theme : undefined}
               onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              onSignOut={() => signOut({ callbackUrl: '/deensteps/' })}
+              onSignOut={() => signOut({ callbackUrl: '/' })}
               onNavigate={() => setOpen(false)}
               hasPin={hasPin}
               firstChildId={firstChildId}
