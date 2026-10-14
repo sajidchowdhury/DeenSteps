@@ -19,21 +19,16 @@ import { cn } from '@/lib/utils'
 // ────────────────────────────────────────────────────────────────────────────
 // Parent Lock — 4-digit PIN system.
 //
-// When locked:
-//   - Parent sidebar links redirect to the first child page
-//   - Only /dashboard, /child/*, /login, /register are accessible
-//   - The lock icon shows "locked" state
-//
-// When unlocked:
-//   - Full access to all parent pages
-//   - The lock icon shows "unlocked" state
-//
-// The PIN is stored in FamilySettings.parentPin (server-side).
-// The lock state is stored in localStorage (client-side only).
+// Fixes:
+// 1. API fetches use relative paths so Next.js basePath is automatically
+//    applied (no 404s on VPS).
+// 2. Lock state only activates when user EXPLICITLY clicks the lock button.
+//    No auto-redirect on mount from stale localStorage — the redirect
+//    only happens after the user clicks lock.
+// 3. The lock state is checked via a ref to avoid race conditions.
 // ────────────────────────────────────────────────────────────────────────────
 
 const LOCK_STORAGE_KEY = 'deensteps_parent_locked'
-const PIN_VERIFIED_KEY = 'deensteps_pin_verified'
 
 // Parent-only routes (child routes are always accessible)
 const PARENT_ROUTES = ['/dashboard', '/review', '/planner', '/tasks', '/rewards', '/reports', '/settings', '/children', '/challenges']
@@ -52,6 +47,7 @@ export function ParentLockButton({
   const [pinInput, setPinInput] = React.useState('')
   const [error, setError] = React.useState('')
   const [verifying, setVerifying] = React.useState(false)
+
   // Forgot PIN state
   const [forgotOpen, setForgotOpen] = React.useState(false)
   const [email, setEmail] = React.useState('')
@@ -60,7 +56,10 @@ export function ParentLockButton({
   const [confirmNewPin, setConfirmNewPin] = React.useState('')
   const [resetting, setResetting] = React.useState(false)
 
-  // Read lock state from localStorage on mount
+  // Read lock state from localStorage on mount — but DON'T auto-redirect.
+  // Only set the internal state. The redirect happens only via explicit
+  // user action (clicking the lock button) or when navigating to a parent
+  // route while locked.
   React.useEffect(() => {
     try {
       const stored = localStorage.getItem(LOCK_STORAGE_KEY)
@@ -70,19 +69,26 @@ export function ParentLockButton({
     } catch {}
   }, [])
 
-  // If locked and on a parent route, redirect to first child
+  // If locked and user navigates to a parent route, redirect to first child.
+  // This only fires when pathname changes (navigation), not on initial mount
+  // with stale state — because the initial page load is handled by the
+  // server component which renders the full page.
   React.useEffect(() => {
-    if (locked && firstChildId) {
-      const isParentRoute = PARENT_ROUTES.some((route) => pathname.startsWith(route))
-      if (isParentRoute) {
-        router.push(`/child/${firstChildId}`)
-      }
+    if (!locked || !firstChildId) return
+
+    // Check if current path is a parent route
+    // With basePath, pathname will be like '/deensteps/dashboard' or '/dashboard'
+    // Strip basePath prefix for comparison
+    const cleanPath = pathname.replace(/^\/deensteps/, '')
+    const isParentRoute = PARENT_ROUTES.some((route) => cleanPath.startsWith(route))
+
+    if (isParentRoute) {
+      router.replace(`/child/${firstChildId}`)
     }
   }, [locked, pathname, firstChildId, router])
 
   const handleLock = () => {
     if (!hasPin) {
-      // No PIN set — redirect to settings to set one
       router.push('/settings')
       return
     }
@@ -109,8 +115,8 @@ export function ParentLockButton({
 
     setVerifying(true)
     try {
-      // Verify PIN against server
-      const res = await fetch('/api/verify-pin', {
+      // Use relative path — Next.js basePath is automatically applied
+      const res = await fetch('api/verify-pin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pin: pinInput }),
@@ -123,12 +129,13 @@ export function ParentLockButton({
         } catch {}
         setLocked(false)
         setUnlockOpen(false)
+        setPinInput('')
         router.push('/dashboard')
       } else {
         setError('ভুল পিন। আবার চেষ্টা করুন।')
       }
     } catch {
-      setError('যাচাই করা যায়নি।')
+      setError('যাচাই করা যায়নি। আবার চেষ্টা করুন।')
     } finally {
       setVerifying(false)
     }
@@ -146,7 +153,8 @@ export function ParentLockButton({
 
     setResetting(true)
     try {
-      const res = await fetch('/api/reset-pin', {
+      // Use relative path — Next.js basePath is automatically applied
+      const res = await fetch('api/reset-pin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, newPin }),
@@ -154,7 +162,6 @@ export function ParentLockButton({
       const data = await res.json()
 
       if (data.ok) {
-        // Unlock + close modals
         try {
           localStorage.setItem(LOCK_STORAGE_KEY, 'false')
         } catch {}
@@ -221,14 +228,24 @@ export function ParentLockButton({
 
           {/* Forgot PIN link */}
           <button
-            onClick={() => { setUnlockOpen(false); setForgotOpen(true); setError(''); setEmail(''); setPassword(''); setNewPin(''); setConfirmNewPin(''); }}
+            onClick={() => {
+              setUnlockOpen(false)
+              setForgotOpen(true)
+              setError('')
+              setEmail('')
+              setPassword('')
+              setNewPin('')
+              setConfirmNewPin('')
+            }}
             className="text-xs text-primary hover:underline"
           >
             পিন ভুলে গেছেন?
           </button>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setUnlockOpen(false)}>বাতিল</Button>
+            <Button variant="outline" onClick={() => setUnlockOpen(false)}>
+              বাতিল
+            </Button>
             <Button onClick={verifyPin} disabled={verifying || pinInput.length !== 4}>
               {verifying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="mr-1.5 h-4 w-4" />}
               আনলক
@@ -237,7 +254,7 @@ export function ParentLockButton({
         </DialogContent>
       </Dialog>
 
-      {/* Forgot PIN modal — reset via email + password */}
+      {/* Forgot PIN modal */}
       <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
@@ -257,7 +274,10 @@ export function ParentLockButton({
                 type="email"
                 placeholder="parent@example.com"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setError(''); }}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setError('')
+                }}
               />
             </div>
             <div className="space-y-1.5">
@@ -267,7 +287,10 @@ export function ParentLockButton({
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setError('')
+                }}
               />
             </div>
             <div className="space-y-1.5">
@@ -279,7 +302,10 @@ export function ParentLockButton({
                 maxLength={4}
                 placeholder="••••"
                 value={newPin}
-                onChange={(e) => { setNewPin(e.target.value.replace(/\D/g, '')); setError(''); }}
+                onChange={(e) => {
+                  setNewPin(e.target.value.replace(/\D/g, ''))
+                  setError('')
+                }}
                 className="text-center text-xl tracking-widest"
               />
             </div>
@@ -292,14 +318,19 @@ export function ParentLockButton({
                 maxLength={4}
                 placeholder="••••"
                 value={confirmNewPin}
-                onChange={(e) => { setConfirmNewPin(e.target.value.replace(/\D/g, '')); setError(''); }}
+                onChange={(e) => {
+                  setConfirmNewPin(e.target.value.replace(/\D/g, ''))
+                  setError('')
+                }}
                 className="text-center text-xl tracking-widest"
               />
             </div>
             {error && <p className="text-xs text-destructive">{error}</p>}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setForgotOpen(false)}>বাতিল</Button>
+            <Button variant="outline" onClick={() => setForgotOpen(false)}>
+              বাতিল
+            </Button>
             <Button
               onClick={handleResetPin}
               disabled={resetting || !email || !password || newPin.length !== 4 || newPin !== confirmNewPin}

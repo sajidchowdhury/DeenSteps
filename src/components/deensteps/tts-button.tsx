@@ -43,7 +43,7 @@ export function TtsButton({
 
     try {
       // Try server-side Google Translate TTS first (best Bengali quality)
-      const res = await fetch('/api/tts', {
+      const res = await fetch('api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
