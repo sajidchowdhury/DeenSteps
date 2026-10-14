@@ -70,11 +70,18 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
     orderBy: { dueTime: 'asc' },
   })
 
-  // Phase E+ (user request): Sort tasks by tier desc, then pointsValue desc.
-  // This puts the most important tasks (highest tier + highest points) at the top.
+  // Phase E+ (user request): Sort tasks by parent's custom sortOrder first,
+  // then tier desc, then pointsValue desc.
+  // Parent sets the order via drag-drop in the planner.
   const sortedOccurrences = [...todayOccurrences].sort((a, b) => {
+    // Sort by parent's custom order first (sortOrder = 0 means default/unset)
+    const aOrder = a.task.sortOrder ?? 0
+    const bOrder = b.task.sortOrder ?? 0
+    if (aOrder !== bOrder) return aOrder - bOrder
+    // Then by tier desc (high tier first)
     const tierDiff = (b.task.tier ?? 3) - (a.task.tier ?? 3)
     if (tierDiff !== 0) return tierDiff
+    // Then by pointsValue desc (high points first)
     return b.task.pointsValue - a.task.pointsValue
   })
 

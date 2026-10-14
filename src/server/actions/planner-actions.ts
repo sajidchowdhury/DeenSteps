@@ -41,12 +41,14 @@ export type PlannerOverview = {
   }
   todaysSchedule: Array<{
     id: string
+    taskId: string
     title: string
     iconKey: string
     category: string
     dueTime: string | null
     status: string
     pointsValue: number
+    sortOrder: number
     assignedChildren: Array<{ id: string; displayName: string; avatarColor: string }>
   }>
   reviewQueue: {
@@ -203,14 +205,16 @@ export async function getPlannerData(): Promise<PlannerOverview> {
 
   const todaysSchedule = todayOccurrencesRaw.map((o) => ({
     id: o.id,
+    taskId: o.task.id,
     title: o.task.title,
     iconKey: o.task.iconKey,
     category: o.task.category,
     dueTime: o.dueTime,
     status: o.status,
     pointsValue: o.task.pointsValue,
+    sortOrder: o.task.sortOrder,
     assignedChildren: assignmentsByTask.get(o.task.id) ?? [],
-  }))
+  })).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
 
   // ── Reflection state ──
   // "This week" = the most recent reflection's weekStart falls within the

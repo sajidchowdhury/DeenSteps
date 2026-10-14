@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
+import { DraggableSchedule } from '@/components/deensteps/draggable-schedule'
 import { getPlannerData, getFamilyAchievementStatus } from '@/server/actions/planner-actions'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { cn } from '@/lib/utils'
@@ -120,75 +121,21 @@ export default async function PlannerPage() {
             has summary cards with the same data. The planner focuses on
             schedule + reflection + achievements. */}
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Today's schedule */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="font-display text-lg flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
-                আজকের সিডিউল
-              </CardTitle>
-              <CardDescription>সব সন্তানের আজকের কাজ এক জায়গায়।</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {planner.todaysSchedule.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-card/30 px-6 py-10 text-center">
-                  <Calendar className="mx-auto h-8 w-8 text-muted-foreground" />
-                  <p className="mt-3 font-medium text-foreground">আজ কোনো কাজ নির্ধারিত নেই</p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    কাজ পৃষ্ঠা থেকে নতুন চ্যালেঞ্জ যোগ করুন বা লাইব্রেরি থেকে ইম্পোর্ট করুন।
-                  </p>
-                  <Button asChild size="sm" className="mt-4">
-                    <Link href="/tasks"><ListChecks className="mr-1.5 h-4 w-4" /> কাজ যোগ করুন</Link>
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <ul className="space-y-2">
-                  {planner.todaysSchedule.slice(0, 10).map((o) => {
-                    const meta = TASK_STATUS_META[o.status] ?? TASK_STATUS_META.ASSIGNED
-                    return (
-                      <li
-                        key={o.id}
-                        className="flex items-start gap-3 rounded-lg border border-border bg-card/50 p-3"
-                      >
-                        <span className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                          <DynamicIcon iconKey={o.iconKey} className="h-4 w-4" />
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="text-sm font-semibold text-foreground">{o.title}</p>
-                            <Badge variant="outline" className={cn('text-[10px]', meta.tone)}>{meta.label}</Badge>
-                            {o.dueTime && (
-                              <Badge variant="outline" className="text-[10px] gap-1">
-                                <Clock className="h-2.5 w-2.5" /> {o.dueTime}
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                            {o.assignedChildren.length > 0 ? (
-                              o.assignedChildren.map((c) => (
-                                <span key={c.id} className="inline-flex items-center gap-1">
-                                  <Avatar color={c.avatarColor} name={c.displayName} size="sm" />
-                                  <span className="text-xs text-muted-foreground">{c.displayName}</span>
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-xs text-muted-foreground">কাউকে নির্ধারণ করা হয়নি</span>
-                            )}
-                          </div>
-                        </div>
-                        <Badge variant="secondary" className="text-[10px]">+{o.pointsValue}</Badge>
-                      </li>
-                    )
-                  })}
-                  </ul>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-        </div> {/* close grid div */}
+        {/* Drag-and-drop schedule */}
+        <DraggableSchedule
+          items={planner.todaysSchedule.map((o) => ({
+            occurrenceId: o.id,
+            taskId: o.taskId ?? '',
+            title: o.title,
+            iconKey: o.iconKey,
+            category: o.category,
+            dueTime: o.dueTime,
+            status: o.status,
+            pointsValue: o.pointsValue,
+            sortOrder: 0,
+            assignedChildren: o.assignedChildren,
+          }))}
+        />
 
         {/* Review queue + reflection removed per user request —
             both are now in the Activity Center (/review) */}

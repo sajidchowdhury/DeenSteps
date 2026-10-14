@@ -206,6 +206,7 @@ model TaskTemplate {
   minAge          Int?                    // 3, 6, 9, 13 (null = all ages)
   maxAge          Int?                    // 5, 8, 12, 99
   learningPrompt  String?                // optional short Islamic learning question (Phase 5)
+  sortOrder       Int      @default(0)   // parent-defined display order (drag-drop in planner)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
