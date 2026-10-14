@@ -5,7 +5,9 @@ export default async function OnboardingPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
   const family = await getUserFamily(user.id)
-  if (!family) redirect('/register')
-  // অনবোর্ডিং আর নেই — সরাসরি ড্যাশবোর্ডে যান
+  // If user has no family (e.g. after family data deletion), send them
+  // to the create-family page (NOT /register — that creates a new account).
+  if (!family) redirect('/create-family')
+  // Family exists — go to dashboard
   redirect('/dashboard')
 }
