@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Volume2, Loader2 } from 'lucide-react'
+import { Volume2, Loader2, Square } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // Helper: construct API URL with correct basePath.
@@ -13,10 +13,33 @@ function apiUrl(path: string): string {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// TTS (Text-to-Speech) button — uses server-side Google Translate TTS API
-// for clean Bengali voice. Falls back to browser Web Speech API if the
-// server API fails.
+// Shared audio manager — ensures only ONE TTS plays at a time.
+// When a new TtsButton is clicked, any currently playing audio (both
+// HTML5 Audio and Web Speech API) is stopped before starting the new one.
 // ────────────────────────────────────────────────────────────────────────────
+
+let currentAudio: HTMLAudioElement | null = null
+let currentUtterance: SpeechSynthesisUtterance | null = null
+let currentButtonId: string | null = null
+
+function stopAllAudio() {
+  // Stop HTML5 Audio
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+    currentAudio = null
+  }
+  // Stop Web Speech API
+  if (typeof window !== 'undefined' && window.speechSynthesis) {
+    window.speechSynthesis.cancel()
+  }
+  currentUtterance = null
+  currentButtonId = null
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+
+let buttonIdCounter = 0
 
 export function TtsButton({
   text,
@@ -28,7 +51,27 @@ export function TtsButton({
   className?: string
 }) {
   const [speaking, setSpeaking] = React.useState(false)
-  const audioRef = React.useRef<HTMLAudioElement | null>(null)
+  const [loading, setLoading] = React.useState(false)
+  const buttonId = React.useRef(`tts-${++buttonIdCounter}`).current
+
+  // Listen for when this button's audio stops (from external stop)
+  React.useEffect(() => {
+    const checkInterval = setInterval(() => {
+      if (currentButtonId !== buttonId && speaking) {
+        setSpeaking(false)
+      }
+    }, 200)
+    return () => clearInterval(checkInterval)
+  }, [buttonId, speaking])
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (currentButtonId === buttonId) {
+        stopAllAudio()
+      }
+    }
+  }, [buttonId])
 
   const handleSpeak = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -36,60 +79,65 @@ export function TtsButton({
 
     if (!text) return
 
-    // Stop any currently playing audio
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current = null
+    // If THIS button is currently playing, stop it (toggle behavior)
+    if (currentButtonId === buttonId && speaking) {
+      stopAllAudio()
+      setSpeaking(false)
+      return
     }
 
-    // Stop browser speech synthesis if running
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
-    }
+    // Stop any other audio that's playing
+    stopAllAudio()
+    setSpeaking(false)
 
-    setSpeaking(true)
+    // Claim this button as the active one
+    currentButtonId = buttonId
+    setLoading(true)
 
     try {
       // Try server-side Google Translate TTS first (best Bengali quality)
       const res = await fetch(apiUrl('/api/tts'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: text.slice(0, 500) }),
       })
 
       if (res.ok) {
         const blob = await res.blob()
         const audioUrl = URL.createObjectURL(blob)
         const audio = new Audio(audioUrl)
-        audioRef.current = audio
+        currentAudio = audio
 
         audio.onended = () => {
           setSpeaking(false)
+          stopAllAudio()
           URL.revokeObjectURL(audioUrl)
         }
         audio.onerror = () => {
           setSpeaking(false)
+          stopAllAudio()
           URL.revokeObjectURL(audioUrl)
           // Fallback to browser TTS
-          browserTTSFallback(text)
+          browserTTSFallback(text, buttonId)
         }
 
+        setLoading(false)
+        setSpeaking(true)
         await audio.play()
       } else {
-        // Fallback to browser TTS
-        browserTTSFallback(text)
+        setLoading(false)
+        browserTTSFallback(text, buttonId)
       }
     } catch {
-      setSpeaking(false)
-      // Fallback to browser TTS
-      browserTTSFallback(text)
+      setLoading(false)
+      browserTTSFallback(text, buttonId)
     }
   }
 
   // Fallback: use browser's built-in Web Speech API
-  const browserTTSFallback = (text: string) => {
+  const browserTTSFallback = (text: string, btnId: string) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setSpeaking(false)
+      setLoading(false)
       return
     }
 
@@ -97,7 +145,6 @@ export function TtsButton({
     utterance.lang = 'bn-BD'
     utterance.rate = 0.85
 
-    // Try to find a Bengali voice
     const voices = window.speechSynthesis.getVoices()
     const bnVoice = voices.find((v) => v.lang.toLowerCase().startsWith('bn'))
     if (bnVoice) {
@@ -107,38 +154,42 @@ export function TtsButton({
       if (hiVoice) utterance.voice = hiVoice
     }
 
-    utterance.onstart = () => setSpeaking(true)
-    utterance.onend = () => setSpeaking(false)
-    utterance.onerror = () => setSpeaking(false)
-
-    window.speechSynthesis.speak(utterance)
-  }
-
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-      }
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel()
+    utterance.onstart = () => {
+      setSpeaking(true)
+      currentButtonId = btnId
+    }
+    utterance.onend = () => {
+      setSpeaking(false)
+      if (currentButtonId === btnId) {
+        stopAllAudio()
       }
     }
-  }, [])
+    utterance.onerror = () => {
+      setSpeaking(false)
+      if (currentButtonId === btnId) {
+        stopAllAudio()
+      }
+    }
+
+    currentUtterance = utterance
+    window.speechSynthesis.speak(utterance)
+  }
 
   return (
     <button
       onClick={handleSpeak}
       className={cn(
         'inline-flex items-center gap-1 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary',
-        speaking && 'bg-primary/10 text-primary animate-pulse',
+        speaking && 'bg-primary/10 text-primary',
         className
       )}
-      title="শুনুন"
-      aria-label="শুনুন"
+      title={speaking ? 'থামান' : 'শুনুন'}
+      aria-label={speaking ? 'থামান' : 'শুনুন'}
     >
-      {speaking ? (
+      {loading ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : speaking ? (
+        <Square className="h-3 w-3 fill-current" />
       ) : (
         <Volume2 className="h-3.5 w-3.5" />
       )}

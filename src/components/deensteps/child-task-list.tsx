@@ -315,14 +315,6 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
             )}
           </div>
         </div>
-
-        {/* Points badge — with star icon, prominent on the right */}
-        <div className="flex-shrink-0">
-          <span className="inline-flex items-center gap-1 rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-            <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-            +{task.pointsValue}
-          </span>
-        </div>
       </div>
 
       {/* Submit dialog */}
