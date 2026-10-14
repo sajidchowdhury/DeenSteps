@@ -34,6 +34,8 @@ import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
 import { submitTaskOccurrence } from '@/server/actions/review-actions'
 import { TASK_STATUS_META } from '@/lib/constants'
 import { playSound } from '@/lib/sounds'
+import { TtsButton } from '@/components/deensteps/tts-button'
+import { ShowMore } from '@/components/deensteps/show-more'
 import { cn } from '@/lib/utils'
 
 export type ChildTask = {
@@ -89,11 +91,11 @@ export function ChildTaskList({ occurrences }: { occurrences: ChildTask[] }) {
               বাকি আছে ({activeTasks.length})
             </p>
           )}
-          <ul className="space-y-3">
+          <ShowMore initialCount={10}>
             {activeTasks.map((o) => (
               <ChildTaskItem key={o.id} task={o} />
             ))}
-          </ul>
+          </ShowMore>
         </div>
       )}
 
@@ -222,7 +224,13 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
         <div className="min-w-0 flex-1">
           {/* Title row */}
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <p className="text-base font-bold text-foreground">{task.taskTitle}</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-base font-bold text-foreground">{task.taskTitle}</p>
+              {/* TTS button beside task name — reads the entire task */}
+              <TtsButton
+                text={`${task.taskTitle}. ${task.taskDescription ?? ''} ${task.learningPrompt ?? ''}`}
+              />
+            </div>
             <div className="flex items-center gap-1.5">
               {task.dueTime && (
                 <Badge variant="outline" className="text-xs gap-1">
@@ -238,15 +246,17 @@ function ChildTaskItem({ task }: { task: ChildTask }) {
             <p className="mt-1 text-sm text-muted-foreground">{task.taskDescription}</p>
           )}
 
-          {/* Phase B (B3): Learning prompt — auto-revealed, not collapsed.
-              The most pedagogically valuable content should not be hidden
-              behind a click. The "why" behind each task is always visible. */}
+          {/* Hadith (was "শেখার প্রশ্ন") — auto-revealed with TTS button */}
           {task.learningPrompt && (
             <div className="mt-2.5 rounded-lg border border-emerald-200 bg-emerald-50/40 p-2.5 dark:border-emerald-900/60 dark:bg-emerald-950/20">
-              <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-                <BookOpenCheck className="h-3.5 w-3.5" />
-                শেখার প্রশ্ন
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                  <BookOpenCheck className="h-3.5 w-3.5" />
+                  Hadith
+                </p>
+                {/* TTS button — reads only the hadith */}
+                <TtsButton text={task.learningPrompt} />
+              </div>
               <p className="mt-1 text-xs leading-relaxed text-foreground">{task.learningPrompt}</p>
             </div>
           )}

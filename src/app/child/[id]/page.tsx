@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Star, Sparkles, Flame, Gift, Clock, History, Trophy, Heart, HeartHandshake, TrendingUp } from 'lucide-react'
+import { ArrowLeft, Star, Sparkles, Flame, Gift, Clock, History, Trophy, Heart, HeartHandshake, TrendingUp, BookOpen, Moon } from 'lucide-react'
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { Avatar } from '@/components/deensteps/app-shell'
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { DynamicIcon } from '@/components/deensteps/dynamic-icon'
-import { Nur, NurSpeechBubble } from '@/components/deensteps/mascot'
+import { NurSpeechBubble } from '@/components/deensteps/mascot'
 import { ChildTaskList } from '@/components/deensteps/child-task-list'
 import { RewardRequestButton } from '@/components/deensteps/reward-request-button'
 import { IncidentReportButton } from '@/components/deensteps/incident-report-button'
@@ -206,14 +206,12 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
             ════════════════════════════════════════════════════════════════ */}
         <div className="mb-6 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-cream to-emerald-50/50 dark:border-amber-900/40 dark:from-amber-950/30 dark:via-secondary dark:to-emerald-950/20">
           <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-7">
-            {/* Nūr mascot — mood + speech bubble depends on today's progress */}
+            {/* Islamic icon (no eyes/mouth) — replaces Nūr SVG mascot */}
             <div className="flex flex-shrink-0 flex-col items-center gap-2 self-center">
-              <Nur
-                state={todayApproved > 0 ? 'proud' : 'happy'}
-                size="lg"
-                className="drop-shadow-sm"
-              />
-              {/* Phase E (E5): Contextual speech bubble */}
+              <span className="inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-100 to-emerald-100 dark:from-amber-950/40 dark:to-emerald-950/40">
+                <Moon className="h-12 w-12 text-amber-500" />
+              </span>
+              {/* Contextual speech bubble */}
               <NurSpeechBubble size="sm">
                 {todayTotal === 0
                   ? 'আজ কোনো কাজ নেই! 🌿'
@@ -267,7 +265,14 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent/40"
                 >
                   <History className="h-4 w-4" />
-                  পয়েন্টর হিসাব
+                  পয়েন্টের হিসাব
+                </Link>
+                <Link
+                  href={`/child/${child.id}/investments`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-sky-300 bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-300"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  আমার বিনিয়োগ
                 </Link>
               </div>
             </div>
@@ -379,46 +384,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
           </div>
         )}
 
-        {/* Phase 5 (S5.2): Monthly milestone progress — gentle card */}
-        {milestoneProgress && (
-          <div className="mb-6 rounded-2xl border border-violet-200 bg-violet-50/50 p-4 dark:border-violet-900 dark:bg-violet-950/20">
-            <div className="flex items-start gap-3">
-              <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/40">
-                <Trophy className="h-5 w-5" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="font-display text-base font-bold text-foreground">
-                  {milestoneProgress.qualified
-                    ? 'এই মাসের মাইলস্টোন অর্জিত! 🎉'
-                    : 'এই মাসের অগ্রগতি'}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {milestoneProgress.qualified
-                    ? `তুমি ${milestoneProgress.qualifyingWeeks}/${milestoneProgress.requiredWeeks} সপ্তাহ কোয়ালিফাই করেছ! আল্লাহ তোমার চেষ্টা কবুল করুন।`
-                    : milestoneProgress.requiredWeeks - milestoneProgress.qualifyingWeeks === 1
-                      ? `আর মাত্র ১ সপ্তাহ! প্রতি সপ্তাহে অন্তত একটি কাজ সম্পন্ন করলে গণ্য হবে।`
-                      : `তুমি ${milestoneProgress.qualifyingWeeks}/${milestoneProgress.requiredWeeks} সপ্তাহ কোয়ালিফাই করেছ। আর ${milestoneProgress.requiredWeeks - milestoneProgress.qualifyingWeeks} সপ্তাহ বাকি!`}
-                </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <Progress
-                    value={Math.min(100, Math.round((milestoneProgress.qualifyingWeeks / milestoneProgress.requiredWeeks) * 100))}
-                    className={cn(
-                      'h-2 flex-1',
-                      // Phase E (E6): Glow-pulse when ≥80% of milestone
-                      milestoneProgress.qualifyingWeeks / milestoneProgress.requiredWeeks >= 0.8 && !milestoneProgress.qualified && 'animate-glow-pulse'
-                    )}
-                  />
-                  <span className="text-xs font-semibold text-violet-700 dark:text-violet-300">
-                    {milestoneProgress.qualifyingWeeks}/{milestoneProgress.requiredWeeks}
-                  </span>
-                </div>
-                <p className="mt-1.5 text-xs text-muted-foreground">
-                  💜 ধারাবাহিকতাই আসল জয় — নিখুঁত হওয়ার নয়।
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* এই মাসের অগ্রগতি bar removed per user request */}
 
         {/* Phase B (B2): Old stat cards + ledger button removed.
             The "Today's Mission" hero above now shows: star count, streak,
@@ -450,7 +416,6 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                 )}
               </CardHeader>
               <CardContent>
-                <div className="max-h-[500px] overflow-y-auto">
                 <ChildTaskList occurrences={sortedOccurrences.map((o) => ({
                   id: o.id,
                   status: o.status,
@@ -467,7 +432,6 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
                   reviewerNote: o.submission?.reviewerNote ?? null,
                   childId: child.id,
                 }))} />
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -549,8 +513,7 @@ export default async function ChildDashboardPage({ params }: { params: Promise<{
               </CardContent>
             </Card>
 
-            {/* Investment history */}
-            <InvestmentHistory investments={childInvestments as any} summary={investmentSummary} />
+            {/* Investment history moved to /child/[id]/investments page */}
 
             {/* সাম্প্রতিক পয়েন্ট section removed per user request.
                 The ledger page (/child/[id]/ledger) shows the full star history

@@ -11,6 +11,7 @@ import {
   TaskRowActions,
 } from '@/components/deensteps/task-dialogs'
 import { RestoreDefaultsButton } from '@/components/deensteps/restore-defaults-button'
+import { ShowMore } from '@/components/deensteps/show-more'
 import { TierBadge } from '@/components/deensteps/tier-badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -132,17 +133,15 @@ export default async function TasksPage({
           activeStatus={activeStatus}
         />
 
-        {/* Task list — fixed height scrollable container */}
+        {/* Task list — shows 10 at a time with load more */}
         {filtered.length === 0 ? (
           <EmptyTasks hasAnyTasks={tasks.length > 0} childrenList={childOptions} />
         ) : (
-          <div className="max-h-[600px] overflow-y-auto pr-1">
-            <div className="grid gap-3">
-              {filtered.map((task) => (
-                <TaskRow key={task.id} task={task as unknown as TaskWithAssignments} childOptions={childOptions} />
-              ))}
-            </div>
-          </div>
+          <ShowMore initialCount={10}>
+            {filtered.map((task) => (
+              <TaskRow key={task.id} task={task as unknown as TaskWithAssignments} childOptions={childOptions} />
+            ))}
+          </ShowMore>
         )}
       </div>
     </AppShell>

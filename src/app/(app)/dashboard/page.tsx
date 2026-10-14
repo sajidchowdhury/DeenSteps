@@ -210,7 +210,7 @@ function WhatToDoNowHero({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {/* Review */}
         {pendingReviewCount > 0 && (
-          <Link href="/review" className="group">
+          <Link href="/review?tab=review" className="group">
             <Card className="h-full border-amber-200 bg-amber-50/40 transition-all hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-sm dark:border-amber-900/40 dark:bg-amber-950/20">
               <CardContent className="flex items-center gap-3 p-4">
                 <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300">
@@ -228,7 +228,7 @@ function WhatToDoNowHero({
 
         {/* Incidents */}
         {openIncidentsCount > 0 && (
-          <Link href="#incidents" className="group">
+          <Link href="/review?tab=incidents" className="group">
             <Card className="h-full border-rose-200 bg-rose-50/40 transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-sm dark:border-rose-900/40 dark:bg-rose-950/20">
               <CardContent className="flex items-center gap-3 p-4">
                 <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-300">
@@ -246,7 +246,7 @@ function WhatToDoNowHero({
 
         {/* Sadaqah */}
         {pendingSadaqahCount > 0 && (
-          <Link href="#sadaqah" className="group">
+          <Link href="/review?tab=sadaqah" className="group">
             <Card className="h-full border-emerald-200 bg-emerald-50/40 transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/20">
               <CardContent className="flex items-center gap-3 p-4">
                 <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">

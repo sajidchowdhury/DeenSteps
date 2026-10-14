@@ -141,9 +141,9 @@ export default async function PlannerPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="max-h-96 overflow-y-auto">
+                <div>
                   <ul className="space-y-2">
-                  {planner.todaysSchedule.map((o) => {
+                  {planner.todaysSchedule.slice(0, 10).map((o) => {
                     const meta = TASK_STATUS_META[o.status] ?? TASK_STATUS_META.ASSIGNED
                     return (
                       <li
@@ -186,94 +186,12 @@ export default async function PlannerPage() {
             </CardContent>
           </Card>
 
-          {/* Right column: review queue + reflection status */}
-          <div className="space-y-6">
-            {/* Review queue */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-amber-500" />
-                  রিভিউ সারি
-                </CardTitle>
-                <CardDescription>সন্তানের জমা দেওয়া কাজ অনুমোদন করুন।</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {planner.reviewQueue.count === 0 ? (
-                  <div className="text-center">
-                    <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-500" />
-                    <p className="mt-2 text-sm text-muted-foreground">সব রিভিউ সম্পন্ন! ✨</p>
-                  </div>
-                ) : (
-                  <>
-                    <ul className="space-y-2">
-                      {planner.reviewQueue.items.map((s) => (
-                        <li key={s.id} className="flex items-start gap-2.5 rounded-lg border border-border bg-card/50 p-2.5">
-                          <Avatar color={s.avatarColor} name={s.childName} size="sm" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-foreground">{s.childName}</p>
-                            <p className="truncate text-xs text-muted-foreground">{s.taskTitle}</p>
-                            <p className="text-[10px] text-muted-foreground">
-                              {formatDistanceToNow(parseISO(s.submittedAt), { addSuffix: true })}
-                            </p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button asChild size="sm" className="mt-3 w-full" variant="outline">
-                      <Link href="/review">
-                        রিভিউ খুলুন <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+        </div> {/* close grid div */}
 
-            {/* Reflection status */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-display text-lg flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-violet-500" />
-                  সাপ্তাহিক রিফ্লেকশন
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center justify-between rounded-lg bg-secondary/40 p-2.5 text-sm">
-                  <span className="text-muted-foreground">এই সপ্তাহ</span>
-                  {planner.reflection.thisWeekCompleted ? (
-                    <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
-                      <CheckCircle2 className="mr-1 h-3 w-3" /> সম্পন্ন
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline">বাকি</Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-secondary/40 p-2.5 text-sm">
-                  <span className="text-muted-foreground">গত সপ্তাহ</span>
-                  {planner.reflection.lastWeekCompleted ? (
-                    <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200">
-                      <CheckCircle2 className="mr-1 h-3 w-3" /> সম্পন্ন
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline">বাকি</Badge>
-                  )}
-                </div>
-                {planner.reflection.consecutiveWeeks > 0 && (
-                  <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-2.5 text-xs text-violet-900 dark:border-violet-900/40 dark:bg-violet-950/20 dark:text-violet-200">
-                    🔥 টানা {planner.reflection.consecutiveWeeks} সপ্তাহ রিফ্লেকশন করেছেন!
-                  </div>
-                )}
-                <Button asChild size="sm" variant="outline" className="w-full">
-                  <Link href="/dashboard#reflection">
-                    <BookOpen className="mr-1.5 h-3.5 w-3.5" /> রিফ্লেকশন খুলুন
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        {/* Review queue + reflection removed per user request —
+            both are now in the Activity Center (/review) */}
 
-        {/* Rewards + budget snapshot */}
+        {/* Rewards + budget — setup here, not in settings */}
         <Card>
           <CardHeader>
             <CardTitle className="font-display text-lg flex items-center gap-2">
@@ -316,10 +234,7 @@ export default async function PlannerPage() {
             )}
             <div className="mt-3 flex flex-wrap gap-2">
               <Button asChild size="sm" variant="outline">
-                <Link href="/rewards"><Gift className="mr-1.5 h-3.5 w-3.5" /> পুরস্কার পরিচালনা</Link>
-              </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link href="/settings"><SettingsIcon className="mr-1.5 h-3.5 w-3.5" /> বাজেট সেট করুন</Link>
+                <Link href="/rewards"><Gift className="mr-1.5 h-3.5 w-3.5" /> পুরস্কার</Link>
               </Button>
             </div>
           </CardContent>

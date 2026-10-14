@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { Target, CalendarRange, Trophy, Award, Plus } from 'lucide-react'
 
 import { getCurrentUser, getUserFamily } from '@/lib/auth/session'
+import { ShowMore } from '@/components/deensteps/show-more'
 import { db } from '@/lib/db'
 import { AppShell, Avatar } from '@/components/deensteps/app-shell'
 import { ChallengeFormDialog } from '@/components/deensteps/challenge-dialogs'
@@ -114,13 +115,11 @@ export default async function ChallengesPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="max-h-[600px] overflow-y-auto pr-1">
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {activeChallenges.map((c) => (
-                    <ChallengeCard key={c.id} challenge={c} />
-                  ))}
-                </div>
-              </div>
+              <ShowMore initialCount={10}>
+                {activeChallenges.map((c) => (
+                  <ChallengeCard key={c.id} challenge={c} />
+                ))}
+              </ShowMore>
             )}
 
             {/* Past challenges */}
@@ -131,13 +130,11 @@ export default async function ChallengesPage() {
                   <CardDescription>A history of finished and cancelled challenges.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="max-h-64 overflow-y-auto">
-                    <div className="space-y-3">
-                      {pastChallenges.map((c) => (
-                        <PastChallengeRow key={c.id} challenge={c} />
-                      ))}
-                    </div>
-                  </div>
+                  <ShowMore initialCount={10}>
+                    {pastChallenges.map((c) => (
+                      <PastChallengeRow key={c.id} challenge={c} />
+                    ))}
+                  </ShowMore>
                 </CardContent>
               </Card>
             )}
